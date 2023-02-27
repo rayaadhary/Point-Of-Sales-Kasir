@@ -250,6 +250,14 @@ session_start();
               </a>
             </li>
             <li class="nav-item">
+              <a href="<?= BASEURL ?>/pages/barang/barang.php" class="nav-link">
+                <i class="nav-icon fas fa-box"></i>
+                <p>
+                  Barang
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>

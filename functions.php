@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 define('BASEURL', 'http://localhost/kasir/admin');
 
@@ -35,6 +36,26 @@ function getAllPelanggan()
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   return $data;
+}
+
+function getAllBarang()
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM barang");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  return $data;
+}
+
+function getDeleteBarang($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "DELETE FROM barang WHERE id_barang = '$id'");
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 function getPelangganById($id)
