@@ -13,11 +13,13 @@ session_start();
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="<?= BASEURL ?>/plugins/fontawesome-free/css/all.min.css">
   <!-- IonIcons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="<?= BASEURL ?>/dist/css/adminlte.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 </head>
 <!--
 `body` tag options:
@@ -80,7 +82,7 @@ session_start();
             <a href="#" class="dropdown-item">
               <!-- Message Start -->
               <div class="media">
-                <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                <img src="<?= BASEURL ?>/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
                     Brad Diesel
@@ -96,7 +98,7 @@ session_start();
             <a href="#" class="dropdown-item">
               <!-- Message Start -->
               <div class="media">
-                <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                <img src="<?= BASEURL ?>/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
                     John Pierce
@@ -112,7 +114,7 @@ session_start();
             <a href="#" class="dropdown-item">
               <!-- Message Start -->
               <div class="media">
-                <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                <img src="<?= BASEURL ?>/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
                     Nora Silvester
@@ -166,7 +168,7 @@ session_start();
           </a>
         </li>
         <li class="nav-item">
-          <a href="logout.php" class=""><i class="fas fa-th-large"></i></a>
+          <a href="logout.php" class="nav-link logout" role="button"><i class="fas fa-sign-out-alt"></i></a>
         </li>
       </ul>
     </nav>
@@ -176,7 +178,7 @@ session_start();
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="index3.html" class="brand-link">
-        <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="<?= BASEURL ?>/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">AdminLTE 3</span>
       </a>
 
@@ -185,7 +187,7 @@ session_start();
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
-            <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            <img src="<?= BASEURL ?>/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
             <a href="#" class="d-block"><?= $_SESSION['nama']; ?></a>
@@ -937,7 +939,7 @@ session_start();
                     <tbody>
                       <tr>
                         <td>
-                          <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                          <img src="<?= BASEURL ?>/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
                           Some Product
                         </td>
                         <td>$13 USD</td>
@@ -956,7 +958,7 @@ session_start();
                       </tr>
                       <tr>
                         <td>
-                          <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                          <img src="<?= BASEURL ?>/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
                           Another Product
                         </td>
                         <td>$29 USD</td>
@@ -975,7 +977,7 @@ session_start();
                       </tr>
                       <tr>
                         <td>
-                          <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                          <img src="<?= BASEURL ?>/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
                           Amazing Product
                         </td>
                         <td>$1,230 USD</td>
@@ -994,7 +996,7 @@ session_start();
                       </tr>
                       <tr>
                         <td>
-                          <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                          <img src="<?= BASEURL ?>/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
                           Perfect Item
                           <span class="badge bg-danger">NEW</span>
                         </td>
@@ -1141,18 +1143,22 @@ session_start();
   <!-- REQUIRED SCRIPTS -->
 
   <!-- jQuery -->
-  <script src="plugins/jquery/jquery.min.js"></script>
+  <script src="<?= BASEURL ?>/plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap -->
-  <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= BASEURL ?>/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE -->
-  <script src="dist/js/adminlte.js"></script>
+  <script src="<?= BASEURL ?>/dist/js/adminlte.js"></script>
 
   <!-- OPTIONAL SCRIPTS -->
-  <script src="plugins/chart.js/Chart.min.js"></script>
+  <script src="<?= BASEURL ?>/plugins/chart.js/Chart.min.js"></script>
   <!-- AdminLTE for demo purposes -->
-  <script src="dist/js/demo.js"></script>
+  <script src="<?= BASEURL ?>/dist/js/demo.js"></script>
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-  <script src="dist/js/pages/dashboard3.js"></script>
+  <script src="<?= BASEURL ?>/dist/js/pages/dashboard3.js"></script>
+  <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+
+  <!-- SweetAlert2 -->
+  <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 </body>
 
 </html>

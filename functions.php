@@ -2,6 +2,8 @@
 
 define('BASEURL', 'http://localhost/kasir/admin');
 
+
+
 function dbConnect()
 {
   $db = mysqli_connect('localhost', 'root', '', 'kasir');
@@ -15,6 +17,16 @@ function logout()
   header("Location: index.php");
 }
 
+function gantiPassword($username, $password)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "UPDATE pengguna SET password = '$password' WHERE username = '$username'");
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 function getAllPelanggan()
 {
