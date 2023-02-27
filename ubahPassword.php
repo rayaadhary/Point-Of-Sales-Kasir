@@ -1,7 +1,6 @@
 <?php
 
 include_once "functions.php";
-session_start();
 
 $usernameBaru = $_POST['username'];
 $passwordBaru = $_POST['password'];

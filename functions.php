@@ -47,6 +47,23 @@ function getAllBarang()
   return $data;
 }
 
+
+function insertDataBarang($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("INSERT INTO barang VALUES (?, ?, ?)");
+  $res->bind_param("sss", $data['id_barang'], $data['nama_barang'], $data['harga']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $res->close();
+}
+
+
+
 function getDeleteBarang($id)
 {
   $db = dbConnect();

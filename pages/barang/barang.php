@@ -32,10 +32,10 @@ include_once "../layout/header.php"
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <div class="container-fluid">
+      <?php flash(); ?>
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1>DataTables</h1>
-          <?php flash(); ?>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -54,7 +54,12 @@ include_once "../layout/header.php"
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
+              <!-- <h3 class="card-title">DataTable with default features</h3> -->
+              <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                Tambah
+              </button>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -120,6 +125,46 @@ include_once "../layout/header.php"
 </div>
 <!-- ./wrapper -->
 
+<!-- Modal Tambah Data -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Form Tambah Barang</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="barang-tambah.php" method="post">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="id_barang">ID Barang</label>
+              <input type="text" class="form-control" name="id_barang" id="id_barang" placeholder="Masukan id barang">
+            </div>
+            <div class="form-group">
+              <label for="nama_barang">Nama Barang</label>
+              <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang">
+            </div>
+            <div class="form-group">
+              <label for="harga">Harga Barang</label>
+              <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Akhir modal -->
+
 <!-- jQuery -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
@@ -149,7 +194,7 @@ include_once "../layout/header.php"
   $(function() {
     $("#example1").DataTable({
       "responsive": true,
-      "lengthChange": false,
+      // "lengthChange": false,
       "autoWidth": false,
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
       language: {

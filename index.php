@@ -1,5 +1,4 @@
 <?php
-session_start();
 include_once "functions.php";
 if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
   $id = $_COOKIE['username'];
