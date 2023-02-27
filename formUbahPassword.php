@@ -1,5 +1,6 @@
 <?php
 include_once "functions.php";
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,6 +28,7 @@ include_once "functions.php";
       </div>
       <div class="card-body">
         <p class="login-box-msg">You are only one step a way from your new password, recover your password now.</p>
+        <?php flash(); ?>
         <form action="ubahPassword.php" method="post">
           <div class="input-group mb-3">
             <input type="text" class="form-control" name="username" placeholder="username">
