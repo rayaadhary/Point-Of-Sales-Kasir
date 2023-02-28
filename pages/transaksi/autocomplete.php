@@ -7,6 +7,9 @@ $db = dbConnect();
 $searchTerm = $_GET['term'];
 $query = $db->query("SELECT * FROM barang WHERE nama_barang LIKE '%" . $searchTerm . "%' ORDER BY nama_barang ASC");
 while ($row = $query->fetch_assoc()) {
-  $data[] = $row['nama_barang'];
+  $data[] = array(
+    'id_barang' => $row['id_barang'],
+    'value' => $row['nama_barang']
+  );
 }
 echo json_encode($data);

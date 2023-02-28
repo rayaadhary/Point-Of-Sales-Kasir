@@ -80,8 +80,14 @@ include_once "../layout/header.php"
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
-                      <label for="id-barang">Nama Barang</label>
-                      <input type="text" class="form-control" name="nama_barang" id="id-barang">
+                      <label for="nama-barang">Nama Barang</label>
+                      <input type="text" class="form-control" name="nama_barang" id="nama-barang">
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="id-barang">ID Barang</label>
+                      <input type="text" class="form-control" name="id_barang" id="id-barang" readonly>
                     </div>
                   </div>
                 </div>
@@ -133,8 +139,12 @@ include_once "../layout/header.php"
 <script type="text/javascript">
   $(function() {
     var data = "<?= BASEURL ?>/pages/transaksi/autocomplete.php";
-    $("#id-barang").autocomplete({
-      source: data
+    var results = [];
+    $("#nama-barang").autocomplete({
+      source: data,
+      select: function(event, ui) {
+        $("#id-barang").val(ui.item.id_barang);
+      }
     });
   });
 </script>
