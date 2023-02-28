@@ -47,6 +47,15 @@ function getAllBarang()
   return $data;
 }
 
+function getBarangById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM barang WHERE id_barang = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  return $data;
+}
+
 
 function insertDataBarang($data)
 {
@@ -62,7 +71,19 @@ function insertDataBarang($data)
   $res->close();
 }
 
-
+function updateDataBarang($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("UPDATE barang SET nama_barang=?, harga=? WHERE id_barang=?");
+  $res->bind_param("sss",  $data['nama_barang'], $data['harga'], $data['id_barang']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $res->close();
+}
 
 function getDeleteBarang($id)
 {

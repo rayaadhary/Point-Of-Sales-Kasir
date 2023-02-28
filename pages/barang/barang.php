@@ -83,7 +83,7 @@ include_once "../layout/header.php"
                       <td><?= $item['harga']; ?></td>
                       <td>
                         <!-- a href -->
-                        <a href="barang-edit.php?id_barang=<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
+                        <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
                           <i class="fas fa-edit"></i>
                         </a>
                         <!-- a href -->
@@ -127,7 +127,7 @@ include_once "../layout/header.php"
 
 <!-- Modal Tambah Data -->
 
-<!-- Modal -->
+<!-- Modal Tambah Data -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -151,6 +151,48 @@ include_once "../layout/header.php"
             <div class="form-group">
               <label for="harga">Harga Barang</label>
               <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Akhir modal -->
+
+<!-- Modal Edit Data -->
+<div class="modal fade" id="myModal<?= $item['id_barang'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Form Edit Barang</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="barang-edit.php" method="post">
+          <?php
+          $id_barang = $item['id_barang'];
+          $data = getBarangById($id_barang);
+          ?>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="id_barang">ID Barang</label>
+              <input type="text" class="form-control" name="id_barang" id="id_barang" value="<?= $data['id_barang'] ?>" readonly>
+            </div>
+            <div class="form-group">
+              <label for="nama_barang">Nama Barang</label>
+              <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang" value="<?= $data['nama_barang'] ?>">
+            </div>
+            <div class=" form-group">
+              <label for="harga">Harga Barang</label>
+              <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang" value="<?= $data['harga'] ?>">
             </div>
           </div>
       </div>

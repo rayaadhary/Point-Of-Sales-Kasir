@@ -249,7 +249,7 @@ include_once "functions.php";
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= BASEURL ?>/pages/barang/barang.php" class="nav-link">
+              <a href="pages/barang/barang.php" class="nav-link">
                 <i class="nav-icon fas fa-box"></i>
                 <p>
                   Barang
