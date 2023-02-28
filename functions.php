@@ -3,6 +3,11 @@ session_start();
 
 define('BASEURL', 'http://localhost/kasir/admin');
 
+function waktu()
+{
+  date_default_timezone_set('Asia/Jakarta');
+  return date('Y-m-d H:i', time());
+}
 
 
 function dbConnect()
@@ -60,8 +65,8 @@ function getBarangById($id)
 function insertDataBarang($data)
 {
   $db = dbConnect();
-  $res = $db->prepare("INSERT INTO barang VALUES (?, ?, ?)");
-  $res->bind_param("sss", $data['id_barang'], $data['nama_barang'], $data['harga']);
+  $res = $db->prepare("INSERT INTO barang VALUES (?, ?, ?, ?)");
+  $res->bind_param("ssss", $data['id_barang'], $data['nama_barang'], $data['harga'], $data['stok']);
   $res->execute();
   if ($res) {
     return 1;
@@ -74,8 +79,8 @@ function insertDataBarang($data)
 function updateDataBarang($data)
 {
   $db = dbConnect();
-  $res = $db->prepare("UPDATE barang SET nama_barang=?, harga=? WHERE id_barang=?");
-  $res->bind_param("sss",  $data['nama_barang'], $data['harga'], $data['id_barang']);
+  $res = $db->prepare("UPDATE barang SET nama_barang=?, harga=?, stok=? WHERE id_barang=?");
+  $res->bind_param("ssss",  $data['nama_barang'], $data['harga'], $data['stok'], $data['id_barang']);
   $res->execute();
   if ($res) {
     return 1;

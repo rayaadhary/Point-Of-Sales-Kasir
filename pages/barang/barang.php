@@ -69,6 +69,7 @@ include_once "../layout/header.php"
                     <th>ID Barang</th>
                     <th>Nama Barang</th>
                     <th>Harga</th>
+                    <th>Stok</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -81,6 +82,7 @@ include_once "../layout/header.php"
                       <td><?= $item['id_barang']; ?></td>
                       <td><?= $item['nama_barang']; ?></td>
                       <td><?= $item['harga']; ?></td>
+                      <td><?= $item['stok']; ?></td>
                       <td>
                         <!-- a href -->
                         <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
@@ -152,6 +154,10 @@ include_once "../layout/header.php"
               <label for="harga">Harga Barang</label>
               <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang">
             </div>
+            <div class="form-group">
+              <label for="stok">Stok Barang</label>
+              <input type="number" class="form-control" id="stok" name="stok" placeholder="Masukan Stok Barang">
+            </div>
           </div>
       </div>
       <div class="modal-footer">
@@ -190,9 +196,13 @@ include_once "../layout/header.php"
               <label for="nama_barang">Nama Barang</label>
               <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang" value="<?= $data['nama_barang'] ?>">
             </div>
-            <div class=" form-group">
+            <div class="form-group">
               <label for="harga">Harga Barang</label>
               <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang" value="<?= $data['harga'] ?>">
+            </div>
+            <div class="form-group">
+              <label for="stok">Stok Barang</label>
+              <input type="number" class="form-control" id="stok" name="stok" placeholder="Masukan Stok Barang" value="<?= $data['stok'] ?>">
             </div>
           </div>
       </div>
