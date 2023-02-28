@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2023 at 01:54 PM
+-- Generation Time: Feb 28, 2023 at 09:39 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -30,15 +30,16 @@ SET time_zone = "+00:00";
 CREATE TABLE `barang` (
   `id_barang` varchar(255) NOT NULL COMMENT 'Primary Key',
   `nama_barang` varchar(255) DEFAULT NULL,
-  `harga` int(11) DEFAULT NULL
+  `harga` int(11) DEFAULT NULL,
+  `stok` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `barang`
 --
 
-INSERT INTO `barang` (`id_barang`, `nama_barang`, `harga`) VALUES
-('K0001', 'Kaca A', 100000);
+INSERT INTO `barang` (`id_barang`, `nama_barang`, `harga`, `stok`) VALUES
+('K0001', 'Kaca B', 100000, 100);
 
 -- --------------------------------------------------------
 
@@ -79,6 +80,24 @@ CREATE TABLE `pengguna` (
 INSERT INTO `pengguna` (`username`, `password`, `role`, `nama`) VALUES
 ('admin', 'admin', 'karyawan', 'ucup');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transaksi`
+--
+
+CREATE TABLE `transaksi` (
+  `no_faktur` varchar(255) NOT NULL,
+  `tanggal` datetime DEFAULT NULL,
+  `jatuh_tempo` datetime DEFAULT NULL,
+  `banyak` int(11) DEFAULT NULL,
+  `diskon` int(11) DEFAULT NULL,
+  `subtotal` int(11) DEFAULT NULL,
+  `total` int(11) DEFAULT NULL,
+  `bayar` int(11) DEFAULT NULL,
+  `kembali` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -94,6 +113,12 @@ ALTER TABLE `barang`
 --
 ALTER TABLE `pelanggan`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `transaksi`
+--
+ALTER TABLE `transaksi`
+  ADD PRIMARY KEY (`no_faktur`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
