@@ -99,6 +99,7 @@ include_once "../layout/header.php"
                     </div>
                   </div>
                   <input type="hidden" id="harga">
+                  <input type="hidden" name="no" id="no" value="1">
                   <div class="col-md-4">
                     <div class="d-flex justify-content-end">
                       <!-- <button class="btn btn-primary">Tambah</button> -->
@@ -142,7 +143,9 @@ include_once "../layout/header.php"
                       <input type="text" name="kembalian" id="kembalian" value="0" class="form-control" readonly>
                     </div>
                     <br>
-                    <button type="submit" name="simpan" class="btn btn-default"> Simpan</button>
+                    <div class="d-flex justify-content-start">
+                      <button type="submit" name="simpan" class="btn btn-primary"> Simpan</button>
+                    </div>
                   </div>
                 </div>
 
@@ -193,6 +196,15 @@ include_once "../layout/header.php"
 <!-- Page specific script -->
 
 <script type="text/javascript">
+  function del(no) {
+    var stotal = parseInt($('#subTotal' + no).val());
+    var alltotal = parseInt($('#stotal').val());
+    var newtotal = alltotal - stotal;
+
+    $('#stotal').val(newtotal);
+    $('#row' + no).remove();
+  }
+
   $(function() {
     $('#nama-barang').select2({
       theme: "classic",
@@ -231,6 +243,7 @@ include_once "../layout/header.php"
     });
 
     $('#tambah').on('click', function() {
+      var no = $('#no').val();
       var id_barang = $('#id-barang').val();
       var nama_barang = $('#nama-barang option:selected').text();
       var banyak = $('#banyak').val();
@@ -238,31 +251,47 @@ include_once "../layout/header.php"
       var total = $('#stotal').val();
       var subtotal = banyak * harga;
       var total = parseInt(total) + parseInt(subtotal);
-      var html = '<div class="row">' +
+      var html = '<div class="row mb-2" id="row' + no + '">' +
         '<div class="col-md-4">' +
-        '<span>' + nama_barang + '</span>' +
-        '<input type="hidden" name="nama_barang[]" value="' + nama_barang + '">' +
+        '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" readonly>' +
+        '<input type="hidden" id="idBarang' + no + '" name="idBarang[]" readonly>' +
         '</div>' +
         '<div class="col-md-2">' +
-        '<span>' + harga + '</span>' +
-        '<input type="hidden" name="harga[]" value="' + harga + '">' +
+        '<input class="form-control" id="hargaBarang' + no + '" name="harga[]" readonly>' +
         '</div>' +
         '<div class="col-md-2">' +
-        '<span>' + banyak + '</span>' +
-        '<input type="hidden" name="banyak[]" value="' + banyak + '">' +
+        '<input class="form-control" id="qty' + no + '" name="banyak[]" readonly>' +
         '</div>' +
         '<div class="col-md-3">' +
-        '<span>' + subtotal + '</span>' +
-        '<input type="hidden" name="subtotal[]" value="' + subtotal + '">' +
+        '<input class="form-control" id="subTotal' + no + '"  name="subtotal[]" readonly>' +
         '</div>' +
-        '<a class="btn btn-sm btn-danger"> X </a>' +
+        '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
         '</div>';
       $('.list').append(html);
       $('#stotal').val(total);
+      $('#namaBarang' + no).val(nama_barang);
+      $('#idBarang' + no).val(id_barang);
+      $('#hargaBarang' + no).val(harga);
+      $('#qty' + no).val(banyak);
+      $('#subTotal' + no).val(subtotal);
       $('#banyak').val('');
+      var no = (no - 1) + 2;
+      $('#no').val(no);
       $('#nama-barang').val(null).trigger('change');
       $('#id-barang').val(null).trigger('change');
     });
+
+    $('#bayar').on('keyup', function() {
+      var total = parseInt($('#stotal').val());
+      var bayar = parseInt($(this).val());
+      var kembalian = bayar - total;
+
+      if (kembalian) {
+        $('#kembalian').val(kembalian);
+      } else {
+        $('#kembalian').val(0);
+      }
+    })
   });
 </script>
 
