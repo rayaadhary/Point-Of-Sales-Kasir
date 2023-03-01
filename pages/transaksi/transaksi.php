@@ -23,6 +23,8 @@ include_once "../../functions.php";
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 
 <?php
@@ -81,13 +83,25 @@ include_once "../layout/header.php"
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="nama-barang">Nama Barang</label>
-                      <input type="text" class="form-control" name="nama_barang" id="nama-barang">
+                      <!-- <input type="text" class="form-control" name="nama_barang" id="nama-barang"> -->
+                      <select name="nama_barang" id="nama-barang" class="form-control"></select>
                     </div>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <div class="form-group">
                       <label for="id-barang">ID Barang</label>
                       <input type="text" class="form-control" name="id_barang" id="id-barang" readonly>
+                    </div>
+                  </div>
+                  <div class="col-md-1">
+                    <div class="form-group">
+                      <label for="banyak">Banyak</label>
+                      <input type="number" class="form-control" name="banyak" id="banyak">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="d-flex justify-content-end">
+                      <button class="btn btn-primary" type="submit" id="tambah">Tambah</button>
                     </div>
                   </div>
                 </div>
@@ -138,13 +152,39 @@ include_once "../layout/header.php"
 
 <script type="text/javascript">
   $(function() {
-    var data = "<?= BASEURL ?>/pages/transaksi/autocomplete.php";
-    var results = [];
-    $("#nama-barang").autocomplete({
-      source: data,
-      select: function(event, ui) {
-        $("#id-barang").val(ui.item.id_barang);
+    $('#nama-barang').select2({
+      theme: "classic",
+      placeholder: 'Pilih Nama Barang',
+      ajax: {
+        url: "<?= BASEURL ?>/pages/transaksi/autocomplete.php",
+        type: 'GET',
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+          return {
+            term: params.term
+          };
+        },
+        processResults: function(data) {
+          var results = [];
+          $.each(data, function(index, item) {
+            results.push({
+              id: item.id_barang,
+              text: item.nama_barang
+            });
+          });
+          return {
+            results: results
+          };
+        },
+        cache: true
       }
+    });
+
+    // Fungsi untuk mengambil id barang dari input field terpisah saat user memilih nama barang
+    $('#nama-barang').on('select2:select', function(e) {
+      var data = e.params.data;
+      $('#id-barang').val(data.id);
     });
   });
 </script>
