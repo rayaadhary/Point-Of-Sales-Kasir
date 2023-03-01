@@ -99,10 +99,10 @@ include_once "../layout/header.php"
                     </div>
                   </div>
                   <input type="hidden" id="harga">
-                  <input type="hidden" id="idbrg">
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                     <div class="d-flex justify-content-end">
-                      <button class="btn btn-primary" type="submit">Tambah</button>
+                      <!-- <button class="btn btn-primary">Tambah</button> -->
+                      <a href="#" class="btn btn-primary" id="tambah">Tambah</a>
                     </div>
                   </div>
                 </div>
@@ -134,7 +134,7 @@ include_once "../layout/header.php"
                     <br>
                     <div class="row">
                       <span>Bayar</span>
-                      <input type="text" id="bayar" name="bayar" class="form-control" required>
+                      <input type="text" id="bayar" name="bayar" class="form-control">
                     </div>
                     <br>
                     <div class="row">
@@ -212,7 +212,8 @@ include_once "../layout/header.php"
           $.each(data, function(index, item) {
             results.push({
               id: item.id_barang,
-              text: item.nama_barang
+              text: item.nama_barang,
+              harga: item.harga
             });
           });
           return {
@@ -222,11 +223,45 @@ include_once "../layout/header.php"
         cache: true
       }
     });
-
     // Fungsi untuk mengambil id barang dari input field terpisah saat user memilih nama barang
     $('#nama-barang').on('select2:select', function(e) {
       var data = e.params.data;
       $('#id-barang').val(data.id);
+      $('#harga').val(data.harga);
+    });
+
+    $('#tambah').on('click', function() {
+      var id_barang = $('#id-barang').val();
+      var nama_barang = $('#nama-barang option:selected').text();
+      var banyak = $('#banyak').val();
+      var harga = $('#harga').val();
+      var total = $('#stotal').val();
+      var subtotal = banyak * harga;
+      var total = parseInt(total) + parseInt(subtotal);
+      var html = '<div class="row">' +
+        '<div class="col-md-4">' +
+        '<span>' + nama_barang + '</span>' +
+        '<input type="hidden" name="nama_barang[]" value="' + nama_barang + '">' +
+        '</div>' +
+        '<div class="col-md-2">' +
+        '<span>' + harga + '</span>' +
+        '<input type="hidden" name="harga[]" value="' + harga + '">' +
+        '</div>' +
+        '<div class="col-md-2">' +
+        '<span>' + banyak + '</span>' +
+        '<input type="hidden" name="banyak[]" value="' + banyak + '">' +
+        '</div>' +
+        '<div class="col-md-3">' +
+        '<span>' + subtotal + '</span>' +
+        '<input type="hidden" name="subtotal[]" value="' + subtotal + '">' +
+        '</div>' +
+        '<a class="btn btn-sm btn-danger"> X </a>' +
+        '</div>';
+      $('.list').append(html);
+      $('#stotal').val(total);
+      $('#banyak').val('');
+      $('#nama-barang').val(null).trigger('change');
+      $('#id-barang').val(null).trigger('change');
     });
   });
 </script>

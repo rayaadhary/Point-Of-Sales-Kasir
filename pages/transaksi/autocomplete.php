@@ -23,7 +23,8 @@ if (isset($_GET['term'])) {
   while ($row = mysqli_fetch_assoc($result)) {
     $data[] = array(
       'id_barang' => $row['id_barang'],
-      'nama_barang' => $row['nama_barang']
+      'nama_barang' => $row['nama_barang'],
+      'harga' => $row['harga']
     );
   }
   echo json_encode($data);
