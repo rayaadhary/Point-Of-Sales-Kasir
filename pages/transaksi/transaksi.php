@@ -83,7 +83,6 @@ include_once "../layout/header.php"
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="nama-barang">Nama Barang</label>
-                      <!-- <input type="text" class="form-control" name="nama_barang" id="nama-barang"> -->
                       <select name="nama_barang" id="nama-barang" class="form-control"></select>
                     </div>
                   </div>
@@ -96,15 +95,58 @@ include_once "../layout/header.php"
                   <div class="col-md-1">
                     <div class="form-group">
                       <label for="banyak">Banyak</label>
-                      <input type="number" class="form-control" name="banyak" id="banyak">
+                      <input type="text" class="form-control" name="banyak" id="banyak">
                     </div>
                   </div>
+                  <input type="hidden" id="harga">
+                  <input type="hidden" id="idbrg">
                   <div class="col-md-6">
                     <div class="d-flex justify-content-end">
-                      <button class="btn btn-primary" type="submit" id="tambah">Tambah</button>
+                      <button class="btn btn-primary" type="submit">Tambah</button>
                     </div>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="list">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <span>Nama Barang</span>
+                        </div>
+                        <div class="col-md-2">
+                          <span>Harga</span>
+                        </div>
+                        <div class="col-md-2">
+                          <span>QTY</span>
+                        </div>
+                        <div class="col-md-3">
+                          <span>Subtotal</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-md-offset-1">
+                    <div class="row">
+                      <span>Total</span>
+                      <input type="text" id="stotal" name="total" class="form-control" value="0" readonly>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <span>Bayar</span>
+                      <input type="text" id="bayar" name="bayar" class="form-control" required>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <span>Kembalian</span>
+                      <input type="text" name="kembalian" id="kembalian" value="0" class="form-control" readonly>
+                    </div>
+                    <br>
+                    <button type="submit" name="simpan" class="btn btn-default"> Simpan</button>
+                  </div>
+                </div>
+
+
               </form>
             </div>
             <!-- /.card-body -->
