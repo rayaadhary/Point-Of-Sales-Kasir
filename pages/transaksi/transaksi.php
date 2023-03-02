@@ -39,7 +39,7 @@ include_once "../layout/header.php"
       <?php flash(); ?>
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>DataTables</h1>
+          <h1>Transaksi</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -57,22 +57,29 @@ include_once "../layout/header.php"
       <div class="row">
         <div class="col-12">
           <div class="card">
-            <div class="card-header">
-              <!-- <h3 class="card-title">DataTable with default features</h3> -->
-              <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
-              <!-- Button trigger modal -->
-              <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            <!-- <div class="card-header"> -->
+            <!-- <h3 class="card-title">DataTable with default features</h3> -->
+            <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
+            <!-- Button trigger modal -->
+            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 Tambah
               </button> -->
+            <!-- <h3></h3> -->
 
-              <label for="tanggal">Tanggal Transaksi</label>
-              <input type="datetime-local" class="form-control" name="tanggal" id="tanggal" value="<?= waktu() ?>" style="width: 180px;">
-            </div>
+            <!-- </div> -->
             <!-- /.card-header -->
             <div class="card-body">
-              <form action="" method="post">
-                <?php
-                ?>
+              <form action="transaksi-tambah.php" method="post">
+                <div class="row mb-4">
+                  <div class="col-md-2">
+                    <label for="tanggal">Tanggal Transaksi</label>
+                    <input type="date" class="form-control" name="tanggal" id="tanggal" value="<?= waktu() ?>" style="width: 130px;">
+                  </div>
+                  <div class="col-md-2">
+                    <label for="jatuh-tempo">Jatuh Tempo</label>
+                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" value="<?= waktu() ?>" style="width: 130px;">
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col-md-2">
                     <div class="form-group">
@@ -131,6 +138,11 @@ include_once "../layout/header.php"
                     <div class="row">
                       <span>Total</span>
                       <input type="text" id="stotal" name="total" class="form-control" value="0" readonly>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <span>Diskon</span>
+                      <input type="number" id="diskon" name="diskon" class="form-control" value="0">
                     </div>
                     <br>
                     <div class="row">
@@ -283,9 +295,9 @@ include_once "../layout/header.php"
 
     $('#bayar').on('keyup', function() {
       var total = parseInt($('#stotal').val());
+      var diskon = parseInt($('#diskon').val());
       var bayar = parseInt($(this).val());
-      var kembalian = bayar - total;
-
+      var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
       if (kembalian) {
         $('#kembalian').val(kembalian);
       } else {

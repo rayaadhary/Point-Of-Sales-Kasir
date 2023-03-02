@@ -13,6 +13,7 @@ if (isset($_POST["btn_login"])) {
   if ($password == $data['password']) {
     $_SESSION['role'] = 'pemilik' || 'karyawan';
     $_SESSION['username'] = $data['username'];
+    $_SESSION['id_pengguna'] = $data['id_pengguna'];
     $_SESSION['nama'] = $data['nama'];
     $_SESSION['role'] = $data['role'];
     setFlash("berhasil", "login", "success");
