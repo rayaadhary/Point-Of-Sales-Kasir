@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 28, 2023 at 09:39 AM
+-- Generation Time: Mar 02, 2023 at 10:54 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -39,7 +39,7 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`id_barang`, `nama_barang`, `harga`, `stok`) VALUES
-('K0001', 'Kaca B', 100000, 100);
+('K0001', 'kaca 2mm', 20000, 100);
 
 -- --------------------------------------------------------
 
@@ -48,7 +48,7 @@ INSERT INTO `barang` (`id_barang`, `nama_barang`, `harga`, `stok`) VALUES
 --
 
 CREATE TABLE `pelanggan` (
-  `id` varchar(255) NOT NULL,
+  `id_pelanggan` varchar(255) NOT NULL,
   `nama` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -56,9 +56,8 @@ CREATE TABLE `pelanggan` (
 -- Dumping data for table `pelanggan`
 --
 
-INSERT INTO `pelanggan` (`id`, `nama`) VALUES
-('P0001', 'Peter'),
-('P0002', 'Parker');
+INSERT INTO `pelanggan` (`id_pelanggan`, `nama`) VALUES
+('1', 'kunjat');
 
 -- --------------------------------------------------------
 
@@ -67,6 +66,7 @@ INSERT INTO `pelanggan` (`id`, `nama`) VALUES
 --
 
 CREATE TABLE `pengguna` (
+  `id_pengguna` int(11) NOT NULL,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `role` enum('pemilik','karyawan') DEFAULT NULL,
@@ -77,8 +77,8 @@ CREATE TABLE `pengguna` (
 -- Dumping data for table `pengguna`
 --
 
-INSERT INTO `pengguna` (`username`, `password`, `role`, `nama`) VALUES
-('admin', 'admin', 'karyawan', 'ucup');
+INSERT INTO `pengguna` (`id_pengguna`, `username`, `password`, `role`, `nama`) VALUES
+(1, 'admin', 'admin', 'karyawan', 'nono');
 
 -- --------------------------------------------------------
 
@@ -87,16 +87,29 @@ INSERT INTO `pengguna` (`username`, `password`, `role`, `nama`) VALUES
 --
 
 CREATE TABLE `transaksi` (
-  `no_faktur` varchar(255) NOT NULL,
+  `id_transaksi` int(11) NOT NULL,
+  `no_faktur` varchar(255) DEFAULT NULL,
   `tanggal` datetime DEFAULT NULL,
-  `jatuh_tempo` datetime DEFAULT NULL,
+  `jatuh_tempo` date DEFAULT NULL,
   `banyak` int(11) DEFAULT NULL,
   `diskon` int(11) DEFAULT NULL,
   `subtotal` int(11) DEFAULT NULL,
   `total` int(11) DEFAULT NULL,
   `bayar` int(11) DEFAULT NULL,
-  `kembali` int(11) DEFAULT NULL
+  `kembali` int(11) DEFAULT NULL,
+  `id_pelanggan` varchar(255) DEFAULT NULL,
+  `id_barang` varchar(255) DEFAULT NULL,
+  `id_pengguna` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `transaksi`
+--
+
+INSERT INTO `transaksi` (`id_transaksi`, `no_faktur`, `tanggal`, `jatuh_tempo`, `banyak`, `diskon`, `subtotal`, `total`, `bayar`, `kembali`, `id_pelanggan`, `id_barang`, `id_pengguna`) VALUES
+(4, '1', '2023-03-02 00:00:00', '2023-03-02', 2, 40000, 40000, 240000, 200000, 0, '1', 'K0001', 1),
+(5, '1', '2023-03-02 00:00:00', '2023-03-02', 10, 40000, 200000, 240000, 200000, 0, '1', 'K0001', 1),
+(6, '3', '2023-03-02 00:00:00', '2023-03-02', 2, 0, 40000, 40000, 100000, 60000, '1', 'K0001', 1);
 
 --
 -- Indexes for dumped tables
@@ -112,13 +125,50 @@ ALTER TABLE `barang`
 -- Indexes for table `pelanggan`
 --
 ALTER TABLE `pelanggan`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id_pelanggan`);
+
+--
+-- Indexes for table `pengguna`
+--
+ALTER TABLE `pengguna`
+  ADD PRIMARY KEY (`id_pengguna`);
 
 --
 -- Indexes for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  ADD PRIMARY KEY (`no_faktur`);
+  ADD PRIMARY KEY (`id_transaksi`),
+  ADD KEY `id_pengguna` (`id_pengguna`),
+  ADD KEY `id_barang` (`id_barang`),
+  ADD KEY `id_pelanggan` (`id_pelanggan`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `pengguna`
+--
+ALTER TABLE `pengguna`
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `transaksi`
+--
+ALTER TABLE `transaksi`
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `transaksi`
+--
+ALTER TABLE `transaksi`
+  ADD CONSTRAINT `transaksi_ibfk_1` FOREIGN KEY (`id_pengguna`) REFERENCES `pengguna` (`id_pengguna`),
+  ADD CONSTRAINT `transaksi_ibfk_2` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`),
+  ADD CONSTRAINT `transaksi_ibfk_3` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id_pelanggan`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
