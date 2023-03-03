@@ -37,13 +37,15 @@ $pdf->Cell(20, 5, 'Unit', 1, 0, 'C');
 $pdf->Cell(50, 5, 'Harga Satuan', 1, 0, 'C');
 $pdf->Cell(60, 5, 'Total', 1, 1, 'C'); // Pindah ke baris baru
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(15, 5, '' . $_SESSION['cetak']['no'], 1, 0, 'C');
-$pdf->Cell(100, 5, '' . $_SESSION['cetak']['nama_barang'], 1, 0);
-$pdf->Cell(30, 5, '' . $_SESSION['cetak']['banyak'], 1, 0, 'C');
-$pdf->Cell(20, 5, 'pcs', 1, 0, 'C');
-$pdf->Cell(50, 5, 'Rp.' . number_format($_SESSION['cetak']['harga'], 2, ',', '.'), 1, 0, 'C');
-$pdf->Cell(60, 5, 'Rp.' .  number_format($_SESSION['cetak']['subtotal'], 2, ',', '.'), 1, 1, 'C'); // Pindah ke baris baru
-
+$no =  $_SESSION['cetak']['no'] - 1;
+for ($i = 0; $i < $no; $i++) {
+  $pdf->Cell(15, 5, '' . $i + 1, 1, 0, 'C');
+  $pdf->Cell(100, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
+  $pdf->Cell(30, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
+  $pdf->Cell(20, 5, 'pcs', 1, 0, 'C');
+  $pdf->Cell(50, 5, 'Rp. ' . number_format($_SESSION['cetak']['harga'][$i], 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(60, 5, 'Rp. ' . number_format($_SESSION['cetak']['subtotal'][$i], 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
+}
 // Isi data faktur/invoice di sini
 
 
