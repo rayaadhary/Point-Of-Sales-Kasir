@@ -1,5 +1,6 @@
 <?php
 
+include_once "../../dist/fpdf/fpdf.php";
 include_once "../../functions.php";
 
 $db = dbConnect();
@@ -7,7 +8,7 @@ $db = dbConnect();
 if (isset($_POST['simpan'])) {
   // var_dump($_POST);
   // die;
-  if (empty($_POST['no_faktur']) || empty($_POST['tanggal']) || empty($_POST['jatuh_tempo']) || empty($_POST['banyak']) || empty($_POST['diskon']) || empty($_POST['subtotal']) || empty($_POST['total']) || empty($_POST['bayar']) || empty($_POST['kembalian']) || empty($_POST['idBarang']) || empty($_SESSION['id_pengguna'])) {
+  if (empty($_POST['no_faktur']) || empty($_POST['tanggal']) || empty($_POST['jatuh_tempo']) || empty($_POST['banyak']) || empty($_POST['subtotal']) || empty($_POST['total']) || empty($_POST['bayar']) || empty($_POST['kembalian']) || empty($_POST['idBarang']) || empty($_SESSION['id_pengguna'])) {
     setFlash('gagal', 'ditambahkan', 'danger');
     header('Location: ' . BASEURL . '/pages/transaksi/transaksi.php');
     exit;
@@ -33,8 +34,12 @@ if (isset($_POST['simpan'])) {
       $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$total', '$bayar', '$kembalian', '1', '$id_barang', '$id_pengguna')";
       $sql = mysqli_query($db, $query);
       if ($sql) {
-        setFlash('berhasil', 'ditambahkan', 'primary');
-        header('Location: ' . BASEURL . '/pages/transaksi/transaksi.php');
+        $_SESSION['cetak'] = [
+          'no_faktur' => $no_faktur,
+          'tanggal' => $tanggal
+        ];
+        // setFlash('berhasil', 'ditambahkan', 'primary');
+        header('Location: ' . BASEURL . '/pages/transaksi/cetak-transaksi.php');
         exit;
       }
     }
