@@ -141,7 +141,7 @@ include_once "../layout/header.php"
                     </div>
                     <br>
                     <div class="row">
-                      <span>Diskon</span>
+                      <span>Potongan</span>
                       <input type="number" id="diskon" name="diskon" class="form-control" value="0">
                     </div>
                     <br>

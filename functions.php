@@ -3,6 +3,7 @@ session_start();
 
 define('BASEURL', 'http://localhost/kasir/admin');
 
+
 function waktu()
 {
   date_default_timezone_set('Asia/Jakarta');
