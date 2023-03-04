@@ -11,14 +11,6 @@ function waktu()
 }
 
 
-function jatuhTempo($tanggal)
-{
-  // Menambahkan 1 bulan pada tanggal transaksi
-  $jatuh_tempo = date('Y-d-m', strtotime('+1 month', strtotime($tanggal)));
-  return $jatuh_tempo;
-}
-
-
 function dbConnect()
 {
   $db = mysqli_connect('localhost', 'root', '', 'kasir');
@@ -39,7 +31,7 @@ function kodeFaktur($waktu)
   $query = $db->query("SELECT max(no_faktur) as kodeTerbesar FROM transaksi");
   $data = $query->fetch_assoc();
   $kode_faktur = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_faktur, 3, 3);
+  $urutan = (int) substr($kode_faktur, 7, 3);
   $urutan++;
   $waktu_formatted = date_create_from_format('Y-m-d', $waktu);
   $waktu_formatted = date_format($waktu_formatted, 'dm');

@@ -93,7 +93,7 @@ include_once "../layout/header.php"
                       $kode_faktur = kodeFaktur($waktu);
                       ?>
                       <label for="no-faktur">No Faktur</label>
-                      <input type="text" class="form-control" name="no_faktur" id="no-faktur" value="<?= $kode_faktur ?>" readonly style="width: 110px;">
+                      <input type="text" class="form-control" name="no_faktur" id="no-faktur" value="<?= $kode_faktur ?>" readonly style="width: 120px;">
                     </div>
                   </div>
                   <div class="col-md-2">
@@ -334,6 +334,14 @@ include_once "../layout/header.php"
       $('#nama-barang').val(null).trigger('change');
       $('#id-barang').val(null).trigger('change');
     });
+
+    $('#diskon').on('keyup', function() {
+      var total = parseInt($('#stotal').val());
+      var diskon = parseInt($(this).val());
+      var bayar = parseInt($('#bayar').val());
+      var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
+      $('#kembalian').val(kembalian);
+    })
 
     $('#bayar').on('keyup', function() {
       var total = parseInt($('#stotal').val());
