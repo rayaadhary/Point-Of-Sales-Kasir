@@ -19,12 +19,15 @@ include_once "../../functions.php";
   <!-- Sweetalert 2 -->
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> -->
+  <link rel="stylesheet" href="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+  <script src="../../dist/jquery/jquery-3.6.3.min.js"></script>
+  <script src="../../dist/jquery/select2-4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script> -->
+  <script src="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.js"></script>
+  <link rel="stylesheet" href="../../dist/jquery/select2-4.1.0-rc.0/dist/css/select2.min.css">
 </head>
 
 <?php
@@ -73,18 +76,22 @@ include_once "../layout/header.php"
                 <div class="row mb-4">
                   <div class="col-md-2">
                     <label for="tanggal">Tanggal Transaksi</label>
-                    <input type="date" class="form-control" name="tanggal" id="tanggal" value="<?= waktu() ?>" style="width: 130px;">
+                    <input type="date" class="form-control" name="tanggal" id="tanggal" value="<?= waktu() ?>" style="width: 140px;">
                   </div>
                   <div class="col-md-2">
                     <label for="jatuh-tempo">Jatuh Tempo</label>
-                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" value="<?= waktu() ?>" style="width: 130px;">
+                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" value="<?= waktu() ?>" style="width: 140px;">
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-2">
                     <div class="form-group">
+                      <?php
+                      $waktu = date_format(date_create(), 'Y-m-d');
+                      $kode_faktur = kodeFaktur($waktu);
+                      ?>
                       <label for="no-faktur">No Faktur</label>
-                      <input type="text" class="form-control" name="no_faktur" id="no-faktur">
+                      <input type="text" class="form-control" name="no_faktur" id="no-faktur" value="<?= $kode_faktur ?>" readonly style="width: 110px;">
                     </div>
                   </div>
                   <div class="col-md-2">
@@ -151,7 +158,7 @@ include_once "../layout/header.php"
                     </div>
                     <br>
                     <div class="row">
-                      <span>Kembalian</span>
+                      <span>Sisa</span>
                       <input type="text" name="kembalian" id="kembalian" value="0" class="form-control" readonly>
                     </div>
                     <br>
@@ -208,6 +215,19 @@ include_once "../layout/header.php"
 <!-- Page specific script -->
 
 <script type="text/javascript">
+  // Use datepicker on the date inputs
+  $("input[type=date]").datepicker({
+    dateFormat: 'yy-dd-mm',
+    onSelect: function(dateText, inst) {
+      $(inst).val(dateText); // Write the value in the input
+    }
+  });
+
+  // Code below to avoid the classic date-picker
+  $("input[type=date]").on('click', function() {
+    return false;
+  });
+
   function del(no) {
     var stotal = parseInt($('#subTotal' + no).val());
     var alltotal = parseInt($('#stotal').val());

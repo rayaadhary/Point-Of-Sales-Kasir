@@ -6,8 +6,9 @@ define('BASEURL', 'http://localhost/kasir/admin');
 
 function waktu()
 {
+
   date_default_timezone_set('Asia/Jakarta');
-  return date('Y-m-d', time());
+  return date('Y-d-m', time());
 }
 
 
@@ -24,6 +25,25 @@ function logout()
   header("Location: index.php");
 }
 
+
+function kodeFaktur($waktu)
+{
+  $db = dbConnect();
+  $query = $db->query("SELECT max(no_faktur) as kodeTerbesar FROM transaksi");
+  $data = $query->fetch_assoc();
+  $kode_faktur = $data['kodeTerbesar'];
+  $urutan = (int) substr($kode_faktur, 3, 3);
+  $urutan++;
+  $waktu_formatted = date_create_from_format('Y-m-d', $waktu);
+  $waktu_formatted = date_format($waktu_formatted, 'dm');
+  $huruf = "INV";
+  $kode_faktur = $huruf . $waktu_formatted . sprintf("%03s", $urutan);
+  $query->free();
+  $db->close();
+  return $kode_faktur;
+}
+
+
 function gantiPassword($username, $password)
 {
   $db = dbConnect();
@@ -33,6 +53,8 @@ function gantiPassword($username, $password)
   } else {
     return 0;
   }
+  $res->free();
+  $db->close();
 }
 
 function getAllPelanggan()
@@ -41,6 +63,7 @@ function getAllPelanggan()
   $res = mysqli_query($db, "SELECT * FROM pelanggan");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
+  $db->close();
   return $data;
 }
 
@@ -50,6 +73,7 @@ function getAllBarang()
   $res = mysqli_query($db, "SELECT * FROM barang");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
+  $db->close();
   return $data;
 }
 
@@ -59,6 +83,7 @@ function getBarangById($id)
   $res = mysqli_query($db, "SELECT * FROM barang WHERE id_barang = '$id'");
   $data = $res->fetch_assoc();
   $res->free();
+  $db->close();
   return $data;
 }
 
@@ -74,7 +99,7 @@ function insertDataBarang($data)
   } else {
     return 0;
   }
-  $res->close();
+  $db->close();
 }
 
 function updateDataBarang($data)
@@ -88,7 +113,7 @@ function updateDataBarang($data)
   } else {
     return 0;
   }
-  $res->close();
+  $db->close();
 }
 
 function getDeleteBarang($id)
@@ -100,6 +125,8 @@ function getDeleteBarang($id)
   } else {
     return 0;
   }
+  $res->free();
+  $db->close();
 }
 
 function getPelangganById($id)
@@ -108,6 +135,7 @@ function getPelangganById($id)
   $res = mysqli_query($db, "SELECT * FROM pelanggan WHERE id = '$id'");
   $data = $res->fetch_assoc();
   $res->free();
+  $db->close();
   return $data;
 }
 
@@ -117,6 +145,7 @@ function getPenggunaById($id)
   $res = mysqli_query($db, "SELECT * FROM pengguna WHERE username = '$id'");
   $data = $res->fetch_assoc();
   $res->free();
+  $db->close();
   return $data;
 }
 
@@ -129,6 +158,7 @@ function bisa($db, $query)
   } else {
     return 0;
   }
+  $db->close();
 }
 
 function setFlash($pesan, $aksi, $tipe)

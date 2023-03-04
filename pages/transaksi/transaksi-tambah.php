@@ -25,13 +25,14 @@ if (isset($_POST['simpan'])) {
       $diskon = mysqli_real_escape_string($db, trim($_POST['diskon']));
       $subtotal = mysqli_real_escape_string($db, trim($_POST['subtotal'][$i]));
       $total = mysqli_real_escape_string($db, trim($_POST['total']));
+      $bersih = $total - $diskon;
       $bayar = mysqli_real_escape_string($db, trim($_POST['bayar']));
       $kembalian = mysqli_real_escape_string($db, trim($_POST['kembalian']));
       // $id_pelanggan = mysqli_real_escape_string($db, trim($_POST['id_pelanggan']));
       $id_barang = mysqli_real_escape_string($db, trim($_POST['idBarang'][$i]));
       $id_pengguna = mysqli_real_escape_string($db, trim($_SESSION['id_pengguna']));
       // eksekusi query
-      $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$total', '$bayar', '$kembalian', '1', '$id_barang', '$id_pengguna')";
+      $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '1', '$id_barang', '$id_pengguna')";
       $sql = mysqli_query($db, $query);
     }
     if ($sql) {
