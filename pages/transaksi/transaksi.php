@@ -80,7 +80,7 @@ include_once "../layout/header.php"
                   </div>
                   <div class="col-md-2">
                     <label for="jatuh-tempo">Jatuh Tempo</label>
-                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" value="<?= waktu() ?>" style="width: 140px;">
+                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" value="<?= waktu() ?>" readonly style="width: 140px;">
                   </div>
                 </div>
                 <div class="row">
@@ -216,17 +216,36 @@ include_once "../layout/header.php"
 
 <script type="text/javascript">
   // Use datepicker on the date inputs
-  $("input[type=date]").datepicker({
-    dateFormat: 'yy-dd-mm',
-    onSelect: function(dateText, inst) {
-      $(inst).val(dateText); // Write the value in the input
-    }
-  });
+  // $("input[type=date]").datepicker({
+  //   dateFormat: 'yy-dd-mm',
+  //   onSelect: function(dateText, inst) {
+  //     $(inst).val(dateText); // Write the value in the input
+  //   }
+  // });
 
   // Code below to avoid the classic date-picker
   $("input[type=date]").on('click', function() {
     return false;
   });
+
+  $('#tanggal').datepicker({
+    dateFormat: 'yy-mm-dd',
+    onSelect: function(selectedDate) {
+      // Menghitung tanggal jatuh tempo dengan menambahkan satu bulan pada tanggal transaksi
+      const tanggal = new Date(selectedDate);
+      tanggal.setMonth(tanggal.getMonth() + 1);
+      const jatuhTempo = tanggal.getFullYear() + '-' + (tanggal.getMonth() + 1).toString().padStart(2, '0') + '-' + tanggal.getDate().toString().padStart(2, '0');
+
+      // Menetapkan nilai input jatuh tempo dengan hasil perhitungan
+      $('#jatuh-tempo').datepicker('setDate', jatuhTempo);
+    }
+  });
+
+  $('#jatuh-tempo').datepicker({
+    dateFormat: 'yy-mm-dd',
+  });
+
+
 
   function del(no) {
     var stotal = parseInt($('#subTotal' + no).val());

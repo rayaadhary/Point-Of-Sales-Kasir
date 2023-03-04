@@ -11,6 +11,13 @@ function waktu()
   return date('Y-d-m', time());
 }
 
+function jatuhTempo($tanggal)
+{
+  // Menambahkan 1 bulan pada tanggal transaksi
+  $jatuh_tempo = date('Y-d-m', strtotime('+1 month', strtotime($tanggal)));
+  return $jatuh_tempo;
+}
+
 
 function dbConnect()
 {
