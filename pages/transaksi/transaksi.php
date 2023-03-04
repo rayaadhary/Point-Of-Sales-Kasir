@@ -1,6 +1,7 @@
 <?php
 include_once "../../functions.php";
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,11 +77,11 @@ include_once "../layout/header.php"
                 <div class="row mb-4">
                   <div class="col-md-2">
                     <label for="tanggal">Tanggal Transaksi</label>
-                    <input type="date" class="form-control" name="tanggal" id="tanggal" value="<?= waktu() ?>" style="width: 140px;">
+                    <input type="date" class="form-control" name="tanggal" id="tanggal" style="width: 140px;">
                   </div>
                   <div class="col-md-2">
                     <label for="jatuh-tempo">Jatuh Tempo</label>
-                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" value="<?= waktu() ?>" readonly style="width: 140px;">
+                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" readonly style="width: 140px;">
                   </div>
                 </div>
                 <div class="row">
@@ -228,21 +229,34 @@ include_once "../layout/header.php"
     return false;
   });
 
-  $('#tanggal').datepicker({
-    dateFormat: 'yy-mm-dd',
-    onSelect: function(selectedDate) {
-      // Menghitung tanggal jatuh tempo dengan menambahkan satu bulan pada tanggal transaksi
-      const tanggal = new Date(selectedDate);
-      tanggal.setMonth(tanggal.getMonth() + 1);
-      const jatuhTempo = tanggal.getFullYear() + '-' + (tanggal.getMonth() + 1).toString().padStart(2, '0') + '-' + tanggal.getDate().toString().padStart(2, '0');
+  $(document).ready(function() {
+    // Mendapatkan tanggal sekarang dengan format yyyy-mm-dd
+    var today = $.datepicker.formatDate('yy-mm-dd', new Date());
 
-      // Menetapkan nilai input jatuh tempo dengan hasil perhitungan
-      $('#jatuh-tempo').datepicker('setDate', jatuhTempo);
-    }
-  });
+    // Menetapkan nilai awal input tanggal dan jatuh tempo dengan tanggal sekarang
+    $('#tanggal').val(today);
+    $('#jatuh-tempo').val(today);
 
-  $('#jatuh-tempo').datepicker({
-    dateFormat: 'yy-mm-dd',
+    // Menetapkan nilai awal input tanggal dan jatuh tempo dengan tanggal sekarang
+    $('#tanggal').val(today);
+    $('#jatuh-tempo').val(today);
+    // Menerapkan datepicker pada input tanggal dan jatuh tempo
+    $('#tanggal').datepicker({
+      dateFormat: 'yy-mm-dd',
+      onSelect: function(selectedDate) {
+        // Menghitung tanggal jatuh tempo dengan menambahkan satu bulan pada tanggal transaksi
+        const tanggal = new Date(selectedDate);
+        tanggal.setMonth(tanggal.getMonth() + 1);
+        const jatuhTempo = tanggal.getFullYear() + '-' + (tanggal.getMonth() + 1).toString().padStart(2, '0') + '-' + tanggal.getDate().toString().padStart(2, '0');
+
+        // Menetapkan nilai input jatuh tempo dengan hasil perhitungan
+        $('#jatuh-tempo').datepicker('setDate', jatuhTempo);
+      }
+    });
+
+    $('#jatuh-tempo').datepicker({
+      dateFormat: 'yy-mm-dd'
+    });
   });
 
 
