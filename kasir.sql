@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 02, 2023 at 10:54 AM
+-- Generation Time: Mar 04, 2023 at 08:27 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -89,7 +89,7 @@ INSERT INTO `pengguna` (`id_pengguna`, `username`, `password`, `role`, `nama`) V
 CREATE TABLE `transaksi` (
   `id_transaksi` int(11) NOT NULL,
   `no_faktur` varchar(255) DEFAULT NULL,
-  `tanggal` datetime DEFAULT NULL,
+  `tanggal` date DEFAULT NULL,
   `jatuh_tempo` date DEFAULT NULL,
   `banyak` int(11) DEFAULT NULL,
   `diskon` int(11) DEFAULT NULL,
@@ -97,19 +97,11 @@ CREATE TABLE `transaksi` (
   `total` int(11) DEFAULT NULL,
   `bayar` int(11) DEFAULT NULL,
   `kembali` int(11) DEFAULT NULL,
+  `status` enum('Lunas','Hutang') DEFAULT NULL,
   `id_pelanggan` varchar(255) DEFAULT NULL,
   `id_barang` varchar(255) DEFAULT NULL,
   `id_pengguna` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `transaksi`
---
-
-INSERT INTO `transaksi` (`id_transaksi`, `no_faktur`, `tanggal`, `jatuh_tempo`, `banyak`, `diskon`, `subtotal`, `total`, `bayar`, `kembali`, `id_pelanggan`, `id_barang`, `id_pengguna`) VALUES
-(4, '1', '2023-03-02 00:00:00', '2023-03-02', 2, 40000, 40000, 240000, 200000, 0, '1', 'K0001', 1),
-(5, '1', '2023-03-02 00:00:00', '2023-03-02', 10, 40000, 200000, 240000, 200000, 0, '1', 'K0001', 1),
-(6, '3', '2023-03-02 00:00:00', '2023-03-02', 2, 0, 40000, 40000, 100000, 60000, '1', 'K0001', 1);
 
 --
 -- Indexes for dumped tables
@@ -156,7 +148,7 @@ ALTER TABLE `pengguna`
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
