@@ -347,7 +347,7 @@ include_once "../layout/header.php"
         $('#jatuh-tempo').val(tanggal);
       } else {
         $('#status').val('Hutang');
-        $('#kembalian').val(0);
+        $('#kembalian').val(kembalian);
 
         const tanggal = moment($('#tanggal').val());
         tanggal.add(1, 'month');

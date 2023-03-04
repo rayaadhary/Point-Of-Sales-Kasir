@@ -8,7 +8,7 @@ $db = dbConnect();
 if (isset($_POST['simpan'])) {
   // var_dump($_POST);
   // die;
-  if (empty($_POST['no_faktur']) || empty($_POST['tanggal']) || empty($_POST['jatuh_tempo']) || empty($_POST['banyak']) || empty($_POST['subtotal']) || empty($_POST['total']) || empty($_POST['bayar']) || empty($_POST['idBarang']) || empty($_SESSION['id_pengguna'])) {
+  if (empty($_POST['no_faktur']) || empty($_POST['tanggal']) || empty($_POST['jatuh_tempo']) || empty($_POST['banyak']) || empty($_POST['subtotal']) || empty($_POST['total']) || empty($_POST['bayar']) || empty($_POST['idBarang']) || empty($_SESSION['id_pengguna']) || empty($_POST['status'])) {
     setFlash('gagal', 'ditambahkan', 'danger');
     header('Location: ' . BASEURL . '/pages/transaksi/transaksi.php');
     exit;
@@ -31,8 +31,9 @@ if (isset($_POST['simpan'])) {
       // $id_pelanggan = mysqli_real_escape_string($db, trim($_POST['id_pelanggan']));
       $id_barang = mysqli_real_escape_string($db, trim($_POST['idBarang'][$i]));
       $id_pengguna = mysqli_real_escape_string($db, trim($_SESSION['id_pengguna']));
+      $status = mysqli_real_escape_string($db, trim($_POST['status']));
       // eksekusi query
-      $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '1', '$id_barang', '$id_pengguna')";
+      $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '1', '$id_barang', '$id_pengguna')";
       $sql = mysqli_query($db, $query);
     }
     if ($sql) {
