@@ -108,6 +108,18 @@ include_once "../layout/header.php"
                       <input type="text" class="form-control" name="id_barang" id="id-barang" readonly>
                     </div>
                   </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="nama-pelanggan">Nama Pelanggan</label>
+                      <select name="nama_pelanggan" id="nama-pelanggan" class="form-control"></select>
+                    </div>
+                  </div>
+                  <div class="col-md-1">
+                    <div class="form-group">
+                      <label for="id-pelanggan">ID Pelanggan</label>
+                      <input type="text" class="form-control" name="id_pelanggan" id="id-pelanggan" readonly>
+                    </div>
+                  </div>
                   <div class="col-md-1">
                     <div class="form-group">
                       <label for="banyak">Banyak</label>
@@ -116,7 +128,7 @@ include_once "../layout/header.php"
                   </div>
                   <input type="hidden" id="harga">
                   <input type="hidden" name="no" id="no" value="1">
-                  <div class="col-md-4">
+                  <div class="col-md-2">
                     <div class="d-flex justify-content-end">
                       <!-- <button class="btn btn-primary">Tambah</button> -->
                       <a href="#" class="btn btn-primary" id="tambah">Tambah</a>
@@ -294,6 +306,40 @@ include_once "../layout/header.php"
       var data = e.params.data;
       $('#id-barang').val(data.id);
       $('#harga').val(data.harga);
+    });
+
+    $('#nama-pelanggan').select2({
+      theme: "classic",
+      placeholder: 'Masukkan Nama Pelanggan',
+      ajax: {
+        url: "<?= BASEURL ?>/pages/transaksi/nama-pelanggan.php",
+        type: 'GET',
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+          return {
+            term: params.term
+          };
+        },
+        processResults: function(data) {
+          var results = [];
+          $.each(data, function(index, item) {
+            results.push({
+              id: item.id_pelanggan,
+              text: item.nama_pelanggan,
+            });
+          });
+          return {
+            results: results
+          };
+        },
+        cache: true
+      }
+    });
+    // Fungsi untuk mengambil id barang dari input field terpisah saat user memilih nama barang
+    $('#nama-pelanggan').on('select2:select', function(e) {
+      var data = e.params.data;
+      $('#id-pelanggan').val(data.id);
     });
 
     $('#tambah').on('click', function() {
