@@ -38,9 +38,22 @@ if (isset($_POST['simpan'])) {
       $id_barang = mysqli_real_escape_string($db, trim($_POST['idBarang'][$i]));
       $id_pengguna = mysqli_real_escape_string($db, trim($_SESSION['id_pengguna']));
       $status = mysqli_real_escape_string($db, trim($_POST['status']));
-      // eksekusi query
-      $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna')";
-      $sql = mysqli_query($db, $query);
+
+      // mengurangi stok barang
+      $cekBarang = mysqli_query($db, "SELECT * FROM barang WHERE id_barang = '$id_barang'");
+      $ambilStok = mysqli_fetch_array($cekBarang);
+      $stok = $ambilStok['stok'];
+      $sisaStok = $stok - $banyak;
+      if ($stok < $banyak) {
+        setFlash('gagal', 'stok kurang', 'danger');
+        header('Location: ' . BASEURL . '/pages/transaksi/transaksi.php');
+        exit;
+      } else {
+        // eksekusi query
+        $stok = mysqli_query($db, "UPDATE barang SET stok='$sisaStok' WHERE id_barang = '$id_barang'");
+        $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna')";
+        $sql = mysqli_query($db, $query);
+      }
     }
     if ($sql) {
       $_SESSION['cetak'] = $_POST;
