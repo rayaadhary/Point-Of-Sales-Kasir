@@ -358,7 +358,13 @@ include_once "../layout/header.php"
       var diskon = parseInt($(this).val());
       var bayar = parseInt($('#bayar').val());
       var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
-      $('#kembalian').val(kembalian);
+      if (kembalian >= 0) {
+        $('#kembalian').val(kembalian);
+        $('#status').val('Lunas');
+      } else {
+        $('#status').val('Hutang');
+        $('#kembalian').val(kembalian);
+      }
     })
 
     $('#bayar').on('keyup', function() {
