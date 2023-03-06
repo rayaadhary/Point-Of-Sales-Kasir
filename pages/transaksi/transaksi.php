@@ -257,7 +257,8 @@ include_once "../layout/header.php"
 
 
     $('#tanggal').datepicker({
-      dateFormat: 'yy-mm-dd'
+      dateFormat: 'yy-mm-dd',
+      changeYear: true
     });
   });
 
