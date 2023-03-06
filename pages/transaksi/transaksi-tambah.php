@@ -18,8 +18,11 @@ if (isset($_POST['simpan'])) {
     $no =  $_POST['no'] - 1;
     $id_pelanggan = mysqli_real_escape_string($db, trim($_POST['id_pelanggan']));
     $nama_pelanggan = mysqli_real_escape_string($db, trim($_POST['nama_pelanggan']));
-    $query = "INSERT INTO pelanggan VALUES ('$id_pelanggan', '$nama_pelanggan')";
-    $sql = mysqli_query($db, $query);
+    $sql = mysqli_query($db, "SELECT id_pelanggan FROM pelanggan WHERE id_pelanggan = '$id_pelanggan'");
+    if ($sql->num_rows == 0) {
+      $query = "INSERT INTO pelanggan VALUES ('$id_pelanggan', '$nama_pelanggan')";
+      $sql = mysqli_query($db, $query);
+    }
     for ($i = 0; $i < $no; $i++) {
       print_r($_POST['no']);
       $no_faktur = mysqli_real_escape_string($db, trim($_POST['no_faktur']));
