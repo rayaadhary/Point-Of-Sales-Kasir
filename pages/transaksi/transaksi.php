@@ -361,6 +361,8 @@ include_once "../layout/header.php"
       if (kembalian >= 0) {
         $('#kembalian').val(kembalian);
         $('#status').val('Lunas');
+        var tanggal = $('#tanggal').val();
+        $('#jatuh-tempo').val(tanggal);
       } else {
         $('#status').val('Hutang');
         $('#kembalian').val(kembalian);
