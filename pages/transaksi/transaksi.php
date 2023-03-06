@@ -111,7 +111,7 @@ include_once "../layout/header.php"
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="nama-pelanggan">Nama Pelanggan</label>
-                      <select name="nama_pelanggan" id="nama-pelanggan" class="form-control"></select>
+                      <input type="text" name="nama_pelanggan" id="nama-pelanggan" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-1">
@@ -308,38 +308,11 @@ include_once "../layout/header.php"
       $('#harga').val(data.harga);
     });
 
-    $('#nama-pelanggan').select2({
-      theme: "classic",
-      placeholder: 'Masukkan Nama Pelanggan',
-      ajax: {
-        url: "<?= BASEURL ?>/pages/transaksi/nama-pelanggan.php",
-        type: 'GET',
-        dataType: 'json',
-        delay: 250,
-        data: function(params) {
-          return {
-            term: params.term
-          };
-        },
-        processResults: function(data) {
-          var results = [];
-          $.each(data, function(index, item) {
-            results.push({
-              id: item.id_pelanggan,
-              text: item.nama_pelanggan,
-            });
-          });
-          return {
-            results: results
-          };
-        },
-        cache: true
+    $('#nama-pelanggan').autocomplete({
+      source: "<?= BASEURL ?>/pages/transaksi/nama-pelanggan.php",
+      select: function(event, ui) {
+        $('#id-pelanggan').val(ui.item.id_pelanggan);
       }
-    });
-    // Fungsi untuk mengambil id barang dari input field terpisah saat user memilih nama barang
-    $('#nama-pelanggan').on('select2:select', function(e) {
-      var data = e.params.data;
-      $('#id-pelanggan').val(data.id);
     });
 
     $('#tambah').on('click', function() {

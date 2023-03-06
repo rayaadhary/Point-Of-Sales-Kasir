@@ -20,10 +20,16 @@ if (isset($_GET['term'])) {
   $query = "SELECT * FROM pelanggan WHERE nama_pelanggan LIKE '%" . $searchTerm . "%' ORDER BY nama_pelanggan ASC";
   $result = mysqli_query($db, $query);
   $data = array();
+  // while ($row = mysqli_fetch_assoc($result)) {
+  //   $data[] = array(
+  //     'id_pelanggan' => $row['id_pelanggan'],
+  //     'nama_pelanggan' => $row['nama_pelanggan']
+  //   );
+  // }
   while ($row = mysqli_fetch_assoc($result)) {
     $data[] = array(
       'id_pelanggan' => $row['id_pelanggan'],
-      'nama_pelanggan' => $row['nama_pelanggan']
+      'value' => $row['nama_pelanggan']
     );
   }
   echo json_encode($data);
