@@ -42,6 +42,20 @@ function kodeFaktur($waktu)
   return $kode_faktur;
 }
 
+function kodePelanggan()
+{
+  $db = dbConnect();
+  $query = $db->query("SELECT max(id_pelanggan) as kodeTerbesar FROM pelanggan");
+  $data = $query->fetch_assoc();
+  $kode_pelanggan = $data['kodeTerbesar'];
+  $urutan = (int) substr($kode_pelanggan, 1, 4);
+  $urutan++;
+  $huruf = "P";
+  $kode_pelanggan = $huruf . sprintf("%04s", $urutan);
+  $query->free();
+  $db->close();
+  return $kode_pelanggan;
+}
 
 function gantiPassword($username, $password)
 {

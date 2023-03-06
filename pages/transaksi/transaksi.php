@@ -116,7 +116,7 @@ include_once "../layout/header.php"
                   </div>
                   <div class="col-md-1">
                     <div class="form-group">
-                      <label for="id-pelanggan">ID Pelanggan</label>
+                      <label for="id-pelanggan">ID</label>
                       <input type="text" class="form-control" name="id_pelanggan" id="id-pelanggan" readonly>
                     </div>
                   </div>
@@ -130,7 +130,6 @@ include_once "../layout/header.php"
                   <input type="hidden" name="no" id="no" value="1">
                   <div class="col-md-2">
                     <div class="d-flex justify-content-end">
-                      <!-- <button class="btn btn-primary">Tambah</button> -->
                       <a href="#" class="btn btn-primary" id="tambah">Tambah</a>
                     </div>
                   </div>
