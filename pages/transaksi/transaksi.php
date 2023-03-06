@@ -256,7 +256,7 @@ include_once "../layout/header.php"
 
 
 
-    $('#jatuh-tempo').datepicker({
+    $('#tanggal').datepicker({
       dateFormat: 'yy-mm-dd'
     });
   });
