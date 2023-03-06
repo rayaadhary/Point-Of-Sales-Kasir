@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2023 at 08:27 AM
+-- Generation Time: Mar 06, 2023 at 06:03 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -49,15 +49,16 @@ INSERT INTO `barang` (`id_barang`, `nama_barang`, `harga`, `stok`) VALUES
 
 CREATE TABLE `pelanggan` (
   `id_pelanggan` varchar(255) NOT NULL,
-  `nama` varchar(255) DEFAULT NULL
+  `nama_pelanggan` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `pelanggan`
 --
 
-INSERT INTO `pelanggan` (`id_pelanggan`, `nama`) VALUES
-('1', 'kunjat');
+INSERT INTO `pelanggan` (`id_pelanggan`, `nama_pelanggan`) VALUES
+('P0001', 'kunjat'),
+('P0002', 'raya');
 
 -- --------------------------------------------------------
 
@@ -104,6 +105,13 @@ CREATE TABLE `transaksi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `transaksi`
+--
+
+INSERT INTO `transaksi` (`id_transaksi`, `no_faktur`, `tanggal`, `jatuh_tempo`, `banyak`, `diskon`, `subtotal`, `total`, `bayar`, `kembali`, `status`, `id_pelanggan`, `id_barang`, `id_pengguna`) VALUES
+(3, 'INV0603001', '2023-03-06', '2023-04-06', 2, 10000, 40000, 30000, 30000, 0, 'Lunas', 'P0002', 'K0001', 1);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -148,7 +156,7 @@ ALTER TABLE `pengguna`
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
