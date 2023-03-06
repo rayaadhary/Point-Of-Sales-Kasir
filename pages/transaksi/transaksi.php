@@ -366,6 +366,27 @@ include_once "../layout/header.php"
       } else {
         $('#status').val('Hutang');
         $('#kembalian').val(kembalian);
+        const tanggal = moment($('#tanggal').val());
+        tanggal.add(1, 'month');
+        const jatuhTempo = tanggal.format('YYYY-MM-DD');
+
+        // Menetapkan nilai input jatuh tempo dengan hasil perhitungan
+        $('#jatuh-tempo').val(jatuhTempo);
+
+        // Menerapkan datepicker pada input tanggal dan jatuh tempo
+        $('#tanggal').datepicker({
+          changeYear: true,
+          dateFormat: 'yy-mm-dd',
+          onSelect: function(selectedDate) {
+            // Menghitung tanggal jatuh tempo dengan menambahkan satu bulan pada tanggal transaksi
+            const tanggal = moment(selectedDate);
+            tanggal.add(1, 'month');
+            const jatuhTempo = tanggal.format('YYYY-MM-DD');
+
+            // Menetapkan nilai input jatuh tempo dengan hasil perhitungan
+            $('#jatuh-tempo').val(jatuhTempo);
+          }
+        });
       }
     })
 
