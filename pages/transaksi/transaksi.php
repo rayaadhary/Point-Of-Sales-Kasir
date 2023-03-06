@@ -258,7 +258,16 @@ include_once "../layout/header.php"
 
     $('#tanggal').datepicker({
       dateFormat: 'yy-mm-dd',
-      changeYear: true
+      changeYear: true,
+      onSelect: function(selectedDate) {
+        // Menghitung tanggal jatuh tempo dengan menambahkan satu bulan pada tanggal transaksi
+        const tanggal = moment(selectedDate);
+        // tanggal.add(1, 'month');
+        const jatuhTempo = tanggal.format('YYYY-MM-DD');
+
+        // Menetapkan nilai input jatuh tempo dengan hasil perhitungan
+        $('#jatuh-tempo').val(jatuhTempo);
+      }
     });
   });
 
