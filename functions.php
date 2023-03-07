@@ -90,6 +90,48 @@ function getAllBarang()
   return $data;
 }
 
+function getGroupBarang()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT * FROM barang GROUP BY nama_barang");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+
+
+function getJumlahBarang()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(stok) AS jumlah_barang FROM barang GROUP BY nama_barang");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getGroupTransaksi()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT tanggal AS tanggal_transaksi FROM transaksi GROUP BY tanggal");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getJumlahTransaksi()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT COUNT(no_faktur) AS jumlah_transaksi FROM transaksi GROUP BY tanggal");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 function getBarangById($id)
 {
   $db = dbConnect();

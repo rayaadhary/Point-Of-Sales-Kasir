@@ -22,10 +22,4 @@ if (isset($_GET['term'])) {
     );
   }
   echo json_encode($data);
-  // while ($row = mysqli_fetch_assoc($result)) {
-  //   $data[] = array(
-  //     'id_pelanggan' => $row['id_pelanggan'],
-  //     'value' => $row['nama_pelanggan']
-  //   );
-  // }
 }
