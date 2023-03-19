@@ -35,6 +35,9 @@ if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
     <div class="card">
       <div class="card-body login-card-body">
         <?php flash(); ?>
+        <div class="d-flex justify-content-center">
+          <lottie-player src="<?= BASEURL ?>/dist/lottiefiles/85568-user-login.json" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></lottie-player>
+        </div>
         <p class="login-box-msg">Sign in to start your session</p>
 
         <form action="<?= BASEURL ?>/cekLogin.php" method="post">
@@ -89,6 +92,8 @@ if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
   <script src="<?= BASEURL ?>/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
   <script src="<?= BASEURL ?>/dist/js/adminlte.min.js"></script>
+  <!-- Lottie Files -->
+  <script src="<?= BASEURL ?>/dist/lottiefiles/lottie-player.js"></script>
 </body>
 
 </html>

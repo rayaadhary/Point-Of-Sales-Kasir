@@ -26,8 +26,11 @@ include_once "functions.php";
         <a href="../../index2.html" class="h1"><b>Admin</b>LTE</a>
       </div>
       <div class="card-body">
-        <p class="login-box-msg">You are only one step a way from your new password, recover your password now.</p>
+        <!-- <p class="login-box-msg">You are only one step a way from your new password, recover your password now.</p> -->
         <?php flash(); ?>
+        <div class="d-flex justify-content-center">
+          <lottie-player src="<?= BASEURL ?>/dist/lottiefiles/lock.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+        </div>
         <form action="ubahPassword.php" method="post">
           <div class="input-group mb-3">
             <input type="text" class="form-control" name="username" placeholder="username">
@@ -76,6 +79,8 @@ include_once "functions.php";
   <script src="<?= BASEURL ?>/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
   <script src="<?= BASEURL ?>/dist/js/adminlte.min.js"></script>
+  <!-- Lottie Files -->
+  <script src="<?= BASEURL ?>/dist/lottiefiles/lottie-player.js"></script>
 </body>
 
 </html>
