@@ -91,4 +91,7 @@ $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(50, 5, 'Sisa', 0, 0);
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(60, 5, 'Rp. ' . number_format($_SESSION['cetak']['kembalian'], 2, ',', '.'), 0, 1, 'R');
+$pdf->AddPage();
+$pdf->SetFont('Arial', 'B', 16);
+$pdf->Cell(200, 10, 'SURAT JALAN', 0, 0);
 $pdf->Output();

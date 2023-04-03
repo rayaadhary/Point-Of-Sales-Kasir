@@ -180,26 +180,77 @@ include_once "../layout/header.php"
                       <input type="text" name="status" id="status" class="form-control" readonly>
                     </div>
                     <br>
-                    <div class="d-flex justify-content-start">
-                      <button type="submit" name="simpan" class="btn btn-primary"> Simpan</button>
+                    <div class="d-flex">
+                      <div class="justify-content-start">
+                        <button type="submit" name="simpan" class="btn btn-primary"> Simpan</button>
+                        <!-- Button trigger modal -->
+                      </div>
+                      <div class="ml-auto">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                          Tambah
+                        </button>
+                      </div>
                     </div>
+
                   </div>
                 </div>
-
-
+                <!-- Modal Tambah Data -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Form Surat Jalan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="barang-tambah.php" method="post">
+                          <div class="card-body">
+                            <div class="form-group">
+                              <label for="id_barang">ID Barang</label>
+                              <input type="text" class="form-control" name="id_barang" id="id_barang" placeholder="Masukan id barang" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="nama_barang">Nama Barang</label>
+                              <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="harga">Harga Barang</label>
+                              <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="stok">Stok Barang</label>
+                              <input type="number" class="form-control" id="stok" name="stok" placeholder="Masukan Stok Barang" required>
+                            </div>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                        <div class="text-center">
+                          <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
+                        </div>
+                      </div>
               </form>
             </div>
-            <!-- /.card-body -->
           </div>
-          <!-- /.card -->
         </div>
-        <!-- /.col -->
+        <!-- Akhir modal -->
+
+        </form>
       </div>
-      <!-- /.row -->
+      <!-- /.card-body -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    <!-- /.card -->
+</div>
+<!-- /.col -->
+</div>
+<!-- /.row -->
+</div>
+<!-- /.container-fluid -->
+</section>
+
+
+<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 <footer class=" main-footer">
