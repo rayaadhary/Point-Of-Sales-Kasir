@@ -42,6 +42,21 @@ function kodeFaktur($waktu)
   return $kode_faktur;
 }
 
+function nomorSuratJalan()
+{
+  $db = dbConnect();
+  $query = $db->query("SELECT max(no_surat_jalan) as kodeTerbesar FROM pengiriman");
+  $data = $query->fetch_assoc();
+  $surat_jalan = $data['kodeTerbesar'];
+  $urutan = (int) substr($surat_jalan, 3, 5);
+  $urutan++;
+  $huruf = "DOM";
+  $surat_jalan = $huruf . sprintf("%05s", $urutan);
+  $query->free();
+  $db->close();
+  return $surat_jalan;
+}
+
 function kodePelanggan()
 {
   $db = dbConnect();

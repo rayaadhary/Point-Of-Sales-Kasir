@@ -8,7 +8,7 @@ $db = dbConnect();
 if (isset($_POST['simpan'])) {
   // var_dump($_POST);
   // die;
-  if (empty($_POST['no_faktur']) || empty($_POST['id_pelanggan']) || empty($_POST['tanggal']) || empty($_POST['jatuh_tempo']) || empty($_POST['banyak']) || empty($_POST['subtotal']) || empty($_POST['total']) || empty($_POST['bayar']) || empty($_POST['idBarang']) || empty($_SESSION['id_pengguna']) || empty($_POST['status'])) {
+  if (empty($_POST)) {
     setFlash('gagal', 'ditambahkan', 'danger');
     header('Location: ' . BASEURL . '/pages/transaksi/transaksi.php');
     exit;
@@ -23,6 +23,10 @@ if (isset($_POST['simpan'])) {
       $query = "INSERT INTO pelanggan VALUES ('$id_pelanggan', '$nama_pelanggan')";
       $sql = mysqli_query($db, $query);
     }
+    $surat_jalan = mysqli_real_escape_string($db, trim($_POST['surat_jalan']));
+    $alamat_tujuan = mysqli_real_escape_string($db, trim($_POST['alamat_tujuan']));
+    $tanggal_kirim = mysqli_real_escape_string($db, trim($_POST['tanggal_kirim']));
+    $sql = mysqli_query($db, "INSERT INTO pengiriman VALUES ('$surat_jalan', '$alamat_tujuan', '$tanggal_kirim')");
     for ($i = 0; $i < $no; $i++) {
       print_r($_POST['no']);
       $no_faktur = mysqli_real_escape_string($db, trim($_POST['no_faktur']));
@@ -51,7 +55,7 @@ if (isset($_POST['simpan'])) {
       } else {
         // eksekusi query
         $stok = mysqli_query($db, "UPDATE barang SET stok='$sisaStok' WHERE id_barang = '$id_barang'");
-        $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna')";
+        $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna', '$surat_jalan')";
         $sql = mysqli_query($db, $query);
       }
     }
