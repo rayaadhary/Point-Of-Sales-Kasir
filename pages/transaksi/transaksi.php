@@ -462,8 +462,7 @@ include_once "../layout/header.php"
         $('#status').val('Lunas');
         var tanggal = $('#tanggal').val();
         $('#jatuh-tempo').val(tanggal);
-      }
-      if (total == 0) {
+      } else if (total == 0) {
         $('#status').val('');
       } else {
         $('#status').val('Hutang');
