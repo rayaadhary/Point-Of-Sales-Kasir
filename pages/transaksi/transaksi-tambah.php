@@ -40,6 +40,7 @@ if (isset($_POST['simpan'])) {
       $bersih = $total - $diskon;
       $bayar = mysqli_real_escape_string($db, trim($_POST['bayar']));
       $kembalian = mysqli_real_escape_string($db, trim($_POST['kembalian']));
+      // $kembalian = abs($kembalian);
       $id_barang = mysqli_real_escape_string($db, trim($_POST['idBarang'][$i]));
       $id_pengguna = mysqli_real_escape_string($db, trim($_SESSION['id_pengguna']));
       $status = mysqli_real_escape_string($db, trim($_POST['status']));

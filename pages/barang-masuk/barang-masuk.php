@@ -44,7 +44,7 @@ include_once "../layout/header.php"
       <?php flash(); ?>
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Transaksi</h1>
+          <h1>Barang Masuk</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -74,59 +74,70 @@ include_once "../layout/header.php"
             <!-- </div> -->
             <!-- /.card-header -->
             <div class="card-body">
-              <form action="transaksi-tambah.php" method="post">
+              <form action="#" method="post">
                 <div class="row mb-4">
                   <div class="col-md-2">
-                    <label for="tanggal">Tanggal Transaksi</label>
-                    <input type="date" class="form-control" name="tanggal" id="tanggal" style="width: 140px;">
+                    <label for="tanggal">Tanggal Beli</label>
+                    <input type="date" class="form-control" name="tanggal_beli" id="tanggal-beli" style="width: 140px;">
                   </div>
                   <div class="col-md-2">
-                    <label for="jatuh-tempo">Jatuh Tempo</label>
-                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" readonly style="width: 140px;">
+                    <div class="form-group">
+                      <label for="nama-supplier">Nama Supplier</label>
+                      <input type="text" class="form-control" name="nama_supplier" id="nama-supplier">
+                    </div>
                   </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="id-supplier">ID Supplier</label>
+                      <input type="text" class="form-control" name="id_supplier" id="id-supplier">
+                    </div>
+                  </div>
+
                 </div>
                 <div class="row">
                   <div class="col-md-2">
                     <div class="form-group">
                       <?php
                       $waktu = date_format(date_create(), 'Y-m-d');
-                      $kode_faktur = kodeFaktur($waktu);
+                      $barangMasuk = barangMasuk($waktu);
                       ?>
-                      <label for="no-faktur">No Faktur</label>
-                      <input type="text" class="form-control" name="no_faktur" id="no-faktur" value="<?= $kode_faktur ?>" readonly style="width: 120px;">
+                      <label for="no-faktur">Barang Masuk</label>
+                      <input type="text" class="form-control" name="barang_masuk" id="barang-masuk" value="<?= $barangMasuk ?>" readonly style="width: 120px;">
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="nama-barang">Nama Barang</label>
-                      <select name="nama_barang" id="nama-barang" class="form-control"></select>
+                      <!-- <select name="nama_barang" id="nama-barang" class="form-control"></select> -->
+                      <input type="text" class="form-control" name="nama_barang" id="nama-barang">
                     </div>
                   </div>
                   <div class="col-md-1">
                     <div class="form-group">
                       <label for="id-barang">ID Barang</label>
-                      <input type="text" class="form-control" name="id_barang" id="id-barang" readonly>
+                      <input type="text" class="form-control" name="id_barang" id="id-barang">
+                    </div>
+                  </div>
+
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="harga_beli">Harga Beli</label>
+                      <input type="number" class="form-control" name="harga_beli" id="harga-beli">
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
-                      <label for="nama-pelanggan">Nama Pelanggan</label>
-                      <input type="text" name="nama_pelanggan" id="nama-pelanggan" class="form-control" required>
-                    </div>
-                  </div>
-                  <div class="col-md-1">
-                    <div class="form-group">
-                      <label for="id-pelanggan">ID</label>
-                      <input type="text" class="form-control" name="id_pelanggan" id="id-pelanggan" readonly>
+                      <label for="harga_jual">Harga Jual</label>
+                      <input type="number" class="form-control" name="harga_jual" id="harga-jual">
                     </div>
                   </div>
                   <div class="col-md-1">
                     <div class="form-group">
                       <label for="banyak">Banyak</label>
-                      <input type="text" class="form-control" name="banyak" id="banyak">
+                      <input type="number" class="form-control" name="banyak" id="banyak">
                     </div>
                   </div>
-                  <input type="hidden" id="harga">
+                  <!-- <input type="hidden" id="harga"> -->
                   <input type="hidden" name="no" id="no" value="1">
                   <div class="col-md-2">
                     <div class="d-flex justify-content-end">
@@ -139,11 +150,14 @@ include_once "../layout/header.php"
                   <div class="col-md-8">
                     <div class="list">
                       <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                           <span>Nama Barang</span>
                         </div>
                         <div class="col-md-2">
-                          <span>Harga</span>
+                          <span>Harga Beli</span>
+                        </div>
+                        <div class="col-md-2">
+                          <span>Harga Jual</span>
                         </div>
                         <div class="col-md-2">
                           <span>QTY</span>
@@ -182,7 +196,7 @@ include_once "../layout/header.php"
                     <br>
                     <div class="d-flex">
                       <div class="justify-content-start">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        <button type="submit  " class="btn btn-primary">
                           Simpan
                         </button>
                       </div>
@@ -190,48 +204,6 @@ include_once "../layout/header.php"
 
                   </div>
                 </div>
-                <!-- awal modal tambah -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Form Surat Jalan</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <div class="card-body">
-                          <div class="form-group">
-                            <label for="surat_jalan">Surat Jalan</label>
-                            <?php
-                            $suratJalan = nomorSuratJalan();
-                            ?>
-                            <input type="text" class="form-control" name="surat_jalan" id="surat_jalan" value="<?= $suratJalan ?>" readonly>
-                          </div>
-                          <div class="form-group">
-                            <label for="telepon">Telepon</label>
-                            <input type="text" class="form-control" name="telepon" id="telepom" value="08">
-                          </div>
-                          <div class="form-group">
-                            <label>Alamat</label>
-                            <textarea class="form-control" rows="3" name="alamat_tujuan" id="alamat-tujuan" placeholder="Masukan Alamat Tujuan" required></textarea>
-                          </div>
-                          <div class="form-group">
-                            <label for="tanggal">Tanggal</label>
-                            <input type="date" class="form-control" name="tanggal_kirim" id="tanggal-kirim" required>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <div class="text-center">
-                          <button type="submit" class="btn btn-primary" name="simpan">Simpan</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- akhir modal tambah -->
               </form>
 
             </div>
@@ -299,27 +271,11 @@ include_once "../layout/header.php"
     var today = moment().format('YYYY-MM-DD');
 
     // Menetapkan nilai awal input tanggal dan jatuh tempo dengan tanggal sekarang
-    $('#tanggal').val(today);
-    $('#jatuh-tempo').val(today);
-    $('#tanggal-kirim').val(today);
+    $('#tanggal-beli').val(today);
 
-    $('#tanggal-kirim').datepicker({
+    $('#tanggal-beli').datepicker({
       dateFormat: 'yy-mm-dd',
       changeYear: true
-    });
-
-    $('#tanggal').datepicker({
-      dateFormat: 'yy-mm-dd',
-      changeYear: true,
-      onSelect: function(selectedDate) {
-        // Menghitung tanggal jatuh tempo dengan menambahkan satu bulan pada tanggal transaksi
-        const tanggal = moment(selectedDate);
-        // tanggal.add(1, 'month');
-        const jatuhTempo = tanggal.format('YYYY-MM-DD');
-
-        // Menetapkan nilai input jatuh tempo dengan hasil perhitungan
-        $('#jatuh-tempo').val(jatuhTempo);
-      }
     });
   });
 
@@ -332,78 +288,64 @@ include_once "../layout/header.php"
     $('#row' + no).remove();
   }
 
-  function jatuhTempo() {
-    const tanggal = moment($('#tanggal').val());
-    tanggal.add(1, 'month');
-    const jatuhTempo = tanggal.format('YYYY-MM-DD');
 
-    // Menetapkan nilai input jatuh tempo dengan hasil perhitungan
-    $('#jatuh-tempo').val(jatuhTempo);
-
-    // Menerapkan datepicker pada input tanggal dan jatuh tempo
-    $('#tanggal').datepicker({
-      changeYear: true,
-      dateFormat: 'yy-mm-dd',
-      onSelect: function(selectedDate) {
-        // Menghitung tanggal jatuh tempo dengan menambahkan satu bulan pada tanggal transaksi
-        const tanggal = moment(selectedDate);
-        tanggal.add(1, 'month');
-        const jatuhTempo = tanggal.format('YYYY-MM-DD');
-
-        // Menetapkan nilai input jatuh tempo dengan hasil perhitungan
-        $('#jatuh-tempo').val(jatuhTempo);
-      }
-    });
-  }
 
   $(function() {
-    $('#nama-barang').select2({
-      theme: "classic",
-      placeholder: 'Pilih Nama Barang',
-      ajax: {
-        url: "<?= BASEURL ?>/pages/transaksi/autocomplete.php",
-        type: 'GET',
-        dataType: 'json',
-        delay: 250,
-        data: function(params) {
-          return {
-            term: params.term
-          };
-        },
-        processResults: function(data) {
-          var results = [];
-          $.each(data, function(index, item) {
-            results.push({
-              id: item.id_barang,
-              text: item.nama_barang,
-              harga: item.harga
-            });
-          });
-          return {
-            results: results
-          };
-        },
-        cache: true
+    // $('#nama-barang').select2({
+    //   theme: "classic",
+    //   placeholder: 'Pilih Nama Barang',
+    //   ajax: {
+    //     url: "<?= BASEURL ?>/pages/transaksi/autocomplete.php",
+    //     type: 'GET',
+    //     dataType: 'json',
+    //     delay: 250,
+    //     data: function(params) {
+    //       return {
+    //         term: params.term
+    //       };
+    //     },
+    //     processResults: function(data) {
+    //       var results = [];
+    //       $.each(data, function(index, item) {
+    //         results.push({
+    //           id: item.id_barang,
+    //           text: item.nama_barang,
+    //           harga: item.harga
+    //         });
+    //       });
+    //       return {
+    //         results: results
+    //       };
+    //     },
+    //     cache: true
+    //   }
+    // });
+    // // Fungsi untuk mengambil id barang dari input field terpisah saat user memilih nama barang
+    // $('#nama-barang').on('select2:select', function(e) {
+    //   var data = e.params.data;
+    //   $('#id-barang').val(data.id);
+    //   $('#harga').val(data.harga);
+    // });
+
+    $('#nama-supplier').autocomplete({
+      source: "<?= BASEURL ?>/pages/barang-masuk/nama-supplier.php",
+      select: function(event, ui) {
+        $('#id-supplier').val(ui.item.id_supplier);
       }
     });
-    // Fungsi untuk mengambil id barang dari input field terpisah saat user memilih nama barang
-    $('#nama-barang').on('select2:select', function(e) {
-      var data = e.params.data;
-      $('#id-barang').val(data.id);
-      $('#harga').val(data.harga);
-    });
 
-    $('#nama-pelanggan').autocomplete({
-      source: "<?= BASEURL ?>/pages/transaksi/nama-pelanggan.php",
+    $('#nama-barang').autocomplete({
+      source: "<?= BASEURL ?>/pages/barang-masuk/nama-barang.php",
       select: function(event, ui) {
-        $('#id-pelanggan').val(ui.item.id_pelanggan);
+        $('#id-barang').val(ui.item.id_barang);
       }
     });
 
     $('#tambah').on('click', function() {
       var no = $('#no').val();
       var id_barang = $('#id-barang').val();
-      var nama_barang = $('#nama-barang option:selected').text();
+      var nama_barang = $('#nama-barang').val();
+      // var nama_barang = $('#nama-barang option:selected').text();
       var banyak = $('#banyak').val();
       var harga = $('#harga').val();
       var total = $('#stotal').val();
