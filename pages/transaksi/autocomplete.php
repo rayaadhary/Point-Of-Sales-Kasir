@@ -24,7 +24,7 @@ if (isset($_GET['term'])) {
     $data[] = array(
       'id_barang' => $row['id_barang'],
       'nama_barang' => $row['nama_barang'],
-      'harga' => $row['harga']
+      'harga' => $row['harga_jual']
     );
   }
   echo json_encode($data);
