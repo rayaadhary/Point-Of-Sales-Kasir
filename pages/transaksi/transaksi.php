@@ -210,6 +210,10 @@ include_once "../layout/header.php"
                             <input type="text" class="form-control" name="surat_jalan" id="surat_jalan" value="<?= $suratJalan ?>" readonly>
                           </div>
                           <div class="form-group">
+                            <label for="telepon">Telepon</label>
+                            <input type="text" class="form-control" name="telepon" id="telepom" value="08">
+                          </div>
+                          <div class="form-group">
                             <label>Alamat</label>
                             <textarea class="form-control" rows="3" name="alamat_tujuan" id="alamat-tujuan" placeholder="Masukan Alamat Tujuan" required></textarea>
                           </div>

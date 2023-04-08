@@ -26,7 +26,8 @@ if (isset($_POST['simpan'])) {
     $surat_jalan = mysqli_real_escape_string($db, trim($_POST['surat_jalan']));
     $alamat_tujuan = mysqli_real_escape_string($db, trim($_POST['alamat_tujuan']));
     $tanggal_kirim = mysqli_real_escape_string($db, trim($_POST['tanggal_kirim']));
-    $sql = mysqli_query($db, "INSERT INTO pengiriman VALUES ('$surat_jalan', '$alamat_tujuan', '$tanggal_kirim')");
+    $telepon = mysqli_real_escape_string($db, trim($_POST['telepon']));
+    $sql = mysqli_query($db, "INSERT INTO pengiriman VALUES ('$surat_jalan', '$alamat_tujuan', '$tanggal_kirim', '$telepon')");
     for ($i = 0; $i < $no; $i++) {
       print_r($_POST['no']);
       $no_faktur = mysqli_real_escape_string($db, trim($_POST['no_faktur']));
