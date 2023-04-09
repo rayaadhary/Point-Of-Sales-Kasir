@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASEURL', 'http://localhost/kasir/admin');
+define('BASEURL', 'http://localhost/kasir');
 
 
 function waktu()
@@ -42,21 +42,21 @@ function kodeFaktur($waktu)
   return $kode_faktur;
 }
 
-function barangMasuk($waktu)
+function kodePembelian($waktu)
 {
   $db = dbConnect();
-  $query = $db->query("SELECT max(no_barang_masuk) as kodeTerbesar FROM barang_masuk");
+  $query = $db->query("SELECT max(no_pembelian) as kodeTerbesar FROM masuk");
   $data = $query->fetch_assoc();
-  $kode_faktur = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_faktur, 7, 3);
+  $kode_pembelian = $data['kodeTerbesar'];
+  $urutan = (int) substr($kode_pembelian, 7, 3);
   $urutan++;
   $waktu_formatted = date_create_from_format('Y-m-d', $waktu);
   $waktu_formatted = date_format($waktu_formatted, 'dm');
-  $huruf = "BRM";
-  $kode_faktur = $huruf . $waktu_formatted . sprintf("%03s", $urutan);
+  $huruf = "INV";
+  $kode_pembelian = $huruf . $waktu_formatted . sprintf("%03s", $urutan);
   $query->free();
   $db->close();
-  return $kode_faktur;
+  return $kode_pembelian;
 }
 
 function nomorSuratJalan()
@@ -123,6 +123,26 @@ function getAllBarang()
   return $data;
 }
 
+function getAllBeban()
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM beban");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getAllPrive()
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM prive");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 function getGroupBarang()
 {
   $db = dbConnect();
@@ -175,12 +195,60 @@ function getBarangById($id)
   return $data;
 }
 
+function getBebanById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM beban WHERE id_beban = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getPriveById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM prive WHERE id_prive = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 
 function insertDataBarang($data)
 {
   $db = dbConnect();
   $res = $db->prepare("INSERT INTO barang VALUES (?, ?, ?, ?)");
-  $res->bind_param("ssss", $data['id_barang'], $data['nama_barang'], $data['harga'], $data['stok']);
+  $res->bind_param("ssss", $data['id_barang'], $data['nama_barang'], $data['beli'], $data['stok']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
+function insertDataBeban($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("INSERT INTO beban VALUES (?, ?, ?, ?)");
+  $res->bind_param("ssss", $data['id_beban'], $data['nama_beban'], $data['tanggal'], $data['biaya']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
+function insertDataPrive($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("INSERT INTO prive VALUES (?, ?, ?, ?)");
+  $res->bind_param("ssss", $data['id_prive'], $data['nama_prive'], $data['tanggal'], $data['biaya']);
   $res->execute();
   if ($res) {
     return 1;
@@ -193,8 +261,8 @@ function insertDataBarang($data)
 function updateDataBarang($data)
 {
   $db = dbConnect();
-  $res = $db->prepare("UPDATE barang SET nama_barang=?, harga=?, stok=? WHERE id_barang=?");
-  $res->bind_param("ssss",  $data['nama_barang'], $data['harga'], $data['stok'], $data['id_barang']);
+  $res = $db->prepare("UPDATE barang SET nama_barang=?, beli=?, jual=?, stok=? WHERE id_barang=?");
+  $res->bind_param("ssss",  $data['nama_barang'], $data['beli'], $data['jual'], $data['stok'], $data['id_barang']);
   $res->execute();
   if ($res) {
     return 1;
@@ -204,10 +272,65 @@ function updateDataBarang($data)
   $db->close();
 }
 
+function updateDataPrive($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("UPDATE prive SET nama_prive=?, tanggal=?, biaya=? WHERE id_prive=?");
+  $res->bind_param("ssss",  $data['nama_prive'], $data['tanggal'], $data['biaya'], $data['id_prive']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
+function updateDataBeban($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("UPDATE beban SET nama_beban=?, tanggal=?, biaya=? WHERE id_beban=?");
+  $res->bind_param("ssss",  $data['nama_beban'], $data['tanggal'], $data['biaya'], $data['id_beban']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
+
 function getDeleteBarang($id)
 {
   $db = dbConnect();
   $res = mysqli_query($db, "DELETE FROM barang WHERE id_barang = '$id'");
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $res->free();
+  $db->close();
+}
+
+function getDeleteBeban($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "DELETE FROM beban WHERE id_beban = '$id'");
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $res->free();
+  $db->close();
+}
+
+function getDeletePrive($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "DELETE FROM prive WHERE id_prive = '$id'");
   if ($res) {
     return 1;
   } else {
