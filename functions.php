@@ -74,6 +74,23 @@ function nomorSuratJalan()
   return $surat_jalan;
 }
 
+function barangMasuk($waktu)
+{
+  $db = dbConnect();
+  $query = $db->query("SELECT max(no_barang_masuk) as kodeTerbesar FROM barang_masuk");
+  $data = $query->fetch_assoc();
+  $kode_faktur = $data['kodeTerbesar'];
+  $urutan = (int) substr($kode_faktur, 7, 3);
+  $urutan++;
+  $waktu_formatted = date_create_from_format('Y-m-d', $waktu);
+  $waktu_formatted = date_format($waktu_formatted, 'dm');
+  $huruf = "BRM";
+  $kode_faktur = $huruf . $waktu_formatted . sprintf("%03s", $urutan);
+  $query->free();
+  $db->close();
+  return $kode_faktur;
+}
+
 function kodePelanggan()
 {
   $db = dbConnect();
