@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 09 Apr 2023 pada 10.31
+-- Waktu pembuatan: 09 Apr 2023 pada 11.58
 -- Versi server: 10.4.22-MariaDB
 -- Versi PHP: 8.1.1
 
@@ -40,7 +40,7 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`id_barang`, `nama_barang`, `harga_beli`, `harga_jual`, `stok`) VALUES
-('B0001', 'kaca 02', 2000, 5000, 145);
+('B0001', 'kaca 02', 20000, 30000, 220);
 
 -- --------------------------------------------------------
 
@@ -49,7 +49,8 @@ INSERT INTO `barang` (`id_barang`, `nama_barang`, `harga_beli`, `harga_jual`, `s
 --
 
 CREATE TABLE `barang_masuk` (
-  `no_barang_masuk` varchar(255) NOT NULL,
+  `id_barang_masuk` int(11) NOT NULL,
+  `no_barang_masuk` varchar(255) DEFAULT NULL,
   `id_barang` varchar(255) DEFAULT NULL,
   `banyak` int(11) DEFAULT NULL,
   `diskon` int(11) DEFAULT NULL,
@@ -62,6 +63,14 @@ CREATE TABLE `barang_masuk` (
   `id_pengguna` int(11) DEFAULT NULL,
   `id_supplier` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `barang_masuk`
+--
+
+INSERT INTO `barang_masuk` (`id_barang_masuk`, `no_barang_masuk`, `id_barang`, `banyak`, `diskon`, `subtotal`, `total`, `bayar`, `kembali`, `status`, `tanggal_beli`, `id_pengguna`, `id_supplier`) VALUES
+(2, '', 'B0001', 10, 0, 300000, 300000, 50000, -250000, 'Utang', '2023-04-09', 1, 'PT0001'),
+(3, 'BRM0904001', 'B0001', 10, 0, 300000, 300000, 200000, -100000, 'Utang', '2023-04-09', 1, 'PT0001');
 
 -- --------------------------------------------------------
 
@@ -230,7 +239,7 @@ ALTER TABLE `barang`
 -- Indeks untuk tabel `barang_masuk`
 --
 ALTER TABLE `barang_masuk`
-  ADD PRIMARY KEY (`no_barang_masuk`),
+  ADD PRIMARY KEY (`id_barang_masuk`),
   ADD KEY `id_pengguna` (`id_pengguna`),
   ADD KEY `id_barang` (`id_barang`),
   ADD KEY `id_supplier` (`id_supplier`);
@@ -284,6 +293,12 @@ ALTER TABLE `transaksi`
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
+
+--
+-- AUTO_INCREMENT untuk tabel `barang_masuk`
+--
+ALTER TABLE `barang_masuk`
+  MODIFY `id_barang_masuk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `pengguna`

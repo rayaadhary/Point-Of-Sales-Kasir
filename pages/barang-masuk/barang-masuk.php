@@ -74,7 +74,7 @@ include_once "../layout/header.php"
             <!-- </div> -->
             <!-- /.card-header -->
             <div class="card-body">
-              <form action="#" method="post">
+              <form action="barang-masuk-tambah.php" method="post">
                 <div class="row mb-4">
                   <div class="col-md-2">
                     <label for="tanggal">Tanggal Beli</label>
@@ -83,19 +83,19 @@ include_once "../layout/header.php"
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="nama-supplier">Nama Supplier</label>
-                      <input type="text" class="form-control" name="nama_supplier" id="nama-supplier">
+                      <input type="text" class="form-control" name="nama_supplier" id="nama-supplier" required>
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="id-supplier">ID Supplier</label>
-                      <input type="text" class="form-control" name="id_supplier" id="id-supplier">
+                      <input type="text" class="form-control" name="id_supplier" id="id-supplier" required>
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="telepon-supplier">Telepon Supplier</label>
-                      <input type="number" class="form-control" name="telepon_supplier" id="telepon-supplier">
+                      <input type="number" class="form-control" name="telepon_supplier" id="telepon-supplier" required>
                     </div>
                   </div>
 
@@ -202,7 +202,7 @@ include_once "../layout/header.php"
                     <br>
                     <div class="d-flex">
                       <div class="justify-content-start">
-                        <button type="submit  " class="btn btn-primary">
+                        <button type="submit" name="simpan" class="btn btn-primary">
                           Simpan
                         </button>
                       </div>
@@ -311,6 +311,8 @@ include_once "../layout/header.php"
       source: "<?= BASEURL ?>/pages/barang-masuk/nama-barang.php",
       select: function(event, ui) {
         $('#id-barang').val(ui.item.id_barang);
+        $('#harga-jual').val(ui.item.harga_jual);
+        $('#harga-beli').val(ui.item.harga_beli);
       }
     });
 
