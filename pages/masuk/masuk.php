@@ -44,7 +44,7 @@ include_once "../layout/header.php"
       <?php flash(); ?>
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Transaksi</h1>
+          <h1>Barang Masuk</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -77,7 +77,7 @@ include_once "../layout/header.php"
               <form action="transaksi-tambah.php" method="post">
                 <div class="row mb-4">
                   <div class="col-md-2">
-                    <label for="tanggal">Tanggal Transaksi</label>
+                    <label for="tanggal">Tanggal Masuk</label>
                     <input type="date" class="form-control" name="tanggal" id="tanggal" style="width: 140px;">
                   </div>
                   <div class="col-md-2">
@@ -90,7 +90,7 @@ include_once "../layout/header.php"
                     <div class="form-group">
                       <?php
                       $waktu = date_format(date_create(), 'Y-m-d');
-                      $kode_faktur = kodeFaktur($waktu);
+                      $kode_pembelian = kodePembelian($waktu);
                       ?>
                       <label for="no-faktur">No Faktur</label>
                       <input type="text" class="form-control" name="no_faktur" id="no-faktur" value="<?= $kode_faktur ?>" readonly style="width: 120px;">
@@ -123,10 +123,10 @@ include_once "../layout/header.php"
                   <div class="col-md-1">
                     <div class="form-group">
                       <label for="banyak">Banyak</label>
-                      <input type="number" class="form-control" name="banyak" id="banyak">
+                      <input type="text" class="form-control" name="banyak" id="banyak">
                     </div>
                   </div>
-                  <input type="hidden" id="jual">
+                  <input type="hidden" id="harga">
                   <input type="hidden" name="no" id="no" value="1">
                   <div class="col-md-2">
                     <div class="d-flex justify-content-end">
@@ -376,7 +376,7 @@ include_once "../layout/header.php"
             results.push({
               id: item.id_barang,
               text: item.nama_barang,
-              jual: item.jual
+              harga: item.harga
             });
           });
           return {
@@ -390,7 +390,7 @@ include_once "../layout/header.php"
     $('#nama-barang').on('select2:select', function(e) {
       var data = e.params.data;
       $('#id-barang').val(data.id);
-      $('#jual').val(data.jual);
+      $('#harga').val(data.harga);
     });
 
     $('#nama-pelanggan').autocomplete({
@@ -405,7 +405,7 @@ include_once "../layout/header.php"
       var id_barang = $('#id-barang').val();
       var nama_barang = $('#nama-barang option:selected').text();
       var banyak = $('#banyak').val();
-      var jual = $('#jual').val();
+      var harga = $('#harga').val();
       var total = $('#stotal').val();
       var subtotal = banyak * harga;
       var total = parseInt(total) + parseInt(subtotal);
