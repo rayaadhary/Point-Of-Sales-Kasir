@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Apr 2023 pada 12.06
+-- Waktu pembuatan: 09 Apr 2023 pada 10.31
 -- Versi server: 10.4.22-MariaDB
 -- Versi PHP: 8.1.1
 
@@ -61,6 +61,19 @@ CREATE TABLE `barang_masuk` (
   `tanggal_beli` date DEFAULT NULL,
   `id_pengguna` int(11) DEFAULT NULL,
   `id_supplier` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `beban`
+--
+
+CREATE TABLE `beban` (
+  `id_beban` varchar(255) NOT NULL,
+  `nama_beban` varchar(255) DEFAULT NULL,
+  `tanggal` date DEFAULT NULL,
+  `biaya` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -134,14 +147,34 @@ INSERT INTO `pengiriman` (`no_surat_jalan`, `alamat_tujuan`, `tanggal_kirim`, `t
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `prive`
+--
+
+CREATE TABLE `prive` (
+  `id_prive` varchar(255) NOT NULL,
+  `nama_prive` varchar(255) DEFAULT NULL,
+  `tanggal` date DEFAULT NULL,
+  `biaya` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `supplier`
 --
 
 CREATE TABLE `supplier` (
   `id_supplier` varchar(255) NOT NULL,
   `nama_supplier` varchar(255) DEFAULT NULL,
-  `telepon` varchar(13) DEFAULT NULL
+  `telepon_supplier` varchar(13) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `supplier`
+--
+
+INSERT INTO `supplier` (`id_supplier`, `nama_supplier`, `telepon_supplier`) VALUES
+('PT0001', 'Jaya Perkasa', '08322627272');
 
 -- --------------------------------------------------------
 
@@ -203,6 +236,12 @@ ALTER TABLE `barang_masuk`
   ADD KEY `id_supplier` (`id_supplier`);
 
 --
+-- Indeks untuk tabel `beban`
+--
+ALTER TABLE `beban`
+  ADD PRIMARY KEY (`id_beban`);
+
+--
 -- Indeks untuk tabel `pelanggan`
 --
 ALTER TABLE `pelanggan`
@@ -219,6 +258,12 @@ ALTER TABLE `pengguna`
 --
 ALTER TABLE `pengiriman`
   ADD PRIMARY KEY (`no_surat_jalan`);
+
+--
+-- Indeks untuk tabel `prive`
+--
+ALTER TABLE `prive`
+  ADD PRIMARY KEY (`id_prive`);
 
 --
 -- Indeks untuk tabel `supplier`
