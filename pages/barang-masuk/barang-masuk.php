@@ -92,6 +92,12 @@ include_once "../layout/header.php"
                       <input type="text" class="form-control" name="id_supplier" id="id-supplier">
                     </div>
                   </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="telepon-supplier">Telepon Supplier</label>
+                      <input type="number" class="form-control" name="telepon_supplier" id="telepon-supplier">
+                    </div>
+                  </div>
 
                 </div>
                 <div class="row">
@@ -160,7 +166,7 @@ include_once "../layout/header.php"
                           <span>Harga Jual</span>
                         </div>
                         <div class="col-md-2">
-                          <span>QTY</span>
+                          <span>Banyak</span>
                         </div>
                         <div class="col-md-3">
                           <span>Subtotal</span>
@@ -291,46 +297,13 @@ include_once "../layout/header.php"
 
 
   $(function() {
-    // $('#nama-barang').select2({
-    //   theme: "classic",
-    //   placeholder: 'Pilih Nama Barang',
-    //   ajax: {
-    //     url: "<?= BASEURL ?>/pages/transaksi/autocomplete.php",
-    //     type: 'GET',
-    //     dataType: 'json',
-    //     delay: 250,
-    //     data: function(params) {
-    //       return {
-    //         term: params.term
-    //       };
-    //     },
-    //     processResults: function(data) {
-    //       var results = [];
-    //       $.each(data, function(index, item) {
-    //         results.push({
-    //           id: item.id_barang,
-    //           text: item.nama_barang,
-    //           harga: item.harga
-    //         });
-    //       });
-    //       return {
-    //         results: results
-    //       };
-    //     },
-    //     cache: true
-    //   }
-    // });
-    // // Fungsi untuk mengambil id barang dari input field terpisah saat user memilih nama barang
-    // $('#nama-barang').on('select2:select', function(e) {
-    //   var data = e.params.data;
-    //   $('#id-barang').val(data.id);
-    //   $('#harga').val(data.harga);
-    // });
+
 
     $('#nama-supplier').autocomplete({
       source: "<?= BASEURL ?>/pages/barang-masuk/nama-supplier.php",
       select: function(event, ui) {
         $('#id-supplier').val(ui.item.id_supplier);
+        $('#telepon-supplier').val(ui.item.telepon_supplier);
       }
     });
 
@@ -347,22 +320,27 @@ include_once "../layout/header.php"
       var nama_barang = $('#nama-barang').val();
       // var nama_barang = $('#nama-barang option:selected').text();
       var banyak = $('#banyak').val();
-      var harga = $('#harga').val();
+      var harga_beli = $('#harga-beli').val();
+      var harga_jual = $('#harga-jual').val();
       var total = $('#stotal').val();
-      var subtotal = banyak * harga;
+      // var subtotal = banyak * harga_beli;
+      var subtotal = banyak * harga_jual;
       var total = parseInt(total) + parseInt(subtotal);
       var html = '<div class="row mb-2" id="row' + no + '">' +
-        '<div class="col-md-4">' +
+        '<div class="col-md-3">' +
         '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" readonly>' +
         '<input type="hidden" id="idBarang' + no + '" name="idBarang[]" readonly>' +
         '</div>' +
         '<div class="col-md-2">' +
-        '<input class="form-control" id="hargaBarang' + no + '" name="harga[]" readonly>' +
+        '<input class="form-control" id="hargaBeliBarang' + no + '" name="harga_beli[]" readonly>' +
+        '</div>' +
+        '<div class="col-md-2">' +
+        '<input class="form-control" id="hargaJualBarang' + no + '" name="harga_jual[]" readonly>' +
         '</div>' +
         '<div class="col-md-2">' +
         '<input class="form-control" id="qty' + no + '" name="banyak[]" readonly>' +
         '</div>' +
-        '<div class="col-md-3">' +
+        '<div class="col-md-2">' +
         '<input class="form-control" id="subTotal' + no + '"  name="subtotal[]" readonly>' +
         '</div>' +
         '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
@@ -371,7 +349,8 @@ include_once "../layout/header.php"
       $('#stotal').val(total);
       $('#namaBarang' + no).val(nama_barang);
       $('#idBarang' + no).val(id_barang);
-      $('#hargaBarang' + no).val(harga);
+      $('#hargaJualBarang' + no).val(harga_jual);
+      $('#hargaBeliBarang' + no).val(harga_beli);
       $('#qty' + no).val(banyak);
       $('#subTotal' + no).val(subtotal);
       $('#banyak').val('');
@@ -379,6 +358,8 @@ include_once "../layout/header.php"
       $('#no').val(no);
       $('#nama-barang').val(null).trigger('change');
       $('#id-barang').val(null).trigger('change');
+      $('#harga-jual').val(null).trigger('change');
+      $('#harga-beli').val(null).trigger('change');
     });
 
     $('#diskon').on('keyup', function() {
@@ -389,12 +370,9 @@ include_once "../layout/header.php"
       if (kembalian >= 0) {
         $('#kembalian').val(kembalian);
         $('#status').val('Lunas');
-        var tanggal = $('#tanggal').val();
-        $('#jatuh-tempo').val(tanggal);
       } else {
-        $('#status').val('Hutang');
+        $('#status').val('Utang');
         $('#kembalian').val(kembalian);
-        jatuhTempo();
       }
     })
 
@@ -406,14 +384,11 @@ include_once "../layout/header.php"
       if (kembalian >= 0) {
         $('#kembalian').val(kembalian);
         $('#status').val('Lunas');
-        var tanggal = $('#tanggal').val();
-        $('#jatuh-tempo').val(tanggal);
       } else if (total == 0) {
         $('#status').val('');
       } else {
-        $('#status').val('Hutang');
+        $('#status').val('Utang');
         $('#kembalian').val(kembalian);
-        jatuhTempo();
       }
     })
   });

@@ -12,7 +12,8 @@ if (isset($_GET['term'])) {
     while ($row = mysqli_fetch_assoc($result)) {
       $data[] = array(
         'id_supplier' => $row['id_supplier'],
-        'value' => $row['nama_supplier']
+        'value' => $row['nama_supplier'],
+        'telepon_supplier' => $row['telepon_supplier'],
       );
     }
   } else {

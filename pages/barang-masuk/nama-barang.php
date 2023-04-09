@@ -12,7 +12,7 @@ if (isset($_GET['term'])) {
     while ($row = mysqli_fetch_assoc($result)) {
       $data[] = array(
         'id_barang' => $row['id_barang'],
-        'value' => $row['nama_barang']
+        'value' => $row['nama_barang'],
       );
     }
   } else {

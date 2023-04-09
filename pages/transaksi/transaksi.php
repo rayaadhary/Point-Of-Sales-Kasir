@@ -146,7 +146,7 @@ include_once "../layout/header.php"
                           <span>Harga</span>
                         </div>
                         <div class="col-md-2">
-                          <span>QTY</span>
+                          <span>Banyak</span>
                         </div>
                         <div class="col-md-3">
                           <span>Subtotal</span>
@@ -450,7 +450,7 @@ include_once "../layout/header.php"
         var tanggal = $('#tanggal').val();
         $('#jatuh-tempo').val(tanggal);
       } else {
-        $('#status').val('Hutang');
+        $('#status').val('Utang');
         $('#kembalian').val(kembalian);
         jatuhTempo();
       }
@@ -469,7 +469,7 @@ include_once "../layout/header.php"
       } else if (total == 0) {
         $('#status').val('');
       } else {
-        $('#status').val('Hutang');
+        $('#status').val('Utang');
         $('#kembalian').val(kembalian);
         jatuhTempo();
       }
