@@ -66,25 +66,27 @@ include_once "../layout/header.php"
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    <th>ID Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Harga Beli</th>
-                    <th>Harga Jual</th>
-                    <th>Stok</th>
+                    <th>No Faktur</th>
+                    <th>Tanggal</th>
+                    <th>Jatuh Tempo</th>
+                    <th>Total</th>
+                    <th>Bayar</th>
+                    <th>Kurang</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php
-                  $data = getAllBarang();
+                  $data = getAllTransaksiUtang();
                   foreach ($data as $item) {
                   ?>
                     <tr>
-                      <td><?= $item['id_barang']; ?></td>
-                      <td><?= $item['nama_barang']; ?></td>
-                      <td><?= $item['harga_beli']; ?></td>
-                      <td><?= $item['harga_jual']; ?></td>
-                      <td><?= $item['stok']; ?></td>
+                      <td><?= $item['no_faktur']; ?></td>
+                      <td><?= $item['tanggal']; ?></td>
+                      <td><?= $item['jatuh_tempo']; ?></td>
+                      <td><?= $item['total']; ?></td>
+                      <td><?= $item['bayar']; ?></td>
+                      <td><?= $item['kembali']; ?></td>
                       <td>
                         <!-- a href -->
                         <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">

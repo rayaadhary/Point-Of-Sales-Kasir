@@ -18,7 +18,7 @@ if (isset($_GET['term'])) {
     }
   } else {
     $data[] = array(
-      // 'id_barang' => kodePelanggan(),
+      'id_supplier' => kodeSupplier(),
       'value' => $searchTerm
     );
   }
