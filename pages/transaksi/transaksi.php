@@ -126,11 +126,11 @@ include_once "../layout/header.php"
                       <input type="number" class="form-control" name="banyak" id="banyak">
                     </div>
                   </div>
-                  <input type="hidden" id="jual">
+                  <input type="hidden" id="harga">
                   <input type="hidden" name="no" id="no" value="1">
                   <div class="col-md-2">
                     <div class="d-flex justify-content-end">
-                      <a href="#" class="btn btn-primary" id="tambah">Tambah</a>
+                      <a href="#" class="btn btn-primary" id="tambah-transaksi">Tambah</a>
                     </div>
                   </div>
                 </div>
@@ -376,7 +376,7 @@ include_once "../layout/header.php"
             results.push({
               id: item.id_barang,
               text: item.nama_barang,
-              jual: item.jual
+              harga: item.harga
             });
           });
           return {
@@ -390,7 +390,7 @@ include_once "../layout/header.php"
     $('#nama-barang').on('select2:select', function(e) {
       var data = e.params.data;
       $('#id-barang').val(data.id);
-      $('#jual').val(data.jual);
+      $('#harga').val(data.harga);
     });
 
     $('#nama-pelanggan').autocomplete({
@@ -400,12 +400,12 @@ include_once "../layout/header.php"
       }
     });
 
-    $('#tambah').on('click', function() {
+    $('#tambah-transaksi').on('click', function() {
       var no = $('#no').val();
       var id_barang = $('#id-barang').val();
       var nama_barang = $('#nama-barang option:selected').text();
       var banyak = $('#banyak').val();
-      var jual = $('#jual').val();
+      var harga = $('#harga').val();
       var total = $('#stotal').val();
       var subtotal = banyak * harga;
       var total = parseInt(total) + parseInt(subtotal);

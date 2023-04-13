@@ -26,14 +26,6 @@ if (isset($_POST['simpan'])) {
       $query = "INSERT INTO supplier VALUES ('$id_supplier', '$nama_supplier', '$telepon_supplier')";
       $sql = mysqli_query($db, $query);
     }
-
-    // $surat_jalan = mysqli_real_escape_string($db, trim($_POST['surat_jalan']));
-    // $alamat_tujuan = mysqli_real_escape_string($db, trim($_POST['alamat_tujuan']));
-    // $tanggal_kirim = mysqli_real_escape_string($db, trim($_POST['tanggal_kirim']));
-    // $telepon = mysqli_real_escape_string($db, trim($_POST['telepon']));
-    // $sql = mysqli_query($db, "INSERT INTO pengiriman VALUES ('$surat_jalan', '$alamat_tujuan', '$tanggal_kirim', '$telepon')");
-
-
     for ($i = 0; $i < $no; $i++) {
       print_r($_POST['no']);
       $no_barang_masuk = mysqli_real_escape_string($db, trim($_POST['barang_masuk']));
@@ -67,8 +59,7 @@ if (isset($_POST['simpan'])) {
     }
     if ($sql) {
       $_SESSION['cetak'] = $_POST;
-      // setFlash('berhasil', 'ditambahkan', 'primary');
-      // header('Location: ' . BASEURL . '/pages/barang-masuk/cetak-barang-masuk.php');
+      setFlash('berhasil', 'ditambahkan', 'primary');
       header('Location: ' . BASEURL . '/pages/barang-masuk/barang-masuk.php');
       exit;
     }

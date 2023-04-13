@@ -106,6 +106,21 @@ function kodePelanggan()
   return $kode_pelanggan;
 }
 
+function kodeSupplier()
+{
+  $db = dbConnect();
+  $query = $db->query("SELECT max(id_supplier) as kodeTerbesar FROM supplier");
+  $data = $query->fetch_assoc();
+  $kode_supplier = $data['kodeTerbesar'];
+  $urutan = (int) substr($kode_supplier, 2, 4);
+  $urutan++;
+  $huruf = "PT";
+  $kode_supplier = $huruf . sprintf("%04s", $urutan);
+  $query->free();
+  $db->close();
+  return $kode_supplier;
+}
+
 
 function gantiPassword($username, $password)
 {
@@ -154,6 +169,16 @@ function getAllPrive()
 {
   $db = dbConnect();
   $res = mysqli_query($db, "SELECT * FROM prive");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getAllTransaksiUtang()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT * FROM transaksi WHERE status = 'utang' GROUP BY no_faktur");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();

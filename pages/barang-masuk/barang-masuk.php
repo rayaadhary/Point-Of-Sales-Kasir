@@ -326,7 +326,7 @@ include_once "../layout/header.php"
       var harga_jual = $('#harga-jual').val();
       var total = $('#stotal').val();
       // var subtotal = banyak * harga_beli;
-      var subtotal = banyak * harga_jual;
+      var subtotal = banyak * harga_beli;
       var total = parseInt(total) + parseInt(subtotal);
       var html = '<div class="row mb-2" id="row' + no + '">' +
         '<div class="col-md-3">' +
