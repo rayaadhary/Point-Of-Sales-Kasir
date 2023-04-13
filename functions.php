@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASEURL', 'http://localhost/kasir/admin');
+define('BASEURL', 'http://localhost/kasir');
 
 
 function waktu()
