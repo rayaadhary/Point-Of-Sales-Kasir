@@ -122,17 +122,14 @@ include_once "../layout/header.php"
                   <label>Total</label>
                   <input type="text" name="total" id="total" class="form-control" / readonly>
                 </div>
-                <div class="form-group">
-                  <label>Potongan</label>
-                  <input type="number" name="diskon" id="diskon" class="form-control" />
-                </div>
+
                 <div class="form-group">
                   <label id="keterangan"></label>
-                  <input type="number" name="kembalian" id="kembalian" class="form-control" />
+                  <input type="number" name="kembalian" id="kembalian" class="form-control" / readonly>
                 </div>
                 <div class="form-group">
                   <label>Bayar</label>
-                  <input type="number" name="bayar" id="bayar" class="form-control" />
+                  <input type="number" name="bayar" id="bayar" class="form-control" / required>
                 </div>
                 <div class="form-group">
                   <label>Status</label>
@@ -229,11 +226,9 @@ include_once "../layout/header.php"
           var total = parseInt(data.total);
           // var bayar = parseInt(data.bayar);
           var kembali = parseInt(data.kembali);
-          var diskon = parseInt(data.diskon);
           $('#status').val(data.status);
           $('#bayar').on('keyup', function() {
             var bayar = parseInt($(this).val());
-            // kembali = bayar - (total - diskon >= 0 ? total - diskon : 0);
             sisa = kembali + bayar;
             $('#kembalian').val(sisa);
             if (bayar > Math.abs(sisa)) {
@@ -249,8 +244,7 @@ include_once "../layout/header.php"
           $('#total').val(total);
           $('#bayar').val(bayar);
           $('#kembalian').val(kembali);
-          $('#diskon').val(diskon);
-          $('#insert').val("Update");
+          $('#insert').val("Simpan");
           $('#add_data_Modal').modal('show');
         }
       });
