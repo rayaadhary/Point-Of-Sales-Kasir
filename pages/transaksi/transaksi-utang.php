@@ -113,7 +113,7 @@ include_once "../layout/header.php"
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-              <form method="post" id="insert_form">
+              <form method="post" action="transaksi-pelunasan.php">
                 <div class="form-group">
                   <label>No Faktur</label>
                   <input type="text" name="no_faktur" id="no_faktur" class="form-control" / readonly>
@@ -122,7 +122,10 @@ include_once "../layout/header.php"
                   <label>Total</label>
                   <input type="text" name="total" id="total" class="form-control" / readonly>
                 </div>
-
+                <div class="form-group">
+                  <label>Potongan</label>
+                  <input type="number" name="diskon" id="diskon" class="form-control" />
+                </div>
                 <div class="form-group">
                   <label id="keterangan"></label>
                   <input type="number" name="kembalian" id="kembalian" class="form-control" / readonly>
@@ -130,6 +133,7 @@ include_once "../layout/header.php"
                 <div class="form-group">
                   <label>Bayar</label>
                   <input type="number" name="bayar" id="bayar" class="form-control" / required>
+                  <input type="hidden" name="bayar_baru" id="bayar-baru" / class="form-control" required>
                 </div>
                 <div class="form-group">
                   <label>Status</label>
@@ -137,7 +141,7 @@ include_once "../layout/header.php"
                 </div>
                 <input type="hidden" name="employee_id" id="employee_id" />
                 <div class="d-flex justify-content-end">
-                  <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-primary" />
+                  <input type="submit" name="update_utang" id="update-utang" value="update" class="btn btn-primary" />
                 </div>
               </form>
             </div>
@@ -208,10 +212,6 @@ include_once "../layout/header.php"
   });
 
   $(document).ready(function() {
-    $('#add').click(function() {
-      $('#insert').val("Insert");
-      $('#insert_form')[0].reset();
-    });
     $(document).on('click', '.piutang', function() {
       var no_faktur = $(this).attr("id");
       $.ajax({
@@ -224,8 +224,9 @@ include_once "../layout/header.php"
         success: function(data) {
           $('#no_faktur').val(data.no_faktur);
           var total = parseInt(data.total);
-          // var bayar = parseInt(data.bayar);
+          var bayarAwal = parseInt(data.bayar);
           var kembali = parseInt(data.kembali);
+          var diskon = parseInt(data.diskon);
           $('#status').val(data.status);
           $('#bayar').on('keyup', function() {
             var bayar = parseInt($(this).val());
@@ -238,13 +239,16 @@ include_once "../layout/header.php"
               $('#keterangan').text("Kurang");
               $('#status').val("Utang");
             }
+            var hasil = bayar + bayarAwal;
+            $('#bayar-baru').val(hasil);
           })
           var keterangan = "Kurang";
           $('#keterangan').text(keterangan);
           $('#total').val(total);
           $('#bayar').val(bayar);
+          $('#diskon').val(diskon);
           $('#kembalian').val(kembali);
-          $('#insert').val("Simpan");
+          $('#update-utang').val("Simpan");
           $('#add_data_Modal').modal('show');
         }
       });
