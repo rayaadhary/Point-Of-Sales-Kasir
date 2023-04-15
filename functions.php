@@ -237,6 +237,16 @@ function getBarangById($id)
   return $data;
 }
 
+function getTransaksiUtangById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM transaksi WHERE no_faktur = '$id' AND status = 'utang'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 function getBebanById($id)
 {
   $db = dbConnect();

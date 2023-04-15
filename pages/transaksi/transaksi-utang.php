@@ -72,7 +72,7 @@ include_once "../layout/header.php"
                     <th>Total</th>
                     <th>Bayar</th>
                     <th>Kurang</th>
-                    <th>Aksi</th>
+                    <th>Lunasi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -87,62 +87,13 @@ include_once "../layout/header.php"
                       <td><?= $item['total']; ?></td>
                       <td><?= $item['bayar']; ?></td>
                       <td><?= $item['kembali']; ?></td>
-                      <td>
+                      <td align="center">
                         <!-- a href -->
-                        <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
-                          <i class="fas fa-edit"></i>
-                        </a>
-                        <!-- a href -->
-                        <a href="barang-hapus.php?id_barang=<?= $item['id_barang']; ?>" class="btn btn-danger btn-circle btn-sm hapus">
-                          <i class="fas fa-trash"></i>
+                        <a href="#" type="button" name="utang" value="utang" id="<?= $item["no_faktur"]; ?>" class="btn btn-info piutang">
+                          <i class="fas fa-money-check"></i>
                         </a>
                       </td>
                     </tr>
-                    <!-- Modal Edit Data -->
-                    <div class="modal fade" id="myModal<?= $item['id_barang'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Form Edit Barang</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form action="barang-edit.php" method="post">
-                              <?php
-                              $id_barang = $item['id_barang'];
-                              $data = getBarangById($id_barang);
-                              ?>
-                              <div class="card-body">
-                                <div class="form-group">
-                                  <label for="id_barang">ID Barang</label>
-                                  <input type="text" class="form-control" name="id_barang" id="id_barang" value="<?= $data['id_barang'] ?>" readonly>
-                                </div>
-                                <div class="form-group">
-                                  <label for="nama_barang">Nama Barang</label>
-                                  <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang" value="<?= $data['nama_barang'] ?>">
-                                </div>
-                                <div class="form-group">
-                                  <label for="harga">Harga Beli</label>
-                                  <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang" value="<?= $data['harga'] ?>">
-                                </div>
-                                <div class="form-group">
-                                  <label for="stok">Stok Barang</label>
-                                  <input type="number" class="form-control" id="stok" name="stok" placeholder="Masukan Stok Barang" value="<?= $data['stok'] ?>">
-                                </div>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <div class="text-center">
-                              <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
-                            </div>
-                          </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Akhir modal -->
                   <?php
                   }
                   ?>
@@ -153,6 +104,48 @@ include_once "../layout/header.php"
           <!-- /.card -->
         </div>
         <!-- /.col -->
+      </div>
+      <div id="add_data_Modal" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Form Pelunasan Utang</h5>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form method="post" id="insert_form">
+                <div class="form-group">
+                  <label>No Faktur</label>
+                  <input type="text" name="no_faktur" id="no_faktur" class="form-control" / readonly>
+                </div>
+                <div class="form-group">
+                  <label>Total</label>
+                  <input type="text" name="total" id="total" class="form-control" / readonly>
+                </div>
+                <div class="form-group">
+                  <label>Potongan</label>
+                  <input type="number" name="diskon" id="diskon" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label id="keterangan"></label>
+                  <input type="number" name="kembalian" id="kembalian" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Bayar</label>
+                  <input type="number" name="bayar" id="bayar" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Status</label>
+                  <input type="text" name="status" id="status" class="form-control" / readonly>
+                </div>
+                <input type="hidden" name="employee_id" id="employee_id" />
+                <div class="d-flex justify-content-end">
+                  <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-primary" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- /.row -->
     </div>
@@ -176,49 +169,6 @@ include_once "../layout/header.php"
 </div>
 <!-- ./wrapper -->
 
-<!-- Modal Tambah Data -->
-
-<!-- Modal Tambah Data -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Form Tambah Barang</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="barang-tambah.php" method="post">
-          <div class="card-body">
-            <div class="form-group">
-              <label for="id_barang">ID Barang</label>
-              <input type="text" class="form-control" name="id_barang" id="id_barang" placeholder="Masukan id barang">
-            </div>
-            <div class="form-group">
-              <label for="nama_barang">Nama Barang</label>
-              <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang">
-            </div>
-            <div class="form-group">
-              <label for="harga">Harga Barang</label>
-              <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang">
-            </div>
-            <div class="form-group">
-              <label for="stok">Stok Barang</label>
-              <input type="number" class="form-control" id="stok" name="stok" placeholder="Masukan Stok Barang">
-            </div>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
-        </div>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- Akhir modal -->
 
 
 
@@ -257,6 +207,53 @@ include_once "../layout/header.php"
       language: {
         url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'
       }
+    });
+  });
+
+  $(document).ready(function() {
+    $('#add').click(function() {
+      $('#insert').val("Insert");
+      $('#insert_form')[0].reset();
+    });
+    $(document).on('click', '.piutang', function() {
+      var no_faktur = $(this).attr("id");
+      $.ajax({
+        url: "ambilDataFaktur.php",
+        method: "POST",
+        data: {
+          no_faktur: no_faktur
+        },
+        dataType: "json",
+        success: function(data) {
+          $('#no_faktur').val(data.no_faktur);
+          var total = parseInt(data.total);
+          // var bayar = parseInt(data.bayar);
+          var kembali = parseInt(data.kembali);
+          var diskon = parseInt(data.diskon);
+          $('#status').val(data.status);
+          $('#bayar').on('keyup', function() {
+            var bayar = parseInt($(this).val());
+            // kembali = bayar - (total - diskon >= 0 ? total - diskon : 0);
+            sisa = kembali + bayar;
+            $('#kembalian').val(sisa);
+            if (bayar > Math.abs(sisa)) {
+              $('#keterangan').text("Lebih")
+              $('#status').val("Lunas");
+            } else {
+              $('#keterangan').text("Kurang");
+              $('#status').val("Utang");
+            }
+          })
+          var keterangan = "Kurang";
+          $('#keterangan').text(keterangan);
+          $('#total').val(total);
+          $('#bayar').val(bayar);
+          $('#kembalian').val(kembali);
+          $('#diskon').val(diskon);
+          $('#insert').val("Update");
+          $('#add_data_Modal').modal('show');
+        }
+      });
     });
   });
 </script>
