@@ -124,7 +124,8 @@ include_once "../layout/header.php"
                 </div>
                 <div class="form-group">
                   <label>Potongan</label>
-                  <input type="number" name="diskon" id="diskon" class="form-control" />
+                  <input type="number" name="diskon" value="0" id="diskon" class="form-control" />
+                  <input type="hidden" name="diskon_baru" id="diskon-baru" class="form-control" />
                 </div>
                 <div class="form-group">
                   <label id="keterangan"></label>
@@ -133,7 +134,7 @@ include_once "../layout/header.php"
                 <div class="form-group">
                   <label>Bayar</label>
                   <input type="number" name="bayar" id="bayar" class="form-control" / required>
-                  <input type="hidden" name="bayar_baru" id="bayar-baru" / class="form-control" required>
+                  <input type="hidden" name="bayar_baru" id="bayar-baru" / class="form-control">
                 </div>
                 <div class="form-group">
                   <label>Status</label>
@@ -226,11 +227,31 @@ include_once "../layout/header.php"
           var total = parseInt(data.total);
           var bayarAwal = parseInt(data.bayar);
           var kembali = parseInt(data.kembali);
-          var diskon = parseInt(data.diskon);
+          var diskonAwal = parseInt(data.diskon);
           $('#status').val(data.status);
+          $('#diskon').on('keyup', function() {
+            var diskon = parseInt($(this).val());
+            var bayar = parseInt($('#bayar').val());
+            var diskonBaru = kembali + diskon;
+            var hasilDiskonBaru = diskonAwal + diskon;
+            var sisa = kembali + hasilDiskonBaru;
+            if (hasilDiskonBaru > Math.abs(diskonBaru)) {
+              // kembali += hasilDiskonBaru;
+              $('#kembalian').val(sisa);
+              $('#keterangan').text("Lebih")
+              $('#status').val("Lunas");
+            } else {
+              $('#kembalian').val(diskonBaru);
+              $('#keterangan').text("Kurang");
+              $('#status').val("Utang");
+            }
+            // $('#kembalian').val("text");
+            $('#diskon-baru').val(hasilDiskonBaru);
+          })
           $('#bayar').on('keyup', function() {
             var bayar = parseInt($(this).val());
-            sisa = kembali + bayar;
+            var diskon = parseInt($('#diskon').val());
+            var sisa = kembali + bayar + diskon;
             $('#kembalian').val(sisa);
             if (bayar > Math.abs(sisa)) {
               $('#keterangan').text("Lebih")
@@ -239,14 +260,16 @@ include_once "../layout/header.php"
               $('#keterangan').text("Kurang");
               $('#status').val("Utang");
             }
-            var hasil = bayar + bayarAwal;
-            $('#bayar-baru').val(hasil);
+            var bayarBaru = bayar + bayarAwal;
+            $('#bayar-baru').val(bayarBaru);
           })
           var keterangan = "Kurang";
           $('#keterangan').text(keterangan);
           $('#total').val(total);
           $('#bayar').val(bayar);
           $('#diskon').val(diskon);
+          var hasilDiskonBaru = diskonAwal;
+          $('#diskon-baru').val(hasilDiskonBaru);
           $('#kembalian').val(kembali);
           $('#update-utang').val("Simpan");
           $('#add_data_Modal').modal('show');
