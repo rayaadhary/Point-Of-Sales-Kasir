@@ -260,7 +260,6 @@ include_once "../layout/header.php"
               $('#keterangan').text("Kurang");
               $('#status').val("Utang");
             }
-            x
             var bayarBaru = bayar + bayarAwal;
             $('#bayar-baru').val(bayarBaru);
           })

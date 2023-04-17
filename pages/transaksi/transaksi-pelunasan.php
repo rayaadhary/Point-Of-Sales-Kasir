@@ -10,7 +10,7 @@ if (isset($_POST["update_utang"])) {
   $bayar = mysqli_real_escape_string($db, trim($_POST["bayar_baru"]));
   $kembalian = mysqli_real_escape_string($db, trim($_POST["kembalian"]));
   $status = mysqli_real_escape_string($db, trim($_POST["status"]));
-  $res = $db->prepare("UPDATE transaksi SET kembali=?, bayar=?, status=? WHERE no_faktur=?");
+  $res = $db->prepare("UPDATE transaksi SET diskon=?, kembali=?, bayar=?, status=? WHERE no_faktur=?");
   $res->bind_param("sssss", $diskon,  $kembalian, $bayar, $status, $no_faktur);
   $res->execute();
   if ($res) {
