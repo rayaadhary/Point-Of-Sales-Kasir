@@ -333,8 +333,8 @@ function insertDataPrive($data)
 function updateDataBarang($data)
 {
   $db = dbConnect();
-  $res = $db->prepare("UPDATE barang SET nama_barang=?, beli=?, jual=?, stok=? WHERE id_barang=?");
-  $res->bind_param("ssss",  $data['nama_barang'], $data['beli'], $data['jual'], $data['stok'], $data['id_barang']);
+  $res = $db->prepare("UPDATE barang SET nama_barang=?, harga_jual=? WHERE id_barang=?");
+  $res->bind_param("sss",  $data['nama_barang'], $data['harga_jual'], $data['id_barang']);
   $res->execute();
   if ($res) {
     return 1;

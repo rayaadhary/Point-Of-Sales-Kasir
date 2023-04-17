@@ -111,7 +111,7 @@ include_once "../layout/header.php"
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-              <form method="post" action="transaksi-pelunasan.php">
+              <form method="post" action="barang-masuk-pelunasan.php">
                 <div class="form-group">
                   <label>No Barang Masuk</label>
                   <input type="text" name="no_barang_masuk" id="no-barang-masuk" class="form-control" / readonly>
@@ -212,28 +212,30 @@ include_once "../layout/header.php"
 
   $(document).ready(function() {
     $(document).on('click', '.piutang', function() {
-      var no_faktur = $(this).attr("id");
+      var no_barang_masuk = $(this).attr("id");
       $.ajax({
-        url: "ambilDataFaktur.php",
+        url: "ambilDataBarangMasuk.php",
         method: "POST",
         data: {
-          no_faktur: no_faktur
+          no_barang_masuk: no_barang_masuk
         },
         dataType: "json",
         success: function(data) {
-          $('#no_faktur').val(data.no_faktur);
+          $('#no-barang-masuk').val(data.no_barang_masuk);
           var total = parseInt(data.total);
           var bayarAwal = parseInt(data.bayar);
           var kembali = parseInt(data.kembali);
           var diskonAwal = parseInt(data.diskon);
           $('#status').val(data.status);
           (diskonAwal == 0 ? $('#diskon').val('0') : $('#diskon').val(diskonAwal));
+          $('#bayar').val('0');
           $('#diskon').on('keyup', function() {
             var diskon = parseInt($(this).val());
             var bayar = parseInt($('#bayar').val());
-            var diskonBaru = kembali + diskon;
+            var kembalian = parseInt($('#kembalian').val());
+            var diskonBaru = bayar + diskon + kembali;
             var hasilDiskonBaru = diskonAwal + diskon;
-            if (diskon >= Math.abs(kembali)) {
+            if (diskon >= Math.abs(kembalian)) {
               $('#kembalian').val(diskonBaru);
               $('#keterangan').text("Lebih")
               $('#status').val("Lunas");
@@ -258,14 +260,12 @@ include_once "../layout/header.php"
               $('#keterangan').text("Kurang");
               $('#status').val("Utang");
             }
-            x
             var bayarBaru = bayar + bayarAwal;
             $('#bayar-baru').val(bayarBaru);
           })
           var keterangan = "Kurang";
           $('#keterangan').text(keterangan);
           $('#total').val(total);
-          $('#bayar').val(bayar);
           var hasilDiskonBaru = diskonAwal;
           $('#diskon-baru').val(hasilDiskonBaru);
           $('#kembalian').val(kembali);
