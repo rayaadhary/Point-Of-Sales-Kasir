@@ -185,6 +185,16 @@ function getAllTransaksiUtang()
   return $data;
 }
 
+function getAllBarangMasukUtang()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT * FROM barang_masuk WHERE status = 'utang' GROUP BY no_barang_masuk");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 function getGroupBarang()
 {
   $db = dbConnect();
@@ -231,6 +241,26 @@ function getBarangById($id)
 {
   $db = dbConnect();
   $res = mysqli_query($db, "SELECT * FROM barang WHERE id_barang = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getTransaksiUtangById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM transaksi WHERE no_faktur = '$id' AND status = 'utang'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getBarangMasukUtangById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM barang_masuk WHERE no_barang_masuk = '$id' AND status = 'utang'");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();

@@ -66,9 +66,8 @@ include_once "../layout/header.php"
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    <th>No Faktur</th>
+                    <th>No Barang Masuk</th>
                     <th>Tanggal</th>
-                    <th>Jatuh Tempo</th>
                     <th>Total</th>
                     <th>Bayar</th>
                     <th>Kurang</th>
@@ -77,19 +76,18 @@ include_once "../layout/header.php"
                 </thead>
                 <tbody>
                   <?php
-                  $data = getAllTransaksiUtang();
+                  $data = getAllBarangMasukUtang();
                   foreach ($data as $item) {
                   ?>
                     <tr>
-                      <td><?= $item['no_faktur']; ?></td>
-                      <td><?= $item['tanggal']; ?></td>
-                      <td><?= $item['jatuh_tempo']; ?></td>
+                      <td><?= $item['no_barang_masuk']; ?></td>
+                      <td><?= $item['tanggal_beli']; ?></td>
                       <td><?= $item['total']; ?></td>
                       <td><?= $item['bayar']; ?></td>
                       <td><?= $item['kembali']; ?></td>
                       <td align="center">
                         <!-- a href -->
-                        <a href="#" type="button" name="utang" value="utang" id="<?= $item["no_faktur"]; ?>" class="btn btn-info piutang">
+                        <a href="#" type="button" name="utang" value="utang" id="<?= $item["no_barang_masuk"]; ?>" class="btn btn-info piutang">
                           <i class="fas fa-money-check"></i>
                         </a>
                       </td>
@@ -115,8 +113,8 @@ include_once "../layout/header.php"
             <div class="modal-body">
               <form method="post" action="transaksi-pelunasan.php">
                 <div class="form-group">
-                  <label>No Faktur</label>
-                  <input type="text" name="no_faktur" id="no_faktur" class="form-control" / readonly>
+                  <label>No Barang Masuk</label>
+                  <input type="text" name="no_barang_masuk" id="no-barang-masuk" class="form-control" / readonly>
                 </div>
                 <div class="form-group">
                   <label>Total</label>
@@ -124,7 +122,7 @@ include_once "../layout/header.php"
                 </div>
                 <div class="form-group">
                   <label>Potongan</label>
-                  <input type="number" name="diskon" value="0" id="diskon" class="form-control" />
+                  <input type="number" name="diskon" id="diskon" class="form-control" />
                   <input type="hidden" name="diskon_baru" id="diskon-baru" class="form-control" />
                 </div>
                 <div class="form-group">
@@ -260,6 +258,7 @@ include_once "../layout/header.php"
               $('#keterangan').text("Kurang");
               $('#status').val("Utang");
             }
+            x
             var bayarBaru = bayar + bayarAwal;
             $('#bayar-baru').val(bayarBaru);
           })
