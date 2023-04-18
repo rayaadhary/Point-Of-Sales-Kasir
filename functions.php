@@ -175,6 +175,16 @@ function getAllPrive()
   return $data;
 }
 
+function getAllTransaksi()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT * FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan GROUP BY no_faktur ORDER BY no_faktur DESC");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 function getAllTransaksiUtang()
 {
   $db = dbConnect();
@@ -185,6 +195,15 @@ function getAllTransaksiUtang()
   return $data;
 }
 
+function getAllBarangMasuk()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT * FROM barang_masuk GROUP BY no_barang_masuk");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
 function getAllBarangMasukUtang()
 {
   $db = dbConnect();
@@ -257,6 +276,7 @@ function getTransaksiUtangById($id)
   return $data;
 }
 
+
 function getBarangMasukUtangById($id)
 {
   $db = dbConnect();
@@ -281,6 +301,27 @@ function getPriveById($id)
 {
   $db = dbConnect();
   $res = mysqli_query($db, "SELECT * FROM prive WHERE id_prive = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+
+function getPengirimanById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM pengiriman WHERE no_surat_jalan = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getTransaksiById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan  WHERE no_faktur = '$id'");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
