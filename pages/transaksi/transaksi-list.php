@@ -98,57 +98,12 @@ include_once "../layout/header.php"
                             <i class="fas fa-shipping-fast"></i>
                           </a>
                           <!-- a href -->
-                          <a href="prive-hapus.php?id_prive=<?= $item['no_faktur']; ?>" title="cetak transaksi" class="btn btn-success btn-circle btn-sm hapus">
+                          <a href="cetak-transaksi-list.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" title="cetak transaksi" class="btn btn-success btn-circle btn-sm">
                             <i class="fas fa-money-check"></i>
                           </a>
                         </div>
                       </td>
                     </tr>
-                    <!-- Modal Edit Data -->
-                    <div class="modal fade" id="myModal<?= $item['id_prive'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Form Edit Prive</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form action="prive-edit.php" method="post">
-                              <?php
-                              $id_prive = $item['id_prive'];
-                              $data = getPriveById($id_prive);
-                              ?>
-                              <div class="card-body">
-                                <div class="form-group">
-                                  <label for="id_prive">ID Prive</label>
-                                  <input type="text" class="form-control" name="id_prive" id="id_prive" value="<?= $data['id_prive'] ?>" readonly>
-                                </div>
-                                <div class="form-group">
-                                  <label for="nama_prive">Nama Prive</label>
-                                  <input type="text" class="form-control" id="nama_prive" name="nama_prive" placeholder="Masukan Nama Prive" value="<?= $data['nama_prive'] ?>">
-                                </div>
-                                <div class="form-group">
-                                  <label for="tanggal">Tanggal</label>
-                                  <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="Masukan Tanggal" value="<?= $data['tanggal'] ?>">
-                                </div>
-                                <div class="form-group">
-                                  <label for="biaya">Biaya</label>
-                                  <input type="number" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Prive" value="<?= $data['biaya'] ?>">
-                                </div>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <div class="text-center">
-                              <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
-                            </div>
-                          </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Akhir modal -->
                   <?php
                   }
                   ?>

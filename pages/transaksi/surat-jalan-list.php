@@ -59,15 +59,22 @@ while ($item = mysqli_fetch_assoc($res)) {
   $pdf->Cell(20, 5, '', 1, 1, 'C');
   $i++;
 }
-$jumlah = 0;
-$i = 0;
-// while ($i < $no) {
-$jumlah += $transaksi['banyak'];
-// $i++;
-// }
+
+function jumlah($db, $transaksiId)
+{
+  $total_banyak = 0;
+  $res = mysqli_query($db, "SELECT * FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan JOIN barang b ON t.id_barang = b.id_barang  WHERE no_faktur = '$transaksiId'");
+  while ($item = mysqli_fetch_assoc($res)) {
+    $total_banyak += $item['banyak'];
+  }
+  return $total_banyak;
+}
+
+$totalJumlah = jumlah($db, $transaksiId);
+
 $pdf->Cell(180, 5, '', 0, 0);
 $pdf->Cell(30, 5, 'Jumlah', 0, 0);
-$pdf->Cell(50, 5, '' . $jumlah, 0, 1);
+$pdf->Cell(50, 5, '' . $totalJumlah, 0, 1);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(80, 10, 'Tanda', 0, 0, 'C');
 $pdf->Cell(80, 10, 'Hormat Kami', 0, 0, 'C');
