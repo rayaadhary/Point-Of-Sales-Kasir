@@ -125,6 +125,7 @@ function kodeSupplier()
 function gantiPassword($username, $password)
 {
   $db = dbConnect();
+  $password = password_hash($password, PASSWORD_DEFAULT);
   $res = mysqli_query($db, "UPDATE pengguna SET password = '$password' WHERE username = '$username'");
   if ($res) {
     return 1;
@@ -178,7 +179,7 @@ function getAllPrive()
 function getAllTransaksi()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT * FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan GROUP BY no_faktur ORDER BY no_faktur DESC");
+  $res = $db->query("SELECT *,  SUM(banyak) as jumlahBanyak, subtotal / banyak AS hargaTransaksi FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan GROUP BY no_faktur ORDER BY no_faktur DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -198,12 +199,13 @@ function getAllTransaksiUtang()
 function getAllBarangMasuk()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT * FROM barang_masuk GROUP BY no_barang_masuk");
+  $res = $db->query("SELECT *, SUM(banyak) as jumlahBanyak FROM barang_masuk bm JOIN supplier s ON bm.id_supplier = s.id_supplier GROUP BY no_barang_masuk");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
   return $data;
 }
+
 function getAllBarangMasukUtang()
 {
   $db = dbConnect();
