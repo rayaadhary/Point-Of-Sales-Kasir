@@ -154,9 +154,9 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                 ?>
                   <tr>
                     <td><?= $item['tanggal'] ?></td>
-                    <td><?= $item['nama_beban'] ?></td>
                     <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
                     <td>#</td>
+                    <td><?= $item['nama_beban'] ?></td>
                   </tr>
                 <?php
                 } ?>
@@ -230,9 +230,9 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                 ?>
                   <tr>
                     <td><?= $item['tanggal'] ?></td>
-                    <td><?= $item['nama_prive'] ?></td>
                     <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
                     <td>#</td>
+                    <td><?= $item['nama_prive'] ?></td>
                   </tr>
                 <?php
                 } ?>
@@ -284,8 +284,10 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
   $(function() {
     $(".dataTable").DataTable({
       "responsive": true,
-      // "lengthChange": false,
       "autoWidth": false,
+      "order": [
+        [0, "desc"]
+      ],
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
       language: {
         url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'
