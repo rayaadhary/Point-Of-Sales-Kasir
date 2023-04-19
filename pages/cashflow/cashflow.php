@@ -22,6 +22,13 @@ include_once "../../functions.php";
 
 <?php
 include_once "../layout/header.php";
+$totalTransaksi = getTotalTransaksi();
+$totalBarangMasuk = getTotalBarangMasuk();
+$totalBeban = getTotalBeban();
+$totalPrive = getTotalPrive();
+
+$keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -46,163 +53,202 @@ include_once "../layout/header.php";
   <!-- Main content -->
   <section class="content">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Tabel Transaksi</h3>
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="text-center">
+                <label for="total-transaksi">Total Penjualan</label>
+              </div>
+              <input type="text" class="form-control" value="Rp. <?= number_format($totalTransaksi, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="total_transaksi" id="total-transaksi" readonly />
             </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-              <table class="table table-bordered dataTable">
-                <thead>
-                  <tr>
-                    <!-- <th style="width: 10px">#</th> -->
-                    <th>Tanggal</th>
-                    <th>Penjualan</th>
-                    <th>Jumlah</th>
-                    <th>Keterangan</th>
-                    <!-- <th style="width: 40px">Label</th> -->
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  $data = getAllTransaksi();
-                  foreach ($data as $item) {
-                  ?>
-                    <tr>
-                      <td><?= $item['tanggal'] ?></td>
-                      <td>Rp. <?= number_format($item['total'], 0, ',', '.') ?></td>
-                      <td><?= $item['jumlahBanyak'] ?></td>
-                      <td><?= $item['nama_pelanggan'] ?></td>
-                    </tr>
-                  <?php
-                  } ?>
-                </tbody>
-              </table>
+            <div class="col-md-3">
+              <div class="text-center">
+                <label for="total-pembelian">Total Pembelian</label>
+              </div>
+              <input type="text" class="form-control" value="Rp. <?= number_format($totalBarangMasuk, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="total_transaksi" id="total-transaksi" readonly />
+            </div>
+            <div class="col-md-3">
+              <div class="text-center">
+                <label for="total-beban">Beban Usaha</label>
+              </div>
+              <input type="text" class="form-control" value="Rp. <?= number_format($totalBeban, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="total_beban" id="total-beban" readonly />
+            </div>
+            <div class="col-md-3">
+              <div class="text-center">
+                <label for="total-prive">Total Prive</label>
+              </div>
+              <input type="text" class="form-control" value="Rp. <?= number_format($totalPrive, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="total_prive" id="total-prive" readonly />
             </div>
           </div>
-          <!-- /.card -->
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Tabel Beban</h3>
+          <div class="text-center">
+            <label for="total-keuntungan">Total Keuntungan</label>
+            <div class="d-flex justify-content-center">
+              <div class="col-md-3">
+                <input type="text" class="form-control" value="Rp. <?= number_format($keuntungan, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="total_keuntungan" id="total-keuntungan" readonly />
+              </div>
             </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-              <table class="table table-bordered dataTable">
-                <thead>
-                  <tr>
-                    <!-- <th style="width: 10px">#</th> -->
-                    <th>Tanggal</th>
-                    <th>Beban</th>
-                    <th>Jumlah</th>
-                    <th>Keterangan</th>
-                    <!-- <th style="width: 40px">Label</th> -->
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  $data = getAllBeban();
-                  foreach ($data as $item) {
-                  ?>
-                    <tr>
-                      <td><?= $item['tanggal'] ?></td>
-                      <td><?= $item['nama_beban'] ?></td>
-                      <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
-                      <td>#</td>
-                    </tr>
-                  <?php
-                  } ?>
-                </tbody>
-              </table>
-            </div>
-            <!-- /.card-body -->
           </div>
-          <!-- /.card -->
         </div>
-        <!-- /.col -->
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Tabel Barang Masuk</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-              <table class="table table-bordered dataTable">
-                <thead>
-                  <tr>
-                    <!-- <th style="width: 10px">#</th> -->
-                    <th>Tanggal</th>
-                    <th>Pembelian</th>
-                    <th>Jumlah</th>
-                    <th>Keterangan</th>
-                    <!-- <th style="width: 40px">Label</th> -->
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  $data = getAllBarangMasuk();
-                  foreach ($data as $item) {
-                  ?>
-                    <tr>
-                      <td><?= $item['tanggal_beli'] ?></td>
-                      <td>Rp. <?= number_format($item['total'], 0, ',', '.') ?></td>
-                      <td><?= $item['jumlahBanyak'] ?></td>
-                      <td><?= $item['nama_supplier'] ?></td>
-                    </tr>
-                  <?php
-                  } ?>
-                </tbody>
-              </table>
-            </div>
-            <!-- /.card-body -->
-          </div>
-          <!-- /.card -->
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Tabel Prive</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-              <table class="table table-bordered dataTable">
-                <thead>
-                  <tr>
-                    <!-- <th style="width: 10px">#</th> -->
-                    <th>Tanggal</th>
-                    <th>Prive</th>
-                    <th>Jumlah</th>
-                    <th>Keterangan</th>
-                    <!-- <th style="width: 40px">Label</th> -->
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  $data = getAllPrive();
-                  foreach ($data as $item) {
-                  ?>
-                    <tr>
-                      <td><?= $item['tanggal'] ?></td>
-                      <td><?= $item['nama_prive'] ?></td>
-                      <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
-                      <td>#</td>
-                    </tr>
-                  <?php
-                  } ?>
-                </tbody>
-              </table>
-            </div>
-            <!-- /.card-body -->
-          </div>
-          <!-- /.card -->
-        </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
-    </div><!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Tabel Transaksi</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table class="table table-bordered dataTable">
+              <thead>
+                <tr>
+                  <!-- <th style="width: 10px">#</th> -->
+                  <th>Tanggal</th>
+                  <th>Penjualan</th>
+                  <th>Jumlah</th>
+                  <th>Keterangan</th>
+                  <!-- <th style="width: 40px">Label</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                $data = getAllTransaksi();
+                foreach ($data as $item) {
+                ?>
+                  <tr>
+                    <td><?= $item['tanggal'] ?></td>
+                    <td>Rp. <?= number_format($item['total'], 0, ',', '.') ?></td>
+                    <td><?= $item['jumlahBanyak'] ?></td>
+                    <td><?= $item['nama_pelanggan'] ?></td>
+                  </tr>
+                <?php
+                } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /.card -->
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Tabel Beban</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table class="table table-bordered dataTable">
+              <thead>
+                <tr>
+                  <!-- <th style="width: 10px">#</th> -->
+                  <th>Tanggal</th>
+                  <th>Beban</th>
+                  <th>Jumlah</th>
+                  <th>Keterangan</th>
+                  <!-- <th style="width: 40px">Label</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                $data = getAllBeban();
+                foreach ($data as $item) {
+                ?>
+                  <tr>
+                    <td><?= $item['tanggal'] ?></td>
+                    <td><?= $item['nama_beban'] ?></td>
+                    <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
+                    <td>#</td>
+                  </tr>
+                <?php
+                } ?>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Tabel Barang Masuk</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table class="table table-bordered dataTable">
+              <thead>
+                <tr>
+                  <!-- <th style="width: 10px">#</th> -->
+                  <th>Tanggal</th>
+                  <th>Pembelian</th>
+                  <th>Jumlah</th>
+                  <th>Keterangan</th>
+                  <!-- <th style="width: 40px">Label</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                $data = getAllBarangMasuk();
+                foreach ($data as $item) {
+                ?>
+                  <tr>
+                    <td><?= $item['tanggal_beli'] ?></td>
+                    <td>Rp. <?= number_format($item['total'], 0, ',', '.') ?></td>
+                    <td><?= $item['jumlahBanyak'] ?></td>
+                    <td><?= $item['nama_supplier'] ?></td>
+                  </tr>
+                <?php
+                } ?>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Tabel Prive</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table class="table table-bordered dataTable">
+              <thead>
+                <tr>
+                  <!-- <th style="width: 10px">#</th> -->
+                  <th>Tanggal</th>
+                  <th>Prive</th>
+                  <th>Jumlah</th>
+                  <th>Keterangan</th>
+                  <!-- <th style="width: 40px">Label</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                $data = getAllPrive();
+                foreach ($data as $item) {
+                ?>
+                  <tr>
+                    <td><?= $item['tanggal'] ?></td>
+                    <td><?= $item['nama_prive'] ?></td>
+                    <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
+                    <td>#</td>
+                  </tr>
+                <?php
+                } ?>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 <footer class="main-footer">

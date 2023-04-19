@@ -196,6 +196,46 @@ function getAllTransaksiUtang()
   return $data;
 }
 
+function getTotalTransaksi()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(subtotal) as totalTransaksi FROM transaksi");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalTransaksi'];
+}
+
+function getTotalBarangMasuk()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(subtotal) as totalBarangMasuk FROM barang_masuk");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalBarangMasuk'];
+}
+
+function getTotalBeban()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(biaya) as totalBeban FROM beban");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalBeban'];
+}
+
+function getTotalPrive()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(biaya) as totalPrive FROM prive");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalPrive'];
+}
+
 function getAllBarangMasuk()
 {
   $db = dbConnect();
