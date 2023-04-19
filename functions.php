@@ -159,7 +159,7 @@ function getAllBarang()
 function getAllBeban()
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "SELECT * FROM beban");
+  $res = mysqli_query($db, "SELECT * FROM beban ORDER BY tanggal DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -169,7 +169,7 @@ function getAllBeban()
 function getAllPrive()
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "SELECT * FROM prive");
+  $res = mysqli_query($db, "SELECT * FROM prive ORDER BY tanggal DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -179,7 +179,7 @@ function getAllPrive()
 function getAllTransaksi()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT *,  SUM(banyak) as jumlahBanyak, subtotal / banyak AS hargaTransaksi FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan GROUP BY no_faktur ORDER BY no_faktur DESC");
+  $res = $db->query("SELECT *,  SUM(banyak) as jumlahBanyak, subtotal / banyak AS hargaTransaksi FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan GROUP BY no_faktur ORDER BY tanggal DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -199,7 +199,7 @@ function getAllTransaksiUtang()
 function getTotalTransaksi()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM(subtotal) as totalTransaksi FROM transaksi");
+  $res = $db->query("SELECT SUM(bayar) as totalTransaksi FROM transaksi");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
@@ -209,7 +209,7 @@ function getTotalTransaksi()
 function getTotalBarangMasuk()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM(subtotal) as totalBarangMasuk FROM barang_masuk");
+  $res = $db->query("SELECT SUM(bayar) as totalBarangMasuk FROM barang_masuk");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
@@ -239,7 +239,7 @@ function getTotalPrive()
 function getAllBarangMasuk()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT *, SUM(banyak) as jumlahBanyak FROM barang_masuk bm JOIN supplier s ON bm.id_supplier = s.id_supplier GROUP BY no_barang_masuk");
+  $res = $db->query("SELECT *, SUM(banyak) as jumlahBanyak FROM barang_masuk bm JOIN supplier s ON bm.id_supplier = s.id_supplier GROUP BY no_barang_masuk ORDER BY tanggal_beli DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
