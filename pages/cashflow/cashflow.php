@@ -142,7 +142,6 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                   <!-- <th style="width: 10px">#</th> -->
                   <th>Tanggal</th>
                   <th>Beban</th>
-                  <th>Jumlah</th>
                   <th>Keterangan</th>
                   <!-- <th style="width: 40px">Label</th> -->
                 </tr>
@@ -155,7 +154,6 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                   <tr>
                     <td><?= $item['tanggal'] ?></td>
                     <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
-                    <td>#</td>
                     <td><?= $item['nama_beban'] ?></td>
                   </tr>
                 <?php
@@ -218,7 +216,6 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                   <!-- <th style="width: 10px">#</th> -->
                   <th>Tanggal</th>
                   <th>Prive</th>
-                  <th>Jumlah</th>
                   <th>Keterangan</th>
                   <!-- <th style="width: 40px">Label</th> -->
                 </tr>
@@ -231,7 +228,6 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                   <tr>
                     <td><?= $item['tanggal'] ?></td>
                     <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
-                    <td>#</td>
                     <td><?= $item['nama_prive'] ?></td>
                   </tr>
                 <?php
