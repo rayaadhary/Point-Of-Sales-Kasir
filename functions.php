@@ -125,6 +125,7 @@ function kodeSupplier()
 function gantiPassword($username, $password)
 {
   $db = dbConnect();
+  $password = password_hash($password, PASSWORD_DEFAULT);
   $res = mysqli_query($db, "UPDATE pengguna SET password = '$password' WHERE username = '$username'");
   if ($res) {
     return 1;
@@ -175,10 +176,70 @@ function getAllPrive()
   return $data;
 }
 
+function getAllTransaksi()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT *,  SUM(banyak) as jumlahBanyak, subtotal / banyak AS hargaTransaksi FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan GROUP BY no_faktur ORDER BY no_faktur DESC");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 function getAllTransaksiUtang()
 {
   $db = dbConnect();
   $res = $db->query("SELECT * FROM transaksi WHERE status = 'utang' GROUP BY no_faktur");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getTotalTransaksi()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(subtotal) as totalTransaksi FROM transaksi");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalTransaksi'];
+}
+
+function getTotalBarangMasuk()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(subtotal) as totalBarangMasuk FROM barang_masuk");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalBarangMasuk'];
+}
+
+function getTotalBeban()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(biaya) as totalBeban FROM beban");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalBeban'];
+}
+
+function getTotalPrive()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(biaya) as totalPrive FROM prive");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalPrive'];
+}
+
+function getAllBarangMasuk()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT *, SUM(banyak) as jumlahBanyak FROM barang_masuk bm JOIN supplier s ON bm.id_supplier = s.id_supplier GROUP BY no_barang_masuk");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -257,6 +318,7 @@ function getTransaksiUtangById($id)
   return $data;
 }
 
+
 function getBarangMasukUtangById($id)
 {
   $db = dbConnect();
@@ -281,6 +343,27 @@ function getPriveById($id)
 {
   $db = dbConnect();
   $res = mysqli_query($db, "SELECT * FROM prive WHERE id_prive = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+
+function getPengirimanById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM pengiriman WHERE no_surat_jalan = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getTransaksiById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan  WHERE no_faktur = '$id'");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
@@ -333,8 +416,8 @@ function insertDataPrive($data)
 function updateDataBarang($data)
 {
   $db = dbConnect();
-  $res = $db->prepare("UPDATE barang SET nama_barang=?, beli=?, jual=?, stok=? WHERE id_barang=?");
-  $res->bind_param("ssss",  $data['nama_barang'], $data['beli'], $data['jual'], $data['stok'], $data['id_barang']);
+  $res = $db->prepare("UPDATE barang SET nama_barang=?, harga_jual=? WHERE id_barang=?");
+  $res->bind_param("sss",  $data['nama_barang'], $data['harga_jual'], $data['id_barang']);
   $res->execute();
   if ($res) {
     return 1;

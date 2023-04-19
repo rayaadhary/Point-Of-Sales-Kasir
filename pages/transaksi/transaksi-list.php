@@ -57,88 +57,53 @@ include_once "../layout/header.php"
               <!-- <h3 class="card-title">DataTable with default features</h3> -->
               <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
               <!-- Button trigger modal -->
-              <a href="../barang-masuk/barang-masuk.php" class="btn btn-primary" type="button">Tambah</a>
+              <a href="transaksi-tambah.php" class="btn btn-primary" type="button">Tambah</a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    <th>ID Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Harga Beli</th>
-                    <th>Harga Jual</th>
-                    <th>Stok</th>
+                    <th>No Faktur</th>
+                    <th>Pelanggan</th>
+                    <th>Tanggal</th>
+                    <th>JatuhTempo</th>
+                    <th>Potongan</th>
+                    <th>Total</th>
+                    <th>Bayar</th>
+                    <th>Kembali</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php
-                  $data = getAllBarang();
+                  $data = getAllTransaksi();
                   foreach ($data as $item) {
                   ?>
                     <tr>
-                      <td><?= $item['id_barang']; ?></td>
-                      <td><?= $item['nama_barang']; ?></td>
-                      <td><?= $item['harga_beli']; ?></td>
-                      <td><?= $item['harga_jual']; ?></td>
-                      <td><?= $item['stok']; ?></td>
+                      <td><?= $item['no_faktur']; ?></td>
+                      <td><?= $item['nama_pelanggan']; ?></td>
+                      <td><?= $item['tanggal']; ?></td>
+                      <td><?= $item['jatuh_tempo']; ?></td>
+                      <td>Rp. <?= number_format($item["diskon"], 0, ",", "."); ?></td>
+                      <td>Rp. <?= number_format($item["total"], 0, ",", "."); ?></td>
+                      <td>Rp. <?= number_format($item["bayar"], 0, ",", "."); ?></td>
+                      <td>Rp. <?= number_format($item["kembali"], 0, ",", "."); ?></td>
+                      <td><?= $item['status']; ?></td>
                       <td>
                         <!-- a href -->
-                        <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
-                          <i class="fas fa-edit"></i>
-                        </a>
-                        <!-- a href -->
-                        <a href="barang-hapus.php?id_barang=<?= $item['id_barang']; ?>" class="btn btn-danger btn-circle btn-sm hapus">
-                          <i class="fas fa-trash"></i>
-                        </a>
+                        <div class="d-flex">
+                          <a href="surat-jalan-list.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" type="button" title="surat jalan" class="btn btn-info btn-circle btn-sm">
+                            <i class="fas fa-shipping-fast"></i>
+                          </a>
+                          <!-- a href -->
+                          <a href="cetak-transaksi-list.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" title="cetak transaksi" class="btn btn-success btn-circle btn-sm">
+                            <i class="fas fa-money-check"></i>
+                          </a>
+                        </div>
                       </td>
                     </tr>
-                    <!-- Modal Edit Data -->
-                    <div class="modal fade" id="myModal<?= $item['id_barang'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Form Edit Barang</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form action="barang-edit.php" method="post">
-                              <?php
-                              $id_barang = $item['id_barang'];
-                              $data = getBarangById($id_barang);
-                              ?>
-                              <div class="card-body">
-                                <div class="form-group">
-                                  <label for="id_barang">ID Barang</label>
-                                  <input type="text" class="form-control" name="id_barang" id="id_barang" value="<?= $data['id_barang'] ?>" readonly>
-                                </div>
-                                <div class="form-group">
-                                  <label for="nama_barang">Nama Barang</label>
-                                  <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang" value="<?= $data['nama_barang'] ?>">
-                                </div>
-                                <div class="form-group">
-                                  <label for="harga">Harga Jual</label>
-                                  <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang" value="<?= $data['harga_jual'] ?>">
-                                </div>
-                                <div class="form-group">
-                                  <label for="stok">Stok Barang</label>
-                                  <input type="number" class="form-control" id="stok" name="stok" value="<?= $data['stok'] ?>" readonly>
-                                </div>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <div class="text-center">
-                              <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
-                            </div>
-                          </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Akhir modal -->
                   <?php
                   }
                   ?>
@@ -172,8 +137,6 @@ include_once "../layout/header.php"
 </div>
 <!-- ./wrapper -->
 
-<!-- Modal Tambah Data -->
-
 
 <!-- jQuery -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
@@ -204,8 +167,8 @@ include_once "../layout/header.php"
   $(function() {
     $("#example1").DataTable({
       "responsive": true,
-      // "lengthChange": false,
-      "autoWidth": false,
+      "lengthChange": false,
+      "autoWidth": true,
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
       language: {
         url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'

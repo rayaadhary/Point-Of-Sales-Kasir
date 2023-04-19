@@ -229,13 +229,15 @@ include_once "../layout/header.php"
           var kembali = parseInt(data.kembali);
           var diskonAwal = parseInt(data.diskon);
           $('#status').val(data.status);
+          $('#bayar').val('0');
           (diskonAwal == 0 ? $('#diskon').val('0') : $('#diskon').val(diskonAwal));
           $('#diskon').on('keyup', function() {
             var diskon = parseInt($(this).val());
             var bayar = parseInt($('#bayar').val());
-            var diskonBaru = kembali + diskon;
+            var kembalian = parseInt($('#kembalian').val());
+            var diskonBaru = bayar + diskon + kembali;
             var hasilDiskonBaru = diskonAwal + diskon;
-            if (diskon >= Math.abs(kembali)) {
+            if (diskon >= Math.abs(kembalian)) {
               $('#kembalian').val(diskonBaru);
               $('#keterangan').text("Lebih")
               $('#status').val("Lunas");
@@ -266,7 +268,6 @@ include_once "../layout/header.php"
           var keterangan = "Kurang";
           $('#keterangan').text(keterangan);
           $('#total').val(total);
-          $('#bayar').val(bayar);
           var hasilDiskonBaru = diskonAwal;
           $('#diskon-baru').val(hasilDiskonBaru);
           $('#kembalian').val(kembali);
