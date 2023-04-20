@@ -6,7 +6,7 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 // $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-$data = getPenggunaById($username);
+$data = getPenggunaByUsername($username);
 
 if (isset($_POST["btn_login"])) {
   if (password_verify($password, $data['password'])) {

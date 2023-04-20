@@ -1,6 +1,6 @@
 <?php
 include_once "../../functions.php";
-$title = "barang";
+$title = "pengguna";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,75 +58,78 @@ include_once "../layout/header.php"
               <!-- <h3 class="card-title">DataTable with default features</h3> -->
               <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
               <!-- Button trigger modal -->
-              <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="btn btn-primary" type="button">Tambah</a>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                Tambah
+              </button>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    <th>ID Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Harga Beli</th>
-                    <th>Harga Jual</th>
-                    <th>Stok</th>
+                    <th>ID Pengguna</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Nama</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php
-                  $data = getAllBarang();
+                  $data = getAllPengguna();
                   foreach ($data as $item) {
                   ?>
                     <tr>
-                      <td><?= $item['id_barang']; ?></td>
-                      <td><?= $item['nama_barang']; ?></td>
-                      <td><?= $item['harga_beli']; ?></td>
-                      <td><?= $item['harga_jual']; ?></td>
-                      <td><?= $item['stok']; ?></td>
+                      <td><?= $item['id_pengguna']; ?></td>
+                      <td><?= $item['username']; ?></td>
+                      <td><?= $item['role']; ?></td>
+                      <td><?= $item['nama']; ?></td>
                       <td>
                         <!-- a href -->
-                        <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
+                        <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_pengguna'] ?>" class="btn btn-success btn-circle btn-sm">
                           <i class="fas fa-edit"></i>
                         </a>
                         <!-- a href -->
-                        <a href="barang-hapus.php?id_barang=<?= $item['id_barang']; ?>" class="btn btn-danger btn-circle btn-sm hapus">
+                        <a href="pengguna-hapus.php?id_pengguna=<?= $item['id_pengguna']; ?>" class="btn btn-danger btn-circle btn-sm hapus">
                           <i class="fas fa-trash"></i>
                         </a>
                       </td>
                     </tr>
                     <!-- Modal Edit Data -->
-                    <div class="modal fade" id="myModal<?= $item['id_barang'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog">
+                    <div class="modal fade" id="myModal<?= $item['id_pengguna'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog">
                       <div class="modal-dialog">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Form Edit Barang</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Form Edit Pengguna</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form action="barang-edit.php" method="post">
+                            <form action="pengguna-edit.php" method="post">
                               <?php
-                              $id_barang = $item['id_barang'];
-                              $data = getBarangById($id_barang);
+                              $id_pengguna = $item['id_pengguna'];
+                              $data = getPenggunaById($id_pengguna);
                               ?>
                               <div class="card-body">
                                 <div class="form-group">
-                                  <label for="id_barang">ID Barang</label>
-                                  <input type="text" class="form-control" name="id_barang" id="id_barang" value="<?= $data['id_barang'] ?>" readonly>
+                                  <label for="id_pengguna">ID Pengguna</label>
+                                  <input type="text" class="form-control" id="id_pengguna" name="id_pengguna" placeholder="Masukan id_pengguna" value="<?= $data['id_pengguna'] ?>" readonly>
                                 </div>
                                 <div class="form-group">
-                                  <label for="nama_barang">Nama Barang</label>
-                                  <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang" value="<?= $data['nama_barang'] ?>">
+                                  <label for="username">Username</label>
+                                  <input type="text" class="form-control" id="username" name="username" placeholder="Masukan username" value="<?= $data['username'] ?>">
                                 </div>
                                 <div class="form-group">
-                                  <label for="harga">Harga Jual</label>
-                                  <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang" value="<?= $data['harga_jual'] ?>">
+                                  <label for="role">Role</label>
+                                  <select class="form-control" name="role" id="role">
+                                    <option value="pemilik" <?= ($data['role'] == 'pemilik') ? 'selected' : '' ?>>Pemilik</option>
+                                    <option value="karyawan" <?= ($data['role'] == 'karyawan') ? 'selected' : '' ?>>Karyawan</option>
+                                  </select>
                                 </div>
                                 <div class="form-group">
-                                  <label for="stok">Stok Barang</label>
-                                  <input type="number" class="form-control" id="stok" name="stok" value="<?= $data['stok'] ?>" readonly>
+                                  <label for="nama">Nama</label>
+                                  <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukan nama" value="<?= $data['nama'] ?>">
                                 </div>
                               </div>
                           </div>
@@ -175,6 +178,66 @@ include_once "../layout/header.php"
 
 <!-- Modal Tambah Data -->
 
+<!-- Modal Tambah Data -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Form Tambah Pengguna</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="pengguna-tambah.php" method="post">
+          <div class="card-body">
+            <?php
+            $noPengguna  = kodePengguna();
+            ?>
+            <div class="form-group">
+              <label for="id_pengguna">ID Pengguna</label>
+              <input type="text" class="form-control" id="id_pengguna" value="<?= $noPengguna ?>" name="id_pengguna" readonly>
+            </div>
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Masukan Nama Prive">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Masukan password">
+            </div>
+            <div class="form-group">
+              <label for="konfirmasiPassword">Konfirmasi Password</label>
+              <input type="password" class="form-control" id="konfirmasiPassword" name="konfirmasiPassword" onkeyup="cekPassword();" placeholder="Masukan password">
+            </div>
+            <div class="form-group">
+              <div id="message"></div>
+            </div>
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select class="form-control" name="role" id="role">
+                <option value="karyawan">Karyawan</option>
+                <option value="pemilik">Pemilik</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="nama">Nama</label>
+              <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukan nama">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Akhir modal -->
+
+
 
 <!-- jQuery -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
@@ -195,11 +258,8 @@ include_once "../layout/header.php"
 <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/dist/js/pages/js-hapus.js"></script>
-<script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
-
 <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
-
-<!-- SweetAlert2 -->
+<script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
@@ -218,6 +278,23 @@ include_once "../layout/header.php"
     });
   });
 </script>
+
+<script>
+  function cekPassword() {
+    var password = document.getElementById("password").value;
+    var konfirmasiPassword = document.getElementById("konfirmasiPassword").value;
+
+    if (password != konfirmasiPassword) {
+      var message = document.getElementById("message");
+      message.innerHTML = "Password dan konfirmasi password tidak cocok!";
+    } else {
+      var message = document.getElementById("message");
+      message.innerHTML = "";
+    }
+
+  }
+</script>
+
 </body>
 
 </html>

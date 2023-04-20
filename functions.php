@@ -106,6 +106,21 @@ function kodePelanggan()
   return $kode_pelanggan;
 }
 
+function kodePengguna()
+{
+  $db = dbConnect();
+  $query = $db->query("SELECT max(id_pengguna) as kodeTerbesar FROM pengguna");
+  $data = $query->fetch_assoc();
+  $kode_pengguna = $data['kodeTerbesar'];
+  $urutan = (int) substr($kode_pengguna, 4, 4);
+  $urutan++;
+  $huruf = "USER";
+  $kode_pengguna = $huruf . sprintf("%04s", $urutan);
+  $query->free();
+  $db->close();
+  return $kode_pengguna;
+}
+
 function kodeSupplier()
 {
   $db = dbConnect();
@@ -180,6 +195,16 @@ function getAllSupplier()
 {
   $db = dbConnect();
   $res = mysqli_query($db, "SELECT * FROM supplier");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getAllPengguna()
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM pengguna");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -358,6 +383,7 @@ function getBarangById($id)
   return $data;
 }
 
+
 function getTransaksiUtangById($id)
 {
   $db = dbConnect();
@@ -501,6 +527,21 @@ function insertDataPelanggan($data)
   $db->close();
 }
 
+function insertDataPengguna($data)
+{
+  $db = dbConnect();
+  $password = password_hash($data['password'], PASSWORD_DEFAULT);
+  $res = $db->prepare("INSERT INTO pengguna VALUES (?, ?, ?, ?, ?)");
+  $res->bind_param("sssss", $data['id_pengguna'], $data['username'], $password, $data['role'], $data['nama']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
 function updateDataBarang($data)
 {
   $db = dbConnect();
@@ -562,6 +603,20 @@ function updateDataPelanggan($data)
   $db = dbConnect();
   $res = $db->prepare("UPDATE pelanggan SET nama_pelanggan=? WHERE id_pelanggan=?");
   $res->bind_param("ss",  $data['nama_pelanggan'],  $data['id_pelanggan']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
+function updateDataPengguna($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("UPDATE pengguna SET username=?, role=?, nama=?  WHERE id_pengguna=?");
+  $res->bind_param("ssss",  $data['username'], $data['role'], $data['nama'],   $data['id_pengguna']);
   $res->execute();
   if ($res) {
     return 1;
@@ -637,6 +692,19 @@ function getDeletePelanggan($id)
   $db->close();
 }
 
+function getDeletePengguna($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "DELETE FROM pengguna WHERE id_pengguna = '$id'");
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $res->free();
+  $db->close();
+}
+
 function getPelangganById($id)
 {
   $db = dbConnect();
@@ -648,6 +716,16 @@ function getPelangganById($id)
 }
 
 function getPenggunaById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM pengguna WHERE id_pengguna = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getPenggunaByUsername($id)
 {
   $db = dbConnect();
   $res = mysqli_query($db, "SELECT * FROM pengguna WHERE username = '$id'");
