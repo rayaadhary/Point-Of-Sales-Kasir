@@ -1,5 +1,6 @@
 <?php
 include_once "../../functions.php";
+$title = "beban";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -157,12 +158,12 @@ include_once "../layout/header.php"
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
+<!-- <footer class="main-footer">
   <div class="float-right d-none d-sm-block">
     <b>Version</b> 3.1.0
   </div>
   <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-</footer>
+</footer> -->
 
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -204,7 +205,7 @@ include_once "../layout/header.php"
               $waktu = date_format(date_create(), 'Y-m-d');
               ?>
               <label for="tanggal">Tanggal</label>
-              <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Beban Usaha">
+              <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?= date('Y-m-d'); ?>" placeholder="Masukan Tanggal Beban Usaha">
             </div>
           </div>
       </div>

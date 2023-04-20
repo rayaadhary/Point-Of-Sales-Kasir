@@ -1,5 +1,6 @@
 <?php
 include_once "../../functions.php";
+$title = "pelanggan";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,12 +36,12 @@ include_once "../layout/header.php"
             <?php flash(); ?>
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Data Pelanggan</h1>
+                    <h1>DataTables</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Data Pelanggan</li>
+                        <li class="breadcrumb-item active">DataTables</li>
                     </ol>
                 </div>
             </div>
@@ -68,8 +69,6 @@ include_once "../layout/header.php"
                                     <tr>
                                         <th>ID Pelanggan</th>
                                         <th>Nama Pelanggan</th>
-                                        <th>Alamat</th>
-                                        <th>No Telpon</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -81,11 +80,10 @@ include_once "../layout/header.php"
                                         <tr>
                                             <td><?= $item['id_pelanggan']; ?></td>
                                             <td><?= $item['nama_pelanggan']; ?></td>
-                                            <td><?= $item['alamat']; ?></td>
-                                            <td><?= $item['no_telp']; ?></td>
                                             <td>
                                                 <!-- a href -->
                                                 <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_pelanggan'] ?>" class="btn btn-success btn-circle btn-sm">
+                                                    <i class="fas fa-edit"></i>
                                                 </a>
                                                 <!-- a href -->
                                                 <a href="pelanggan-hapus.php?id_pelanggan=<?= $item['id_pelanggan']; ?>" class="btn btn-danger btn-circle btn-sm hapus">
@@ -93,6 +91,43 @@ include_once "../layout/header.php"
                                                 </a>
                                             </td>
                                         </tr>
+                                        <!-- Modal Edit Data -->
+                                        <div class="modal fade" id="myModal<?= $item['id_pelanggan'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Form Edit Pelanggan</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="pelanggan-edit.php" method="post">
+                                                            <?php
+                                                            $id_pelanggan = $item['id_pelanggan'];
+                                                            $data = getPelangganById($id_pelanggan);
+                                                            ?>
+                                                            <div class="card-body">
+                                                                <div class="form-group">
+                                                                    <label for="id_pelanggan">ID Pelanggan</label>
+                                                                    <input type="text" class="form-control" name="id_pelanggan" id="id_pelanggan" value="<?= $data['id_pelanggan'] ?>" readonly>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="nama_pelanggan">Nama Pelanggan</label>
+                                                                    <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" placeholder="Masukan Nama Pelanggan" value="<?= $data['nama_pelanggan'] ?>">
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="text-center">
+                                                            <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
+                                                        </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Akhir modal -->
                                     <?php
                                     }
                                     ?>
@@ -111,12 +146,12 @@ include_once "../layout/header.php"
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-        <b>Version</b> 3.1.0
-    </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-</footer>
+<!-- <footer class="main-footer">
+  <div class="float-right d-none d-sm-block">
+    <b>Version</b> 3.1.0
+  </div>
+  <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+</footer> -->
 
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -129,16 +164,6 @@ include_once "../layout/header.php"
 <!-- Modal Tambah Data -->
 
 <!-- Modal Tambah Data -->
-<?php
-// $query = mysqli_query($db, "SELECT max(id_supplier) as Kode  FROM supplier");
-// $data = mysqli_fetch_array($query);
-// $kode = $data['Kode'];
-// $urutan = (int) substr($kode, 1, 5);
-
-// $urutan++;
-// $huruf = "SP";
-// $kodeSupplier = $huruf . sprintf("%05s", $urutan);
-?>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -151,21 +176,16 @@ include_once "../layout/header.php"
             <div class="modal-body">
                 <form action="pelanggan-tambah.php" method="post">
                     <div class="card-body">
+                        <?php
+                        $kode_pelanggan = kodePelanggan();
+                        ?>
                         <div class="form-group">
-                            <label for="id_pelanggan">ID Pelanggan</label>
-                            <input type="text" class="form-control" name="id_pelanggan" id="id_pelanggan" placeholder="Masukan id Pelanggan">
+                            <label for="id_pelanggan">ID pelanggan</label>
+                            <input type="text" class="form-control" name="id_pelanggan" id="id_pelanggan" value="<?= $kode_pelanggan ?>" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="nama_pelanggan">Nama Pelanggan</label>
-                            <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" placeholder="Masukan Nama Pelanggan">
-                        </div>
-                        <div class="form-group">
-                            <label for="alamat">Alamat Pelanggan</label>
-                            <input type="text" class="form-control" id="almat" name="alamat" placeholder="Masukan Alamat Pelanggan">
-                        </div>
-                        <div class="form-group">
-                            <label for="no_telp">No Telpon Pelanggan</label>
-                            <input type="number" class="form-control" id="no_telp" name="no_telp" placeholder="Masukan No Telpon Pelanggan">
+                            <label for="nama_pelanggan">Nama Pelanggan Usaha</label>
+                            <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" placeholder="Masukan Nama pelanggan">
                         </div>
                     </div>
             </div>
@@ -180,51 +200,7 @@ include_once "../layout/header.php"
 </div>
 <!-- Akhir modal -->
 
-<!-- Modal Edit Data -->
-<div class="modal fade" id="myModal<?= $item['id_pelanggan'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Form Edit Supplier</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="pelanggan-edit.php" method="post">
-                    <?php
-                    $id_pelanggan = $item['id_pelanggan'];
-                    $data = getPelangganById($id_pelanggan);
-                    ?>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="id_pelanggan">ID Pelanggan</label>
-                            <input type="text" class="form-control" name="id_pelanggan" id="id_pelanggan" value="<?= $data['id_pelanggan'] ?>" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="nama_pelanggan">Nama Pelanggan</label>
-                            <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" placeholder="Masukan Nama Pelanggan" value="<?= $data['nama_pelanggan'] ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="alamat">Alamat Pelanggan</label>
-                            <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Masukan Alamat Pelanggan" value="<?= $data['alamat'] ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="no_telp">No Telepon Pelanggan</label>
-                            <input type="number" class="form-control" id="no_telp" name="no_telp" placeholder="Masukan No Telepon Pelanggan" value="<?= $data['no_telp'] ?>">
-                        </div>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- Akhir modal -->
+
 
 <!-- jQuery -->
 <script src="../../plugins/jquery/jquery.min.js"></script>

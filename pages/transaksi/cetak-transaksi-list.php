@@ -17,23 +17,25 @@ $jatuh_tempo = date_create($transaksi['jatuh_tempo']);
 
 $pdf = new FPDF('L', 'mm', 'A4');
 $pdf->AddPage();
+$pdf->Image('../../dist/img/logo_psm.jpeg', 10, 5, 15);
+$pdf->Ln(5);
 $pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(200, 10, 'PT AJITA PANEL WIRA PERKASA', 0, 0);
+$pdf->Cell(200, 10, 'Putra Subur Makmur', 0, 0);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(70, 10, 'FAKTUR', 1, 1, 'C', false);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(200, 10, 'Ruko Summerville no 42 Taman Kopo Indah V Rahayu Margaasih', 0, 0);
+$pdf->Cell(200, 10, 'Jl Pameuntasan-Gajah Mekar Kab. Bandung Jawa Barat 40911', 0, 0);
 $pdf->Cell(70, 5, '' . $transaksi['no_faktur'], 1, 1, 'C', false);
-$pdf->Cell(200, 10, '', 0, 0);
+$pdf->Cell(200, 10, '085863099783', 0, 0);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(35, 5, 'Tanggal', 1, 0, 'C');
 $pdf->Cell(35, 5, 'Jatuh Tempo', 1, 1, 'C');
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(200, 10, '', 0, 0,);
+$pdf->Cell(200, 10, 'BCA : 3790474588', 0, 0,);
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(35, 5, '' . date_format($tanggal, 'd-m-Y'), 1, 0, 'C');
 $pdf->Cell(35, 5, '' . date_format($jatuh_tempo, 'd-m-Y'), 1, 1, 'C');
-$pdf->Cell(200, 10, '', 0, 0,);
+$pdf->Cell(200, 10, 'a/n : Salsabila Shafa Puja', 0, 0,);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(70, 5, 'No Surat Jalan', 1, 1, 'C');
 $pdf->SetFont('Arial', 'B', 11);
@@ -83,7 +85,7 @@ while ($item = mysqli_fetch_assoc($res)) {
   $pdf->Cell(100, 5, '' . $item['nama_barang'], 1, 0);
   $pdf->Cell(30, 5, '' . $item['banyak'], 1, 0, 'C');
   $pdf->Cell(20, 5, 'pcs', 1, 0, 'C');
-  $pdf->Cell(50, 5, 'Rp. ' . number_format($item['hargaTransaksi'], 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(50, 5, 'Rp. ' . number_format($transaksi['hargaTransaksi'], 2, ',', '.'), 1, 0, 'R');
   $pdf->Cell(60, 5, 'Rp. ' . number_format($item['subtotal'], 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
   $i++;
 }
@@ -97,7 +99,7 @@ $pdf->Cell(60, 5, 'Hormat Kami', 0, 0, 'C');
 $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->Cell(50, 5, 'Subtotal', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(60, 5, 'Rp. ' . number_format($transaksi['jumlahBanyak'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(60, 5, 'Rp. ' . number_format($transaksi['subtotal'], 2, ',', '.'), 0, 1, 'R');
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0, 'C');

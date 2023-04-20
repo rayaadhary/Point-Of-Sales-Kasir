@@ -176,6 +176,16 @@ function getAllPrive()
   return $data;
 }
 
+function getAllSupplier()
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM supplier");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 function getAllTransaksi()
 {
   $db = dbConnect();
@@ -234,6 +244,46 @@ function getTotalPrive()
   $res->free();
   $db->close();
   return $data['totalPrive'];
+}
+
+function hitungTransaksi()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT COUNT(no_faktur) AS jumlahTransaksi FROM transaksi");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['jumlahTransaksi'];
+}
+
+function hitungBarang()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT COUNT(id_barang) AS jumlahBarang FROM barang");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['jumlahBarang'];
+}
+
+function hitungPelanggan()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT COUNT(id_pelanggan) AS jumlahPelanggan FROM pelanggan");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['jumlahPelanggan'];
+}
+
+function hitungSupplier()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT COUNT(id_supplier) AS jumlahSupplier FROM supplier");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['jumlahSupplier'];
 }
 
 function getAllBarangMasuk()
@@ -360,10 +410,20 @@ function getPengirimanById($id)
   return $data;
 }
 
+function getSupplierById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM supplier WHERE id_supplier = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 function getTransaksiById($id)
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "SELECT * FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan  WHERE no_faktur = '$id'");
+  $res = mysqli_query($db, "SELECT *, SUM(banyak) as jumlahBanyak, subtotal / banyak AS hargaTransaksi FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan  WHERE no_faktur = '$id'");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
@@ -413,6 +473,20 @@ function insertDataPrive($data)
   $db->close();
 }
 
+function insertDataSupplier($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("INSERT INTO supplier VALUES (?, ?, ?, ?)");
+  $res->bind_param("ssss", $data['id_supplier'], $data['nama_supplier'], $data['telepon_supplier'], $data['alamat_supplier']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
 function updateDataBarang($data)
 {
   $db = dbConnect();
@@ -432,6 +506,20 @@ function updateDataPrive($data)
   $db = dbConnect();
   $res = $db->prepare("UPDATE prive SET nama_prive=?, tanggal=?, biaya=? WHERE id_prive=?");
   $res->bind_param("ssss",  $data['nama_prive'], $data['tanggal'], $data['biaya'], $data['id_prive']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
+function updateDataSupplier($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("UPDATE supplier SET nama_supplier=?, telepon_supplier=?, alamat_supplier=? WHERE id_supplier=?");
+  $res->bind_param("ssss",  $data['nama_supplier'], $data['telepon_supplier'], $data['alamat_supplier'], $data['id_prive']);
   $res->execute();
   if ($res) {
     return 1;
@@ -495,10 +583,23 @@ function getDeletePrive($id)
   $db->close();
 }
 
+function getDeleteSupplier($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "DELETE FROM supplier WHERE id_supplier = '$id'");
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $res->free();
+  $db->close();
+}
+
 function getPelangganById($id)
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "SELECT * FROM pelanggan WHERE id = '$id'");
+  $res = mysqli_query($db, "SELECT * FROM pelanggan WHERE id_pelanggan = '$id'");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
