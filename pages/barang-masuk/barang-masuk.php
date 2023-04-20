@@ -252,6 +252,8 @@ include_once "../layout/header.php"
 <script src="../../plugins/jszip/jszip.min.js"></script>
 <script src="../../plugins/pdfmake/pdfmake.min.js"></script>
 <script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+<script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->

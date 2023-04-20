@@ -196,6 +196,10 @@ include_once "../layout/header.php"
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/dist/js/pages/js-hapus.js"></script>
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+<script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+
+<!-- SweetAlert2 -->
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->

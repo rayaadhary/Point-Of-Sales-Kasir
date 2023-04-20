@@ -487,6 +487,20 @@ function insertDataSupplier($data)
   $db->close();
 }
 
+function insertDataPelanggan($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("INSERT INTO pelanggan VALUES (?, ?)");
+  $res->bind_param("ss", $data['id_pelanggan'], $data['nama_pelanggan']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
 function updateDataBarang($data)
 {
   $db = dbConnect();
@@ -543,6 +557,20 @@ function updateDataBeban($data)
   $db->close();
 }
 
+function updateDataPelanggan($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("UPDATE pelanggan SET nama_pelanggan=? WHERE id_pelanggan=?");
+  $res->bind_param("ss",  $data['nama_pelanggan'],  $data['id_pelanggan']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
 
 function getDeleteBarang($id)
 {
@@ -587,6 +615,19 @@ function getDeleteSupplier($id)
 {
   $db = dbConnect();
   $res = mysqli_query($db, "DELETE FROM supplier WHERE id_supplier = '$id'");
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $res->free();
+  $db->close();
+}
+
+function getDeletePelanggan($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "DELETE FROM pelanggan WHERE id_pelanggan = '$id'");
   if ($res) {
     return 1;
   } else {
