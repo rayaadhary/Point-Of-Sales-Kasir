@@ -144,7 +144,7 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="index3.html" class="brand-link">
+      <a href="<?= BASEURL ?>/dashboard.php" class="brand-link">
         <img src="<?= BASEURL ?>/dist/img/logo_psm.jpeg" alt="Logo PSM" class="brand-image" style="opacity: .8">
         <span class="brand-text font-weight-light">Putra Subur Makmur</span>
       </a>
@@ -248,26 +248,10 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a href="<?= BASEURL ?>/pages/beban/beban.php" class="nav-link <?= ($title == 'beban') ? 'active' : '' ?>">
-                <i class="nav-icon fas fa-balance-scale-right"></i>
-                <p>
-                  Beban
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
               <a href="<?= BASEURL ?>/pages/pelanggan/pelanggan.php" class="nav-link <?= ($title == 'pelanggan') ? 'active' : '' ?>">
                 <i class="nav-icon fas fa-users"></i>
                 <p>
                   Pelanggan
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="<?= BASEURL ?>/pages/prive/prive.php" class="nav-link <?= ($title == 'prive') ? 'active' : '' ?>">
-                <i class="nav-icon fas fa-money-check"></i>
-                <p>
-                  Prive
                 </p>
               </a>
             </li>
@@ -279,14 +263,40 @@
                 </p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="<?= BASEURL ?>/pages/cashflow/cashflow.php" class="nav-link <?= ($title == 'cashflow') ? 'active' : '' ?>">
-                <i class="nav-icon fas fa-search-dollar"></i>
-                <p>
-                  Cashflow
-                </p>
-              </a>
-            </li>
+            <?php if ($_SESSION['role'] == 'pemilik') { ?>
+              <li class="nav-item">
+                <a href="<?= BASEURL ?>/pages/beban/beban.php" class="nav-link <?= ($title == 'beban') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-balance-scale-right"></i>
+                  <p>
+                    Beban
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= BASEURL ?>/pages/prive/prive.php" class="nav-link <?= ($title == 'prive') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-money-check"></i>
+                  <p>
+                    Prive
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= BASEURL ?>/pages/cashflow/cashflow.php" class="nav-link <?= ($title == 'cashflow') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-search-dollar"></i>
+                  <p>
+                    Cashflow
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= BASEURL ?>/pages/pengguna/pengguna.php" class="nav-link <?= ($title == 'pengguna') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>
+                    Pengguna
+                  </p>
+                </a>
+              </li>
+            <?php } ?>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->

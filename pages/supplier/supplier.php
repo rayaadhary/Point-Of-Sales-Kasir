@@ -58,9 +58,11 @@ include_once "../layout/header.php"
                             <!-- <h3 class="card-title">DataTable with default features</h3> -->
                             <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                Tambah
-                            </button>
+                            <?php if ($_SESSION['role'] == 'karyawan') { ?>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                    Tambah
+                                </button>
+                            <?php } ?>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -71,7 +73,9 @@ include_once "../layout/header.php"
                                         <th>Nama Supplier</th>
                                         <th>No Telpon</th>
                                         <th>Alamat</th>
-                                        <th>Aksi</th>
+                                        <?php if ($_SESSION['role'] == 'karyawan') { ?>
+                                            <th>Aksi</th>
+                                        <?php } ?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -84,16 +88,18 @@ include_once "../layout/header.php"
                                             <td><?= $item['nama_supplier']; ?></td>
                                             <td><?= $item['telepon_supplier']; ?></td>
                                             <td><?= $item['alamat_supplier']; ?></td>
-                                            <td>
-                                                <!-- a href -->
-                                                <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_supplier'] ?>" class="btn btn-success btn-circle btn-sm">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <!-- a href -->
-                                                <a href="supplier-hapus.php?id_supplier=<?= $item['id_supplier']; ?>" class="btn btn-danger btn-circle btn-sm hapus">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                            </td>
+                                            <?php if ($_SESSION['role'] == 'karyawan') { ?>
+                                                <td>
+                                                    <!-- a href -->
+                                                    <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_supplier'] ?>" class="btn btn-success btn-circle btn-sm">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <!-- a href -->
+                                                    <a href="supplier-hapus.php?id_supplier=<?= $item['id_supplier']; ?>" class="btn btn-danger btn-circle btn-sm hapus">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            <?php } ?>
                                         </tr>
                                     <?php
                                     }
