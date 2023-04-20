@@ -135,7 +135,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="logout.php" class="nav-link logout" role="button"><i class="fas fa-sign-out-alt"></i></a>
+          <a href="<?= BASEURL ?>/logout.php" class="nav-link logout" role="button"><i class="fas fa-sign-out-alt"></i></a>
         </li>
       </ul>
     </nav>
