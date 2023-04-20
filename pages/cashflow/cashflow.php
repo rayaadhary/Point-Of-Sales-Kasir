@@ -1,5 +1,6 @@
 <?php
 include_once "../../functions.php";
+$title = 'cashflow';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -142,7 +143,6 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                   <!-- <th style="width: 10px">#</th> -->
                   <th>Tanggal</th>
                   <th>Beban</th>
-                  <th>Jumlah</th>
                   <th>Keterangan</th>
                   <!-- <th style="width: 40px">Label</th> -->
                 </tr>
@@ -155,7 +155,6 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                   <tr>
                     <td><?= $item['tanggal'] ?></td>
                     <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
-                    <td>#</td>
                     <td><?= $item['nama_beban'] ?></td>
                   </tr>
                 <?php
@@ -218,7 +217,6 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                   <!-- <th style="width: 10px">#</th> -->
                   <th>Tanggal</th>
                   <th>Prive</th>
-                  <th>Jumlah</th>
                   <th>Keterangan</th>
                   <!-- <th style="width: 40px">Label</th> -->
                 </tr>
@@ -231,7 +229,6 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
                   <tr>
                     <td><?= $item['tanggal'] ?></td>
                     <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
-                    <td>#</td>
                     <td><?= $item['nama_prive'] ?></td>
                   </tr>
                 <?php
@@ -251,12 +248,12 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
 <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
+<!-- <footer class="main-footer">
   <div class="float-right d-none d-sm-block">
     <b>Version</b> 3.1.0
   </div>
   <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-</footer>
+</footer> -->
 
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -276,6 +273,9 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive;
 <script src="../../dist/js/demo.js"></script>
 
 
+<script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+<!-- SweetAlert2 -->
+<script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>

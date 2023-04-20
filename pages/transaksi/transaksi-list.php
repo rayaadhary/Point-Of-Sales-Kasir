@@ -1,5 +1,7 @@
 <?php
 include_once "../../functions.php";
+$menu = 'transaksi';
+$title = 'transaksi_list';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,7 +59,7 @@ include_once "../layout/header.php"
               <!-- <h3 class="card-title">DataTable with default features</h3> -->
               <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
               <!-- Button trigger modal -->
-              <a href="transaksi-tambah.php" class="btn btn-primary" type="button">Tambah</a>
+              <a href="<?= BASEURL ?>/pages/transaksi/transaksi.php" class="btn btn-primary" type="button">Tambah</a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -122,12 +124,12 @@ include_once "../layout/header.php"
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
+<!-- <footer class="main-footer">
   <div class="float-right d-none d-sm-block">
     <b>Version</b> 3.1.0
   </div>
   <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-</footer>
+</footer> -->
 
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -157,6 +159,8 @@ include_once "../layout/header.php"
 <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/dist/js/pages/js-hapus.js"></script>
+<script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>

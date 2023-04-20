@@ -1,5 +1,7 @@
 <?php
 include_once "../../functions.php";
+$title = "barang_masuk";
+$menu  = "barang_masuk";
 ?>
 
 <!DOCTYPE html>
@@ -228,12 +230,12 @@ include_once "../layout/header.php"
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class=" main-footer">
+<!-- <footer class=" main-footer">
   <div class="float-right d-none d-sm-block">
     <b>Version</b> 3.1.0
   </div>
   <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-</footer>
+</footer> -->
 
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -250,6 +252,8 @@ include_once "../layout/header.php"
 <script src="../../plugins/jszip/jszip.min.js"></script>
 <script src="../../plugins/pdfmake/pdfmake.min.js"></script>
 <script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+<script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->

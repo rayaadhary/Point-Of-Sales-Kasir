@@ -1,5 +1,6 @@
 <?php
 include_once "../../functions.php";
+$title = 'supplier';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,8 +69,8 @@ include_once "../layout/header.php"
                                     <tr>
                                         <th>ID Supplier</th>
                                         <th>Nama Supplier</th>
-                                        <th>Alamat</th>
                                         <th>No Telpon</th>
+                                        <th>Alamat</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -81,8 +82,8 @@ include_once "../layout/header.php"
                                         <tr>
                                             <td><?= $item['id_supplier']; ?></td>
                                             <td><?= $item['nama_supplier']; ?></td>
-                                            <td><?= $item['alamat']; ?></td>
-                                            <td><?= $item['no_telp']; ?></td>
+                                            <td><?= $item['telepon_supplier']; ?></td>
+                                            <td><?= $item['alamat_supplier']; ?></td>
                                             <td>
                                                 <!-- a href -->
                                                 <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_supplier'] ?>" class="btn btn-success btn-circle btn-sm">
@@ -112,12 +113,12 @@ include_once "../layout/header.php"
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
+<!-- <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
         <b>Version</b> 3.1.0
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-</footer>
+</footer> -->
 
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -161,12 +162,12 @@ include_once "../layout/header.php"
                             <input type="text" class="form-control" id="nama_supplier" name="nama_supplier" placeholder="Masukan Nama Supplier">
                         </div>
                         <div class="form-group">
-                            <label for="alamat">Alamat</label>
-                            <input type="text" class="form-control" id="almat" name="alamat" placeholder="Masukan Alamat Supplier">
+                            <label>Alamat</label>
+                            <textarea class="form-control" rows="3" name="alamat_supplier" id="alamat-supplier" placeholder="Masukan Alamat Supplier"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="no_telp">No Telpon Supplier</label>
-                            <input type="number" class="form-control" id="no_telp" name="no_telp" placeholder="Masukan No Telpon Supplier">
+                            <input type="number" class="form-control" id="telepon-supplier" name="telepon_supplier" placeholder="Masukan No Telpon Supplier">
                         </div>
                     </div>
             </div>
@@ -207,12 +208,12 @@ include_once "../layout/header.php"
                             <input type="text" class="form-control" id="nama_supplier" name="nama_supplier" placeholder="Masukan Nama Supplier" value="<?= $data['nama_supplier'] ?>">
                         </div>
                         <div class="form-group">
-                            <label for="alamat">Alamat Supplier</label>
-                            <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Masukan Alamat Supplier" value="<?= $data['alamat'] ?>">
+                            <label for="telepon-supplier">No Telepon Supplier</label>
+                            <input type="number" class="form-control" id="telepon-supplier" name="telepon_suppler" placeholder="Masukan No Telepon Supplier" value="<?= $data['telepon_supplier'] ?>">
                         </div>
                         <div class="form-group">
-                            <label for="no_telp">No Telepon Supplier</label>
-                            <input type="number" class="form-control" id="no_telp" name="no_telp" placeholder="Masukan No Telepon Supplier" value="<?= $data['no_telp'] ?>">
+                            <label>Alamat</label>
+                            <textarea class="form-control" rows="3" name="alamat_supplier" id="alamat-supplier" placeholder="Masukan Alamat Supplier" required><?= $data['alamat_supplier'] ?></textarea>
                         </div>
                     </div>
             </div>
@@ -246,6 +247,8 @@ include_once "../layout/header.php"
 <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/dist/js/pages/js-hapus.js"></script>
+<script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
