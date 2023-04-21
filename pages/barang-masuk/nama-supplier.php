@@ -14,6 +14,7 @@ if (isset($_GET['term'])) {
         'id_supplier' => $row['id_supplier'],
         'value' => $row['nama_supplier'],
         'telepon_supplier' => $row['telepon_supplier'],
+        'alamat_supplier' => $row['alamat_supplier'],
       );
     }
   } else {

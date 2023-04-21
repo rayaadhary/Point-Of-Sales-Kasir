@@ -308,6 +308,7 @@ include_once "../layout/header.php"
       select: function(event, ui) {
         $('#id-supplier').val(ui.item.id_supplier);
         $('#telepon-supplier').val(ui.item.telepon_supplier);
+        $('#alamat-supplier').val(ui.item.alamat_supplier);
       }
     });
 
