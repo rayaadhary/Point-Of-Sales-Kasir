@@ -19,7 +19,10 @@ $title = "dashboard";
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= BASEURL ?>/dist/css/adminlte.min.css">
   <!-- SweetAlert2 -->
-  <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
 </head>
 <!--
 `body` tag options:
@@ -44,12 +47,14 @@ include_once "./pages/layout/header.php";
           <h1 class="m-0">Dashboard</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Dashboard v3</li>
-          </ol>
-        </div><!-- /.col -->
+          <!-- <ol class="breadcrumb float-sm-right"> -->
+          <div class="d-flex justify-content-end mb-4 mr-3">
+            <a href="<?= BASEURL ?>/dist/database/backup_database.php" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" id="backup"><i class="fas fa-download fa-sm text-white-50"></i> Backup Database</a>
+          </div>
+          <!-- </ol> -->
+        </div>
       </div><!-- /.row -->
+
     </div><!-- /.container-fluid -->
   </div>
   <!-- /.content-header -->
@@ -58,6 +63,10 @@ include_once "./pages/layout/header.php";
   $jumlahBarang = hitungBarang();
   $jumlahPelanggan = hitungPelanggan();
   $jumlahSupplier = hitungSupplier();
+  $data_barang = getGroupBarang();
+  $jumlah_barang = getJumlahBarang();
+  $data_transaksi = getGroupTransaksi();
+  $jumlah_transaksi = getJumlahTransaksi();
   ?>
   <!-- Main content -->
   <div class="content">
@@ -115,250 +124,34 @@ include_once "./pages/layout/header.php";
             <div class="icon">
               <i class="ion ion-pie-graph"></i>
             </div>
-            <a href="#" class="small-box-footer">Selengkapnya <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="<?= BASEURL ?>/pages/supplier/supplier.php" class="small-box-footer">Selengkapnya <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
       </div>
       <div class="row">
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-header border-0">
-              <div class="d-flex justify-content-between">
-                <h3 class="card-title">Online Store Visitors</h3>
-                <a href="javascript:void(0);">View Report</a>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="d-flex">
-                <p class="d-flex flex-column">
-                  <span class="text-bold text-lg">820</span>
-                  <span>Visitors Over Time</span>
-                </p>
-                <p class="ml-auto d-flex flex-column text-right">
-                  <span class="text-success">
-                    <i class="fas fa-arrow-up"></i> 12.5%
-                  </span>
-                  <span class="text-muted">Since last week</span>
-                </p>
-              </div>
-              <!-- /.d-flex -->
+        <div class="col-md-12">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Transaksi</h3>
 
-              <div class="position-relative mb-4">
-                <canvas id="visitors-chart" height="200"></canvas>
-              </div>
-
-              <div class="d-flex flex-row justify-content-end">
-                <span class="mr-2">
-                  <i class="fas fa-square text-primary"></i> This Week
-                </span>
-
-                <span>
-                  <i class="fas fa-square text-gray"></i> Last Week
-                </span>
-              </div>
-            </div>
-          </div>
-          <!-- /.card -->
-
-          <div class="card">
-            <div class="card-header border-0">
-              <h3 class="card-title">Products</h3>
               <div class="card-tools">
-                <a href="#" class="btn btn-tool btn-sm">
-                  <i class="fas fa-download"></i>
-                </a>
-                <a href="#" class="btn btn-tool btn-sm">
-                  <i class="fas fa-bars"></i>
-                </a>
-              </div>
-            </div>
-            <div class="card-body table-responsive p-0">
-              <table class="table table-striped table-valign-middle">
-                <thead>
-                  <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Sales</th>
-                    <th>More</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <img src="<?= BASEURL ?>/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      Some Product
-                    </td>
-                    <td>$13 USD</td>
-                    <td>
-                      <small class="text-success mr-1">
-                        <i class="fas fa-arrow-up"></i>
-                        12%
-                      </small>
-                      12,000 Sold
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="<?= BASEURL ?>/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      Another Product
-                    </td>
-                    <td>$29 USD</td>
-                    <td>
-                      <small class="text-warning mr-1">
-                        <i class="fas fa-arrow-down"></i>
-                        0.5%
-                      </small>
-                      123,234 Sold
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="<?= BASEURL ?>/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      Amazing Product
-                    </td>
-                    <td>$1,230 USD</td>
-                    <td>
-                      <small class="text-danger mr-1">
-                        <i class="fas fa-arrow-down"></i>
-                        3%
-                      </small>
-                      198 Sold
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="<?= BASEURL ?>/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      Perfect Item
-                      <span class="badge bg-danger">NEW</span>
-                    </td>
-                    <td>$199 USD</td>
-                    <td>
-                      <small class="text-success mr-1">
-                        <i class="fas fa-arrow-up"></i>
-                        63%
-                      </small>
-                      87 Sold
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <!-- /.card -->
-        </div>
-        <!-- /.col-md-6 -->
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-header border-0">
-              <div class="d-flex justify-content-between">
-                <h3 class="card-title">Sales</h3>
-                <a href="javascript:void(0);">View Report</a>
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button>
               </div>
             </div>
             <div class="card-body">
-              <div class="d-flex">
-                <p class="d-flex flex-column">
-                  <span class="text-bold text-lg">$18,230.00</span>
-                  <span>Sales Over Time</span>
-                </p>
-                <p class="ml-auto d-flex flex-column text-right">
-                  <span class="text-success">
-                    <i class="fas fa-arrow-up"></i> 33.1%
-                  </span>
-                  <span class="text-muted">Since last month</span>
-                </p>
-              </div>
-              <!-- /.d-flex -->
-
-              <div class="position-relative mb-4">
-                <canvas id="sales-chart" height="200"></canvas>
-              </div>
-
-              <div class="d-flex flex-row justify-content-end">
-                <span class="mr-2">
-                  <i class="fas fa-square text-primary"></i> This year
-                </span>
-
-                <span>
-                  <i class="fas fa-square text-gray"></i> Last year
-                </span>
+              <div class="chart">
+                <canvas id="areaChart" style="min-height: 500px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
+                <input type="month" onchange="filterChart(this)" value="">
               </div>
             </div>
           </div>
           <!-- /.card -->
-
-          <div class="card">
-            <div class="card-header border-0">
-              <h3 class="card-title">Online Store Overview</h3>
-              <div class="card-tools">
-                <a href="#" class="btn btn-sm btn-tool">
-                  <i class="fas fa-download"></i>
-                </a>
-                <a href="#" class="btn btn-sm btn-tool">
-                  <i class="fas fa-bars"></i>
-                </a>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                <p class="text-success text-xl">
-                  <i class="ion ion-ios-refresh-empty"></i>
-                </p>
-                <p class="d-flex flex-column text-right">
-                  <span class="font-weight-bold">
-                    <i class="ion ion-android-arrow-up text-success"></i> 12%
-                  </span>
-                  <span class="text-muted">CONVERSION RATE</span>
-                </p>
-              </div>
-              <!-- /.d-flex -->
-              <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                <p class="text-warning text-xl">
-                  <i class="ion ion-ios-cart-outline"></i>
-                </p>
-                <p class="d-flex flex-column text-right">
-                  <span class="font-weight-bold">
-                    <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
-                  </span>
-                  <span class="text-muted">SALES RATE</span>
-                </p>
-              </div>
-              <!-- /.d-flex -->
-              <div class="d-flex justify-content-between align-items-center mb-0">
-                <p class="text-danger text-xl">
-                  <i class="ion ion-ios-people-outline"></i>
-                </p>
-                <p class="d-flex flex-column text-right">
-                  <span class="font-weight-bold">
-                    <i class="ion ion-android-arrow-down text-danger"></i> 1%
-                  </span>
-                  <span class="text-muted">REGISTRATION RATE</span>
-                </p>
-              </div>
-              <!-- /.d-flex -->
-            </div>
-          </div>
         </div>
         <!-- /.col-md-6 -->
       </div>
@@ -397,15 +190,83 @@ include_once "./pages/layout/header.php";
 <script src="<?= BASEURL ?>/dist/js/adminlte.js"></script>
 
 <!-- OPTIONAL SCRIPTS -->
-<script src="<?= BASEURL ?>/plugins/chart.js/Chart.min.js"></script>
+<!-- <script src="<?= BASEURL ?>/plugins/chart.js/Chart.min.js"></script> -->
 <!-- AdminLTE for demo purposes -->
 <script src="<?= BASEURL ?>/dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="<?= BASEURL ?>/dist/js/pages/dashboard3.js"></script>
 <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+<script src="<?= BASEURL ?>/dist/js/pages/js-backup.js"></script>
 
 <!-- SweetAlert2 -->
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+<script>
+  // setup
+  const data = {
+    labels: [<?php foreach ($data_transaksi as $row) {
+                echo '"' . $row['tanggal_transaksi'] . '",';
+              } ?>],
+    datasets: [{
+      label: 'Jumlah Transaksi',
+      data: [
+        <?php foreach ($jumlah_transaksi as $row) {
+          echo '"' . $row['jumlah_transaksi'] . '",';
+        } ?>
+      ],
+      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
+    }]
+  };
+
+  const currentYear = new Date().getFullYear();
+  const minDate = `${currentYear}-01-01`;
+  const maxDate = `${currentYear}-12-31`;
+
+  const config = {
+    type: 'bar',
+    data,
+    options: {
+      scales: {
+        x: {
+          min: minDate,
+          max: maxDate,
+          type: 'time',
+          time: {
+            unit: 'day'
+          }
+        },
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  };
+
+  const myChart = new Chart(
+    document.getElementById('areaChart'),
+    config
+  );
+
+  function filterChart(date) {
+    console.log(date.value);
+    const year = date.value.substring(0, 4);
+    const month = date.value.substring(5, 7);
+    console.log(month);
+
+    const lastDay = (y, m) => {
+      return new Date(y, m, 0).getDate();
+    }
+
+    const startDate = `${date.value}-01`;
+    const endDate = `${date.value}-${lastDay(year, month)}`;
+    myChart.config.options.scales.x.min = startDate;
+    myChart.config.options.scales.x.max = endDate;
+    myChart.update();
+  }
+</script>
+
 </body>
 
 </html>

@@ -21,9 +21,10 @@ if (isset($_POST['simpan'])) {
     $id_supplier = mysqli_real_escape_string($db, trim($_POST['id_supplier']));
     $nama_supplier = mysqli_real_escape_string($db, trim($_POST['nama_supplier']));
     $telepon_supplier = mysqli_real_escape_string($db, trim($_POST['telepon_supplier']));
+    $alamat_supplier = mysqli_real_escape_string($db, trim($_POST['alamat_supplier']));
     $sql = mysqli_query($db, "SELECT id_supplier FROM supplier WHERE id_supplier = '$id_supplier'");
     if ($sql->num_rows == 0) {
-      $query = "INSERT INTO supplier VALUES ('$id_supplier', '$nama_supplier', '$telepon_supplier')";
+      $query = "INSERT INTO supplier VALUES ('$id_supplier', '$nama_supplier', '$telepon_supplier', '$alamat_supplier')";
       $sql = mysqli_query($db, $query);
     }
     for ($i = 0; $i < $no; $i++) {

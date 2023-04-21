@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASEURL', 'http://localhost/kasir');
+define('BASEURL', 'http://localhost/kasir/admin');
 
 
 function waktu()
@@ -135,6 +135,21 @@ function kodeSupplier()
   $db->close();
   return $kode_supplier;
 }
+
+// function kodeSupplier()
+// {
+//   $db = dbConnect();
+//   $query = $db->query("SELECT max(id_supplier) as kodeTerbesar FROM supplier");
+//   $data = $query->fetch_assoc();
+//   $kode_supplier = $data['kodeTerbesar'];
+//   $urutan = (int) substr($kode_supplier, 2, 4);
+//   $urutan++;
+//   $huruf = "PT";
+//   $kode_supplier = $huruf . sprintf("%04s", $urutan);
+//   $query->free();
+//   $db->close();
+//   return $kode_supplier;
+// }
 
 
 function gantiPassword($username, $password)

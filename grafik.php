@@ -1,5 +1,5 @@
 <?php
-include_once "../../functions.php";
+include_once "functions.php";
 
 $db = dbConnect();
 $data_barang = getGroupBarang();

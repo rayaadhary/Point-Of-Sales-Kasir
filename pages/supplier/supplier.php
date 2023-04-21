@@ -38,12 +38,6 @@ include_once "../layout/header.php"
                 <div class="col-sm-6">
                     <h1>Data Supplier</h1>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">DataSupplier</li>
-                    </ol>
-                </div>
             </div>
         </div><!-- /.container-fluid -->
     </section>
@@ -101,6 +95,52 @@ include_once "../layout/header.php"
                                                 </td>
                                             <?php } ?>
                                         </tr>
+
+                                        <!-- Modal Edit Data -->
+                                        <div class="modal fade" id="myModal<?= $item['id_supplier'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Form Edit Supplier</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="supplier-edit.php" method="post">
+                                                            <?php
+                                                            $id_supplier = $item['id_supplier'];
+                                                            $data = getSupplierById($id_supplier);
+                                                            ?>
+                                                            <div class="card-body">
+                                                                <div class="form-group">
+                                                                    <label for="id_supplier">ID Supplier</label>
+                                                                    <input type="text" class="form-control" name="id_supplier" id="id_supplier" value="<?= $data['id_supplier'] ?>" readonly>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="nama_supplier">Nama Supplier</label>
+                                                                    <input type="text" class="form-control" id="nama_supplier" name="nama_supplier" placeholder="Masukan Nama Supplier" value="<?= $data['nama_supplier'] ?>">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="telepon-supplier">No Telepon Supplier</label>
+                                                                    <input type="number" class="form-control" id="telepon-supplier" name="telepon_suppler" placeholder="Masukan No Telepon Supplier" value="<?= $data['telepon_supplier'] ?>">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Alamat</label>
+                                                                    <textarea class="form-control" rows="3" name="alamat_supplier" id="alamat-supplier" placeholder="Masukan Alamat Supplier" required><?= $data['alamat_supplier'] ?></textarea>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="text-center">
+                                                            <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
+                                                        </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Akhir modal -->
                                     <?php
                                     }
                                     ?>
@@ -138,14 +178,7 @@ include_once "../layout/header.php"
 
 <!-- Modal Tambah Data -->
 <?php
-// $query = mysqli_query($db, "SELECT max(id_supplier) as Kode  FROM supplier");
-// $data = mysqli_fetch_array($query);
-// $kode = $data['Kode'];
-// $urutan = (int) substr($kode, 1, 5);
-
-// $urutan++;
-// $huruf = "SP";
-// $kodeSupplier = $huruf . sprintf("%05s", $urutan);
+$kode_supplier = kodeSupplier();
 ?>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -161,19 +194,19 @@ include_once "../layout/header.php"
                     <div class="card-body">
                         <div class="form-group">
                             <label for="id_supplier">ID Supplier</label>
-                            <input type="text" class="form-control" name="id_supplier" id="id_supplier" placeholder="Masukan id Supplier">
+                            <input type="text" class="form-control" name="id_supplier" id="id_supplier" value="<?= $kode_supplier ?>" placeholder="Masukan id Supplier" readonly>
                         </div>
                         <div class="form-group">
                             <label for="nama_supplier">Nama Supplier</label>
                             <input type="text" class="form-control" id="nama_supplier" name="nama_supplier" placeholder="Masukan Nama Supplier">
                         </div>
                         <div class="form-group">
-                            <label>Alamat</label>
-                            <textarea class="form-control" rows="3" name="alamat_supplier" id="alamat-supplier" placeholder="Masukan Alamat Supplier"></textarea>
-                        </div>
-                        <div class="form-group">
                             <label for="no_telp">No Telpon Supplier</label>
                             <input type="number" class="form-control" id="telepon-supplier" name="telepon_supplier" placeholder="Masukan No Telpon Supplier">
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat Supplier</label>
+                            <textarea class="form-control" rows="3" name="alamat_supplier" id="alamat-supplier" placeholder="Masukan Alamat supplier" required></textarea>
                         </div>
                     </div>
             </div>
@@ -188,51 +221,6 @@ include_once "../layout/header.php"
 </div>
 <!-- Akhir modal -->
 
-<!-- Modal Edit Data -->
-<div class="modal fade" id="myModal<?= $item['id_supplier'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Form Edit Supplier</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="supplier-edit.php" method="post">
-                    <?php
-                    $id_supplier = $item['id_supplier'];
-                    $data = getSupplierById($id_supplier);
-                    ?>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="id_supplier">ID Supplier</label>
-                            <input type="text" class="form-control" name="id_supplier" id="id_supplier" value="<?= $data['id_supplier'] ?>" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="nama_supplier">Nama Supplier</label>
-                            <input type="text" class="form-control" id="nama_supplier" name="nama_supplier" placeholder="Masukan Nama Supplier" value="<?= $data['nama_supplier'] ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="telepon-supplier">No Telepon Supplier</label>
-                            <input type="number" class="form-control" id="telepon-supplier" name="telepon_suppler" placeholder="Masukan No Telepon Supplier" value="<?= $data['telepon_supplier'] ?>">
-                        </div>
-                        <div class="form-group">
-                            <label>Alamat</label>
-                            <textarea class="form-control" rows="3" name="alamat_supplier" id="alamat-supplier" placeholder="Masukan Alamat Supplier" required><?= $data['alamat_supplier'] ?></textarea>
-                        </div>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- Akhir modal -->
 
 <!-- jQuery -->
 <script src="../../plugins/jquery/jquery.min.js"></script>

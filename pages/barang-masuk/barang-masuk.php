@@ -48,12 +48,6 @@ include_once "../layout/header.php"
         <div class="col-sm-6">
           <h1>Barang Masuk</h1>
         </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">DataTables</li>
-          </ol>
-        </div>
       </div>
     </div><!-- /.container-fluid -->
   </section>
@@ -91,13 +85,19 @@ include_once "../layout/header.php"
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="id-supplier">ID Supplier</label>
-                      <input type="text" class="form-control" name="id_supplier" id="id-supplier" required>
+                      <input type="text" class="form-control" name="id_supplier" id="id-supplier" readonly>
                     </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="telepon-supplier">Telepon Supplier</label>
                       <input type="number" class="form-control" name="telepon_supplier" id="telepon-supplier" required>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label>Alamat Supplier</label>
+                      <textarea class="form-control" rows="1" name="alamat_supplier" id="alamat-supplier" placeholder="Masukan Alamat supplier" required></textarea>
                     </div>
                   </div>
 
