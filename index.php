@@ -29,7 +29,7 @@ if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
 <body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-logo">
-      <a href="<?= BASEURL ?>/index2.html"><b>Admin</b>LTE</a>
+      <a href="<?= BASEURL ?>/"><b>Putra Subur Makmur</b></a>
     </div>
     <!-- /.login-logo -->
     <div class="card">
@@ -38,7 +38,7 @@ if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
         <div class="d-flex justify-content-center">
           <lottie-player src="<?= BASEURL ?>/dist/lottiefiles/85568-user-login.json" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></lottie-player>
         </div>
-        <p class="login-box-msg">Sign in to start your session</p>
+        <p class="login-box-msg">Login untuk masuk ke Sistem</p>
 
         <form action="<?= BASEURL ?>/cekLogin.php" method="post">
           <div class="input-group mb-3">
@@ -75,11 +75,11 @@ if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
         </form>
 
         <p class="mb-1">
-          <a href="formUbahPassword.php">I forgot my password</a>
+          <a href="formUbahPassword.php">Lupa password?</a>
         </p>
-        <p class="mb-0">
+        <!-- <p class="mb-0">
           <a href="register.html" class="text-center">Register a new membership</a>
-        </p>
+        </p> -->
       </div>
       <!-- /.login-card-body -->
     </div>
