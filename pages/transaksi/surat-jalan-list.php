@@ -23,8 +23,6 @@ $pdf->Cell(200, 5, 'Putra Subur Makmur', 0, 1);
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(200, 5, 'Jl Pameuntasan-Gajah Mekar Kab. Bandung Jawa Barat 40911', 0, 1);
 $pdf->Cell(200, 5, '085863099783', 0, 1);
-$pdf->Cell(200, 5, 'BCA : 3790474588', 0, 1);
-$pdf->Cell(200, 5, 'a/n : Salsabila Shafa Puja', 0, 1);
 $pdf->SetFont('Arial', 'B', 16);
 $pdf->SetX(130);
 $pdf->Cell(200, 10, 'SURAT JALAN', 0, 1);
