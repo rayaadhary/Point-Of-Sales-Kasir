@@ -184,8 +184,11 @@ include_once "../layout/header.php"
         <form action="beban-tambah.php" method="post">
           <div class="card-body">
             <div class="form-group">
+              <?php
+              $kode_beban = kodeBeban();
+              ?>
               <label for="id_beban">ID Beban</label>
-              <input type="text" class="form-control" name="id_beban" id="id_beban" placeholder="Masukan ID Beban">
+              <input type="text" class="form-control" name="id_beban" id="id_beban" value="<?= $kode_beban ?>" readonly placeholder="Masukan ID Beban">
             </div>
             <div class="form-group">
               <label for="nama_beban">Nama Beban Usaha</label>

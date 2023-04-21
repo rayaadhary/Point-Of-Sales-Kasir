@@ -184,8 +184,11 @@ include_once "../layout/header.php"
         <form action="prive-tambah.php" method="post">
           <div class="card-body">
             <div class="form-group">
+              <?php
+              $kode_prive = kodePrive();
+              ?>
               <label for="id_prive">ID Prive</label>
-              <input type="text" class="form-control" name="id_prive" id="id_prive" placeholder="Masukan ID Prive">
+              <input type="text" class="form-control" name="id_prive" id="id_prive" value="<?= $kode_prive ?>" placeholder="Masukan ID Prive" readonly>
             </div>
             <div class="form-group">
               <label for="nama_prive">Nama Prive</label>

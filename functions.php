@@ -136,21 +136,35 @@ function kodeSupplier()
   return $kode_supplier;
 }
 
-// function kodeSupplier()
-// {
-//   $db = dbConnect();
-//   $query = $db->query("SELECT max(id_supplier) as kodeTerbesar FROM supplier");
-//   $data = $query->fetch_assoc();
-//   $kode_supplier = $data['kodeTerbesar'];
-//   $urutan = (int) substr($kode_supplier, 2, 4);
-//   $urutan++;
-//   $huruf = "PT";
-//   $kode_supplier = $huruf . sprintf("%04s", $urutan);
-//   $query->free();
-//   $db->close();
-//   return $kode_supplier;
-// }
+function kodeBeban()
+{
+  $db = dbConnect();
+  $query = $db->query("SELECT max(id_beban) as kodeTerbesar FROM beban");
+  $data = $query->fetch_assoc();
+  $kode_beban = $data['kodeTerbesar'];
+  $urutan = (int) substr($kode_beban, 2, 4);
+  $urutan++;
+  $huruf = "IB";
+  $kode_beban = $huruf . sprintf("%04s", $urutan);
+  $query->free();
+  $db->close();
+  return $kode_beban;
+}
 
+function kodePrive()
+{
+  $db = dbConnect();
+  $query = $db->query("SELECT max(id_prive) as kodeTerbesar FROM prive");
+  $data = $query->fetch_assoc();
+  $kode_prive = $data['kodeTerbesar'];
+  $urutan = (int) substr($kode_prive, 2, 4);
+  $urutan++;
+  $huruf = "IP";
+  $kode_prive = $huruf . sprintf("%04s", $urutan);
+  $query->free();
+  $db->close();
+  return $kode_prive;
+}
 
 function gantiPassword($username, $password)
 {
