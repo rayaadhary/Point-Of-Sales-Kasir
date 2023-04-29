@@ -11,6 +11,7 @@ $data = getPenggunaByUsername($username);
 if (isset($_POST["btn_login"])) {
   if (password_verify($password, $data['password'])) {
     // if ($password == $data['password']) {
+    session_start();
     $_SESSION['role'] = 'pemilik' || 'karyawan';
     $_SESSION['username'] = $data['username'];
     $_SESSION['id_pengguna'] = $data['id_pengguna'];

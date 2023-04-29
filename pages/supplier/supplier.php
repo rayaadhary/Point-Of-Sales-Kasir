@@ -1,7 +1,6 @@
 <?php
 include_once "../../functions.php";
 $title = 'supplier';
-session_start();
 if (!isset($_SESSION["id_pengguna"]))
     header(
         "Location: " . BASEURL

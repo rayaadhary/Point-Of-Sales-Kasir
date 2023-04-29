@@ -2,7 +2,6 @@
 // db Database
 include_once "../../functions.php";
 $db = dbConnect();
-session_start();
 if (!isset($_SESSION["id_pengguna"]))
   header(
     "Location: " . BASEURL

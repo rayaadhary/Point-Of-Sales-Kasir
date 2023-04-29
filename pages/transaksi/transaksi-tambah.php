@@ -2,7 +2,6 @@
 
 include_once "../../dist/fpdf/fpdf.php";
 include_once "../../functions.php";
-session_start();
 if (!isset($_SESSION["id_pengguna"]))
   header(
     "Location: " . BASEURL

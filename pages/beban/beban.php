@@ -1,7 +1,6 @@
 <?php
 include_once "../../functions.php";
 $title = "beban";
-session_start();
 if (!isset($_SESSION["id_pengguna"]))
   header(
     "Location: " . BASEURL

@@ -2,7 +2,6 @@
 include_once "../../functions.php";
 $menu  = "transaksi";
 $title = "transaksi_utang";
-session_start();
 if (!isset($_SESSION["id_pengguna"]))
   header(
     "Location: " . BASEURL

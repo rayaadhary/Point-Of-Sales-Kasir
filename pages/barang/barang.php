@@ -1,6 +1,5 @@
 <?php
 include_once "../../functions.php";
-$title = "barang";
 session_start();
 if (!isset($_SESSION["id_pengguna"]))
   header(
