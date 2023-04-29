@@ -123,7 +123,7 @@ include_once "../layout/header.php"
                                   <label for="role">Role</label>
                                   <select class="form-control" name="role" id="role">
                                     <option value="pemilik" <?= ($data['role'] == 'pemilik') ? 'selected' : '' ?>>Pemilik</option>
-                                    <option value="karyawan" <?= ($data['role'] == 'karyawan') ? 'selected' : '' ?>>Karyawan</option>
+                                    <option value="petugas" <?= ($data['role'] == 'petugas') ? 'selected' : '' ?>>Petugas</option>
                                   </select>
                                 </div>
                                 <div class="form-group">
@@ -199,7 +199,7 @@ include_once "../layout/header.php"
             </div>
             <div class="form-group">
               <label for="username">Username</label>
-              <input type="text" class="form-control" id="username" name="username" placeholder="Masukan Nama Prive">
+              <input type="text" class="form-control" id="username" name="username" placeholder="Masukan Nama pengguna">
             </div>
             <div class="form-group">
               <label for="password">Password</label>
@@ -215,7 +215,7 @@ include_once "../layout/header.php"
             <div class="form-group">
               <label for="role">Role</label>
               <select class="form-control" name="role" id="role">
-                <option value="karyawan">Karyawan</option>
+                <option value="petugas">Petugas</option>
                 <option value="pemilik">Pemilik</option>
               </select>
             </div>

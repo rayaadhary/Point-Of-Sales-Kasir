@@ -12,7 +12,7 @@ if (isset($_POST["btn_login"])) {
   if (password_verify($password, $data['password'])) {
     // if ($password == $data['password']) {
     session_start();
-    $_SESSION['role'] = 'pemilik' || 'karyawan';
+    $_SESSION['role'] = 'pemilik' || 'petugas';
     $_SESSION['username'] = $data['username'];
     $_SESSION['id_pengguna'] = $data['id_pengguna'];
     $_SESSION['nama'] = $data['nama'];

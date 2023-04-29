@@ -195,7 +195,7 @@
                 </p>
               </a>
             </li>
-            <?php if ($_SESSION['role'] == 'karyawan') { ?>
+            <?php if ($_SESSION['role'] == 'petugas') { ?>
               <li class="nav-item <?= ($menu == 'barang_masuk') ? 'menu-open' : '' ?>">
                 <a href="#" class="nav-link <?= ($menu == 'barang_masuk') ? 'active' : '' ?>">
                   <i class="nav-icon fas fa-boxes"></i>
