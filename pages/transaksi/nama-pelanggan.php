@@ -2,7 +2,11 @@
 // db Database
 include_once "../../functions.php";
 $db = dbConnect();
-
+session_start();
+if (!isset($_SESSION["id_pengguna"]))
+  header(
+    "Location: " . BASEURL
+  );
 if (isset($_GET['term'])) {
   $searchTerm = mysqli_real_escape_string($db, $_GET['term']);
   $query = "SELECT * FROM pelanggan WHERE nama_pelanggan LIKE '%" . $searchTerm . "%' ORDER BY nama_pelanggan ASC";

@@ -1,7 +1,11 @@
 <?php
 include_once "../../functions.php";
 include_once "../../dist/fpdf/fpdf.php";
-
+session_start();
+if (!isset($_SESSION["id_pengguna"]))
+  header(
+    "Location: " . BASEURL
+  );
 $pengirimanId = $_GET['idPengiriman'];
 $transaksiId = $_GET['idTransaksi'];
 $pengiriman = getPengirimanById($pengirimanId);

@@ -1,6 +1,10 @@
 <?php
 include_once "../../functions.php";
-
+session_start();
+if (!isset($_SESSION["id_pengguna"]))
+  header(
+    "Location: " . BASEURL
+  );
 if (isset($_POST['btn-simpan'])) {
   // var_dump($_POST);
   // die;

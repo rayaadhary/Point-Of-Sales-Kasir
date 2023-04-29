@@ -1,7 +1,11 @@
 <?php
 
 include_once "../../functions.php";
-
+session_start();
+if (!isset($_SESSION["id_pengguna"]))
+  header(
+    "Location: " . BASEURL
+  );
 $db = dbConnect();
 
 if (isset($_POST["update_utang"])) {

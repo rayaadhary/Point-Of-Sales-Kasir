@@ -3,7 +3,11 @@
 include_once "../../functions.php";
 
 $db = dbConnect();
-
+session_start();
+if (!isset($_SESSION["id_pengguna"]))
+  header(
+    "Location: " . BASEURL
+  );
 if (isset($_POST["update_utang"])) {
   $no_faktur = mysqli_real_escape_string($db, trim($_POST["no_faktur"]));
   $diskon = mysqli_real_escape_string($db, trim($_POST["diskon_baru"]));

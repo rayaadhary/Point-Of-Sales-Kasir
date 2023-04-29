@@ -1,6 +1,11 @@
  
  <?php
   include_once '../../functions.php';
+  session_start();
+  if (!isset($_SESSION["id_pengguna"]))
+    header(
+      "Location: " . BASEURL
+    );
   $db = dbConnect();
   if (isset($_POST["no_barang_masuk"])) {
     $no_barang_masuk = mysqli_real_escape_string($db, trim($_POST['no_barang_masuk']));

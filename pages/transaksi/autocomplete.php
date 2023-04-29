@@ -2,6 +2,11 @@
 // db Database
 include_once "../../functions.php";
 $db = dbConnect();
+session_start();
+if (!isset($_SESSION["id_pengguna"]))
+  header(
+    "Location: " . BASEURL
+  );
 
 // cari dan tampilkan data ke AutoComplete
 // $searchTerm = $_GET['term'];

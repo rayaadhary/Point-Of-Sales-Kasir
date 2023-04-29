@@ -1,6 +1,10 @@
 <?php
 include_once "../../functions.php";
-
+session_start();
+if (!isset($_SESSION["id_pengguna"]))
+  header(
+    "Location: " . BASEURL
+  );
 if (isset($_POST['btn-simpan'])) {
   if (insertDataPrive($_POST) > 0) {
     setFlash('berhasil', 'ditambahkan', 'primary');

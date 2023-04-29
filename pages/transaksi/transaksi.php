@@ -2,6 +2,11 @@
 include_once "../../functions.php";
 $menu = "transaksi";
 $title = "transaksi_tambah";
+session_start();
+if (!isset($_SESSION["id_pengguna"]))
+  header(
+    "Location: " . BASEURL
+  );
 ?>
 
 <!DOCTYPE html>

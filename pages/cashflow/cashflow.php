@@ -1,6 +1,11 @@
 <?php
 include_once "../../functions.php";
 $title = 'cashflow';
+session_start();
+if (!isset($_SESSION["id_pengguna"]))
+  header(
+    "Location: " . BASEURL
+  );
 ?>
 <!DOCTYPE html>
 <html lang="en">
