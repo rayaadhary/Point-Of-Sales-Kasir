@@ -303,7 +303,7 @@ function getTotalPrive()
 function hitungTransaksi()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT COUNT(no_faktur) AS jumlahTransaksi FROM transaksi");
+  $res = $db->query("SELECT COUNT(DISTINCT no_faktur) AS jumlahTransaksi FROM transaksi");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();

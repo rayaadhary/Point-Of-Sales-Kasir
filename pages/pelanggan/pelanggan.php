@@ -57,7 +57,7 @@ include_once "../layout/header.php"
                             <!-- <h3 class="card-title">DataTable with default features</h3> -->
                             <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
                             <!-- Button trigger modal -->
-                            <?php if ($_SESSION['role'] == 'karyawan') { ?>
+                            <?php if ($_SESSION['role'] == 'petugas') { ?>
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                     Tambah
                                 </button>
@@ -70,7 +70,7 @@ include_once "../layout/header.php"
                                     <tr>
                                         <th>ID Pelanggan</th>
                                         <th>Nama Pelanggan</th>
-                                        <?php if ($_SESSION['role'] == 'karyawan') { ?>
+                                        <?php if ($_SESSION['role'] == 'petugas') { ?>
                                             <th>Aksi</th>
                                         <?php } ?>
                                     </tr>
@@ -83,7 +83,7 @@ include_once "../layout/header.php"
                                         <tr>
                                             <td><?= $item['id_pelanggan']; ?></td>
                                             <td><?= $item['nama_pelanggan']; ?></td>
-                                            <?php if ($_SESSION['role'] == 'karyawan') { ?>
+                                            <?php if ($_SESSION['role'] == 'petugas') { ?>
                                                 <td>
                                                     <!-- a href -->
                                                     <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_pelanggan'] ?>" class="btn btn-success btn-circle btn-sm">

@@ -24,6 +24,16 @@ if (!isset($_SESSION["id_pengguna"]))
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
+  <script src="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.js"></script>
+
+
+  <link rel="stylesheet" href="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.css">
+  <script src="../../dist/jquery/jquery-3.6.3.min.js"></script>
+  <script src="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.js"></script>
+
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="../../dist/jquery/moment.js"></script>
+
   <link rel="stylesheet" href="<?= BASEURL ?>/dist/css/adminlte.min.css">
   <!-- Sweetalert 2 -->
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
@@ -222,7 +232,9 @@ include_once "../layout/header.php"
 
 
 <!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- <script src="../../plugins/jquery/jquery.min.js"></script> -->
+<!-- <script src="../../dist/jquery/jquery-3.6.3.min.js"></script> -->
+
 <!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables  & Plugins -->
@@ -246,6 +258,7 @@ include_once "../layout/header.php"
 <script src="../../dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="../../dist/js/demo.js"></script>
+
 <!-- Page specific script -->
 <script>
   $(function() {
@@ -259,6 +272,18 @@ include_once "../layout/header.php"
       }
     });
   });
+  $("input[type=date]").on('click', function() {
+    return false;
+  });
+  $(document).ready(function() {
+    var today = moment().format('YYYY-MM-DD');
+    $('#tanggal').val(today);
+
+    $('#tanggal').datepicker({
+      dateFormat: 'yy-mm-dd',
+      changeYear: true
+    });
+  })
 </script>
 </body>
 

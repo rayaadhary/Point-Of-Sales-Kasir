@@ -1,6 +1,6 @@
 <?php
 include_once "../../functions.php";
-session_start();
+$title = 'barang';
 if (!isset($_SESSION["id_pengguna"]))
   header(
     "Location: " . BASEURL
@@ -119,8 +119,8 @@ include_once "../layout/header.php"
                                   <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang" value="<?= $data['nama_barang'] ?>">
                                 </div>
                                 <div class="form-group">
-                                  <label for="harga">Harga Jual</label>
-                                  <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukan Harga Barang" value="<?= $data['harga_jual'] ?>">
+                                  <label for="harga_jual">Harga Jual</label>
+                                  <input type="number" class="form-control" id="harga_jual" name="harga_jual" placeholder="Masukan Harga Barang" value="<?= $data['harga_jual'] ?>">
                                 </div>
                                 <div class="form-group">
                                   <label for="stok">Stok Barang</label>

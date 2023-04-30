@@ -57,7 +57,7 @@ include_once "../layout/header.php"
                             <!-- <h3 class="card-title">DataTable with default features</h3> -->
                             <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
                             <!-- Button trigger modal -->
-                            <?php if ($_SESSION['role'] == 'karyawan') { ?>
+                            <?php if ($_SESSION['role'] == 'petugas') { ?>
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                     Tambah
                                 </button>
@@ -72,7 +72,7 @@ include_once "../layout/header.php"
                                         <th>Nama Supplier</th>
                                         <th>No Telpon</th>
                                         <th>Alamat</th>
-                                        <?php if ($_SESSION['role'] == 'karyawan') { ?>
+                                        <?php if ($_SESSION['role'] == 'petugas') { ?>
                                             <th>Aksi</th>
                                         <?php } ?>
                                     </tr>
@@ -87,7 +87,7 @@ include_once "../layout/header.php"
                                             <td><?= $item['nama_supplier']; ?></td>
                                             <td><?= $item['telepon_supplier']; ?></td>
                                             <td><?= $item['alamat_supplier']; ?></td>
-                                            <?php if ($_SESSION['role'] == 'karyawan') { ?>
+                                            <?php if ($_SESSION['role'] == 'petugas') { ?>
                                                 <td>
                                                     <!-- a href -->
                                                     <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_supplier'] ?>" class="btn btn-success btn-circle btn-sm">
