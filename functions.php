@@ -656,18 +656,18 @@ function updateDataPengguna($data)
 }
 
 
-function getDeleteBarang($id)
-{
-  $db = dbConnect();
-  $res = mysqli_query($db, "DELETE FROM barang WHERE id_barang = '$id'");
-  if ($res) {
-    return 1;
-  } else {
-    return 0;
-  }
-  $res->free();
-  $db->close();
-}
+// function getDeleteBarang($id)
+// {
+//   $db = dbConnect();
+//   $res = mysqli_query($db, "DELETE FROM barang WHERE id_barang = '$id'");
+//   if ($res) {
+//     return 1;
+//   } else {
+//     return 0;
+//   }
+//   $res->free();
+//   $db->close();
+// }
 
 function getDeleteBeban($id)
 {
