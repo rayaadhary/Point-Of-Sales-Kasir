@@ -27,6 +27,8 @@ if (!isset($_SESSION["id_pengguna"]))
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= BASEURL ?>/dist/css/adminlte.min.css">
   <!-- Sweetalert 2 -->
+  <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 </head>
 
@@ -94,15 +96,18 @@ include_once "../layout/header.php"
                       <td><?= $item['status']; ?></td>
                       <td>
                         <!-- a href -->
-                        <div class="d-flex">
-                          <a href="surat-jalan-list.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" type="button" title="surat jalan" class="btn btn-info btn-circle btn-sm">
-                            <i class="fas fa-shipping-fast"></i>
-                          </a>
-                          <!-- a href -->
-                          <a href="cetak-transaksi-list.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" title="cetak transaksi" class="btn btn-success btn-circle btn-sm">
-                            <i class="fas fa-money-check"></i>
-                          </a>
-                        </div>
+                        <!-- <div class="d-flex"> -->
+                        <a href="surat-jalan-list.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" type="button" title="surat jalan" class="btn btn-info btn-circle btn-sm">
+                          <i class="fas fa-shipping-fast"></i>
+                        </a>
+                        <!-- a href -->
+                        <a href="cetak-transaksi-list.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" title="cetak transaksi" class="btn btn-success btn-circle btn-sm">
+                          <i class="fas fa-money-check"></i>
+                        </a>
+                        <a href="transaksi-hapus.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" class="btn btn-danger btn-circle btn-sm hapus" title="hapus transaksi">
+                          <i class="fas fa-trash"></i>
+                        </a>
+                        <!-- </div> -->
                       </td>
                     </tr>
                   <?php

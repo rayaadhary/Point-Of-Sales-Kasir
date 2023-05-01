@@ -734,6 +734,27 @@ function getDeletePengguna($id)
   $db->close();
 }
 
+function getDeleteTransaksi($transaksi, $pengiriman)
+{
+  $db = dbConnect();
+  $db->autocommit(FALSE);
+  $query1 = "DELETE FROM transaksi WHERE no_faktur = '$transaksi'";
+  $result1 = $db->query($query1);
+  $query2 = "DELETE FROM pengiriman WHERE no_surat_jalan = '$pengiriman'";
+  $result2 = $db->query($query2);
+
+  if ($result1 && $result2) {
+    $db->commit();
+    $db->close();
+    return 1;
+  } else {
+    $db->rollback();
+    $db->close();
+    return 0;
+  }
+}
+
+
 function getPelangganById($id)
 {
   $db = dbConnect();
