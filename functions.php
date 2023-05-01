@@ -738,10 +738,31 @@ function getDeleteTransaksi($transaksi, $pengiriman)
 {
   $db = dbConnect();
   $db->autocommit(FALSE);
+  $query_stok = "SELECT id_barang, banyak FROM transaksi WHERE no_faktur = '$transaksi'";
+  $result_stok = $db->query($query_stok);
+  if ($result_stok->num_rows > 0) {
+    // Jika ada data stok barang, tambahkan stok pada tabel barang
+    while ($row_stok = $result_stok->fetch_assoc()) {
+      $id_barang = $row_stok['id_barang'];
+      $banyak = $row_stok['banyak'];
+      $query_barang = "UPDATE barang SET stok = stok + $banyak WHERE id_barang = '$id_barang'";
+      $result_barang = $db->query($query_barang);
+      if (!$result_barang) {
+        // Jika gagal memperbarui stok barang, lakukan rollback dan keluar dari fungsi
+        $db->rollback();
+        $db->close();
+        return 0;
+      }
+    }
+  }
+
+  $id_barang = getTransaksiById($transaksi)['id_barang'];
+  $banyak = getTransaksiById($transaksi)['banyak'];
   $query1 = "DELETE FROM transaksi WHERE no_faktur = '$transaksi'";
   $result1 = $db->query($query1);
   $query2 = "DELETE FROM pengiriman WHERE no_surat_jalan = '$pengiriman'";
   $result2 = $db->query($query2);
+
 
   if ($result1 && $result2) {
     $db->commit();
