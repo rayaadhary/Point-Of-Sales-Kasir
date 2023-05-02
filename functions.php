@@ -811,11 +811,9 @@ function tombolHapus($id)
   $db = dbConnect();
   $sql = "SELECT * FROM barang WHERE id_barang='$id' AND NOT EXISTS (SELECT * FROM transaksi, barang_masuk WHERE transaksi.id_barang = barang.id_barang AND barang_masuk.id_barang = barang.id_barang)";
   $result = mysqli_query($db, $sql);
-  if ($result) {
-    return 1;
-  } else {
-    return 0;
-  }
+  $res = $result->num_rows;
+  return $res;
+  $result->free();
   $db->close();
 }
 
