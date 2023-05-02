@@ -88,9 +88,14 @@ include_once "../layout/header.php"
                           <i class="fas fa-edit"></i>
                         </a>
                         <!-- a href -->
-                        <a href="barang-hapus.php?id_barang=<?= $item['id_barang'] ?>>" class="btn btn-danger btn-circle btn-sm hapus">
-                          <i class="fas fa-trash"></i>
-                        </a>
+                        <?php
+                        $tombolHapus = tombolHapus($item['id_barang']);
+                        if ($tombolHapus > 0) {
+                        ?>
+                          <a href="barang-hapus.php?id_barang=<?= $item['id_barang'] ?>>" class="btn btn-danger btn-circle btn-sm hapus">
+                            <i class="fas fa-trash"></i>
+                          </a>
+                        <?php } ?>
                       </td>
                     </tr>
                     <!-- Modal Edit Data -->

@@ -263,7 +263,7 @@ function getAllTransaksiUtang()
 function getTotalTransaksi()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM(bayar) as totalTransaksi FROM transaksi");
+  $res = $db->query("SELECT SUM(DISTINCT bayar) as totalTransaksi FROM transaksi");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
@@ -273,7 +273,7 @@ function getTotalTransaksi()
 function getTotalBarangMasuk()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM( bayar) as totalBarangMasuk FROM barang_masuk");
+  $res = $db->query("SELECT SUM(bayar) as totalBarangMasuk FROM barang_masuk");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
@@ -804,6 +804,19 @@ function getPenggunaByUsername($id)
   $res->free();
   $db->close();
   return $data;
+}
+
+function tombolHapus($id)
+{
+  $db = dbConnect();
+  $sql = "SELECT * FROM barang WHERE id_barang='$id' AND NOT EXISTS (SELECT * FROM transaksi, barang_masuk WHERE transaksi.id_barang = barang.id_barang AND barang_masuk.id_barang = barang.id_barang)";
+  $result = mysqli_query($db, $sql);
+  if ($result) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
 }
 
 function bisa($db, $query)

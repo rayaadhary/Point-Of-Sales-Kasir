@@ -30,6 +30,7 @@ if (isset($_POST['simpan'])) {
       $query = "INSERT INTO supplier VALUES ('$id_supplier', '$nama_supplier', '$telepon_supplier', '$alamat_supplier')";
       $sql = mysqli_query($db, $query);
     }
+
     for ($i = 0; $i < $no; $i++) {
       print_r($_POST['no']);
       $no_barang_masuk = mysqli_real_escape_string($db, trim($_POST['barang_masuk']));
