@@ -293,6 +293,47 @@ include_once "../layout/header.php"
     });
   });
 
+  // format nominal rupiah
+  var bayar = document.getElementById('bayar');
+  bayar.addEventListener('keyup', function(e) {
+    // tambahkan 'Rp.' pada saat ketik nominal di form kolom input
+    // gunakan fungsi formatRupiah() untuk mengubah nominal angka yang di ketik menjadi format angka
+    bayar.value = formatRupiah(this.value, 'Rp. ');
+  });
+  /* Fungsi formatRupiah */
+  function formatRupiah(angka, prefix) {
+    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+      split = number_string.split(','),
+      sisa = split[0].length % 3,
+      bayar = split[0].substr(0, sisa),
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // tambahkan titik jika yang di input sudah menjadi angka satuan ribuan
+    if (ribuan) {
+      separator = sisa ? '.' : '';
+      bayar += separator + ribuan.join('.');
+    }
+
+    bayar = split[1] != undefined ? bayar + ',' + split[1] : bayar;
+    return prefix == undefined ? bayar : (bayar ? 'Rp. ' + bayar : '');
+  }
+
+  function formatToInteger(angka) {
+    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+      split = number_string.split(','),
+      bayar = split[0],
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+    if (ribuan) {
+      bayar += ribuan.join('');
+    }
+    return parseInt(bayar);
+  }
+
+  // var inputRupiah = document.getElementById('inputRupiah').value;
+  // var rupiahInteger = formatToInteger(inputRupiah);
+  // var bayarRupiah = document.getElementById('bayar').value;
+  // var bayarInteger = formatToInteger(bayarRupiah);
+
   function del(no) {
     var stotal = parseInt($('#subTotal' + no).val());
     var alltotal = parseInt($('#stotal').val());

@@ -88,9 +88,9 @@ include_once "../layout/header.php"
                           <i class="fas fa-edit"></i>
                         </a>
                         <!-- a href -->
-                        <!-- <a href="barang-hapus.php?id_barang=>" class="btn btn-danger btn-circle btn-sm hapus">
+                        <a href="barang-hapus.php?id_barang=<?= $item['id_barang'] ?>>" class="btn btn-danger btn-circle btn-sm hapus">
                           <i class="fas fa-trash"></i>
-                        </a> -->
+                        </a>
                       </td>
                     </tr>
                     <!-- Modal Edit Data -->

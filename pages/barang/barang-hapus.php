@@ -7,6 +7,8 @@ if (!isset($_SESSION["id_pengguna"]))
 
 $id = $_GET['id_barang'];
 
+
+
 if (getDeleteBarang($id) > 0) {
   setFlash('berhasil', 'dihapus', 'primary');
   header('Location: ' . BASEURL . '/pages/barang/barang.php');

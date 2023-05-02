@@ -81,14 +81,14 @@ $pdf->SetFont('Arial', '', 11);
 
 // $harga = harga_saat_transaksi($db, $transaksiId);
 // $jumlah = jumlah_subtotal($db, $transaksiId);
-
 $i = 1;
 while ($item = mysqli_fetch_assoc($res)) {
   $pdf->Cell(15, 5, '' . $i, 1, 0, 'C');
   $pdf->Cell(80, 5, '' . $item['nama_barang'], 1, 0);
   $pdf->Cell(30, 5, '' . $item['banyak'], 1, 0, 'C');
   $pdf->Cell(20, 5, 'pcs', 1, 0, 'C');
-  $pdf->Cell(40, 5, 'Rp. ' . number_format($transaksi['hargaTransaksi'], 2, ',', '.'), 1, 0, 'R');
+  $hargaTransaksi = $item['subtotal'] / $item['banyak'];
+  $pdf->Cell(40, 5, 'Rp. ' . number_format($hargaTransaksi, 2, ',', '.'), 1, 0, 'R');
   $pdf->Cell(40, 5, 'Rp. ' . number_format($item['subtotal'], 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
   $i++;
 }

@@ -1,0 +1,17 @@
+barang ingin bisa dihapus
+
+harga satuan cetak transaksi
+
+jika transaksi dan barang masuk tidak jadi maka error karena data tidak ada
+
+masalah harga  beli 
+
+input harga dengan nominal dan rupiah
+
+tambah menu modal
+
+bayar required/validasi
+
+keuntungan kotor dari selisih 
+
+harga jual, harga beli, selisih kotor
