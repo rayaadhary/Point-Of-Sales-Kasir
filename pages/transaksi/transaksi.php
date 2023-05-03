@@ -330,9 +330,22 @@ include_once "../layout/header.php"
     var stotal = parseInt($('#subTotal' + no).val());
     var alltotal = parseInt($('#stotal').val());
     var newtotal = alltotal - stotal;
-
     $('#stotal').val(newtotal);
     $('#row' + no).remove();
+
+    var diskon = parseInt($('#diskon').val());
+    var bayar = parseInt($('#bayar').val());
+    var kembalian = bayar - (newtotal - diskon >= 0 ? newtotal - diskon : 0);
+    if (kembalian >= 0) {
+      $('#kembalian').val(kembalian);
+      $('#status').val('Lunas');
+      var tanggal = $('#tanggal').val();
+      $('#jatuh-tempo').val(tanggal);
+    } else {
+      $('#status').val('Utang');
+      $('#kembalian').val(kembalian);
+      jatuhTempo();
+    }
   }
 
   function jatuhTempo() {
@@ -405,6 +418,7 @@ include_once "../layout/header.php"
 
     $('#tambah-transaksi').on('click', function() {
       var no = $('#no').val();
+      // var no = $('.list .row').length;
       var id_barang = $('#id-barang').val();
       var nama_barang = $('#nama-barang option:selected').text();
       var banyak = $('#banyak').val();

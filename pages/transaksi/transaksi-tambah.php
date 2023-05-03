@@ -18,7 +18,7 @@ if (isset($_POST['simpan'])) {
   }
   // operasi INSERT ke database
   else {
-    $no =  $_POST['no'] - 1;
+    $no =  $_POST['no'] - 2;
     $id_pelanggan = mysqli_real_escape_string($db, trim($_POST['id_pelanggan']));
     $nama_pelanggan = mysqli_real_escape_string($db, trim($_POST['nama_pelanggan']));
     $sql = mysqli_query($db, "SELECT id_pelanggan FROM pelanggan WHERE id_pelanggan = '$id_pelanggan'");

@@ -65,7 +65,9 @@ include_once "../layout/header.php"
                   <tr>
                     <th>ID Barang</th>
                     <th>Nama Barang</th>
-                    <th>Harga Beli</th>
+                    <?php if ($_SESSION['role'] == 'pemilik') { ?>
+                      <th>Harga Beli</th>
+                    <?php } ?>
                     <th>Harga Jual</th>
                     <th>Stok</th>
                     <th>Aksi</th>
@@ -79,7 +81,9 @@ include_once "../layout/header.php"
                     <tr>
                       <td><?= $item['id_barang']; ?></td>
                       <td><?= $item['nama_barang']; ?></td>
-                      <td><?= $item['harga_beli']; ?></td>
+                      <?php if ($_SESSION['role'] == 'pemilik') { ?>
+                        <td><?= $item['harga_beli']; ?></td>
+                      <?php } ?>
                       <td><?= $item['harga_jual']; ?></td>
                       <td><?= $item['stok']; ?></td>
                       <td>

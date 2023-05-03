@@ -48,7 +48,7 @@ $pdf->Cell(20, 5, 'Unit', 1, 0, 'C');
 $pdf->Cell(40, 5, 'Harga Satuan', 1, 0, 'C');
 $pdf->Cell(40, 5, 'Total', 1, 1, 'C'); // Pindah ke baris baru
 $pdf->SetFont('Arial', '', 11);
-$no =  $_SESSION['cetak']['no'] - 1;
+$no =  $_SESSION['cetak']['no'] - 2;
 // var_dump($_SESSION['cetak']);
 // die;
 for ($i = 0; $i < $no; $i++) {
@@ -134,7 +134,7 @@ $pdf->Cell(30, 5, 'Banyak', 1, 0, 'C');
 $pdf->Cell(20, 5, 'Unit', 1, 0, 'C');
 $pdf->Cell(20, 5, 'Sub Item', 1, 1, 'C');
 $pdf->SetFont('Arial', '', 11);
-$no =  $_SESSION['cetak']['no'] - 1;
+$no =  $_SESSION['cetak']['no'] - 2;
 // var_dump($_SESSION['cetak']);
 // die;
 for ($i = 0; $i < $no; $i++) {
