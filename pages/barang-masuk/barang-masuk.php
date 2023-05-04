@@ -301,46 +301,53 @@ include_once "../layout/header.php"
   //   bayar.value = formatRupiah(this.value, 'Rp. ');
   // });
   /* Fungsi formatRupiah */
-  // function formatRupiah(angka, prefix) {
-  //   var number_string = angka.replace(/[^,\d]/g, '').toString(),
-  //     split = number_string.split(','),
-  //     sisa = split[0].length % 3,
-  //     bayar = split[0].substr(0, sisa),
-  //     ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+  function formatRupiah(angka, prefix) {
+    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+      split = number_string.split(','),
+      sisa = split[0].length % 3,
+      rupiah = split[0].substr(0, sisa),
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-  // tambahkan titik jika yang di input sudah menjadi angka satuan ribuan
-  //   if (ribuan) {
-  //     separator = sisa ? '.' : '';
-  //     bayar += separator + ribuan.join('.');
-  //   }
+    // tambahkan titik jika yang di input sudah menjadi rupiah satuan ribuan
+    if (ribuan) {
+      separator = sisa ? '.' : '';
+      rupiah += separator + ribuan.join('.');
+    }
 
-  //   bayar = split[1] != undefined ? bayar + ',' + split[1] : bayar;
-  //   return prefix == undefined ? bayar : (bayar ? 'Rp. ' + bayar : '');
-  // }
+    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+  }
 
-  // function formatToInteger(angka) {
-  //   var number_string = angka.replace(/[^,\d]/g, '').toString(),
-  //     split = number_string.split(','),
-  //     bayar = split[0],
-  //     ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-  //   if (ribuan) {
-  //     bayar += ribuan.join('');
-  //   }
-  //   return parseInt(bayar);
-  // }
 
-  // var inputRupiah = document.getElementById('inputRupiah').value;
-  // var rupiahInteger = formatToInteger(inputRupiah);
-  // var bayarRupiah = document.getElementById('bayar').value;
-  // var bayarInteger = formatToInteger(bayarRupiah);
+  function formatToInteger(angka) {
+    var number_string = angka.replace(/[^,\d]/g, '').toString();
+    var angka_integer = parseInt(number_string);
+    return angka_integer;
+  }
+
+
+
+  // var bayarBaru = $('#bayar').val();
+  // var bayarInterger = formatToInteger(bayarBaru);
+  // $('#bayar').val(bayarInterger);
 
   function del(no) {
     var stotal = parseInt($('#subTotal' + no).val());
     var alltotal = parseInt($('#stotal').val());
     var newtotal = alltotal - stotal;
-
     $('#stotal').val(newtotal);
     $('#row' + no).remove();
+
+    var diskon = parseInt($('#diskon').val());
+    var bayar = parseInt($('#bayar').val());
+    var kembalian = bayar - (newtotal - diskon >= 0 ? newtotal - diskon : 0);
+    if (kembalian >= 0) {
+      $('#kembalian').val(kembalian);
+      $('#status').val('Lunas');
+    } else {
+      $('#status').val('Utang');
+      $('#kembalian').val(kembalian);
+    }
   }
 
 
@@ -431,7 +438,10 @@ include_once "../layout/header.php"
     $('#bayar').on('keyup', function() {
       var total = parseInt($('#stotal').val());
       var diskon = parseInt($('#diskon').val());
-      var bayar = parseInt($(this).val());
+      var rupiah = formatRupiah($(this).val(), 'Rp. ');
+      $(this).val(rupiah);
+      var bayar = formatToInteger(rupiah);
+      // $('#kembalian').val(bayar);
       var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
       if (kembalian >= 0) {
         $('#kembalian').val(kembalian);

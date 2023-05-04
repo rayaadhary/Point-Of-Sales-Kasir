@@ -20,7 +20,7 @@ if (isset($_POST['simpan'])) {
   else {
     // var_dump($_POST);
     // die;
-    $no =  $_POST['no'] - 1;
+    $no =  $_POST['no'] - 2;
     $id_supplier = mysqli_real_escape_string($db, trim($_POST['id_supplier']));
     $nama_supplier = mysqli_real_escape_string($db, trim($_POST['nama_supplier']));
     $telepon_supplier = mysqli_real_escape_string($db, trim($_POST['telepon_supplier']));
