@@ -18,9 +18,9 @@ if (isset($_POST['simpan'])) {
   }
   // operasi INSERT ke database
   else {
+    $no =  $_POST['no'] - 2;
     // var_dump($_POST);
     // die;
-    $no =  $_POST['no'] - 2;
     $id_supplier = mysqli_real_escape_string($db, trim($_POST['id_supplier']));
     $nama_supplier = mysqli_real_escape_string($db, trim($_POST['nama_supplier']));
     $telepon_supplier = mysqli_real_escape_string($db, trim($_POST['telepon_supplier']));
@@ -31,7 +31,10 @@ if (isset($_POST['simpan'])) {
       $sql = mysqli_query($db, $query);
     }
 
-    for ($i = 0; $i < $no; $i++) {
+    for ($i = 0; $i <= $no; $i++) {
+      if (!$_POST['idBarang'][$i] && !$_POST['nama_barang'][$i] && !$_POST['harga_beli'][$i] && !$_POST['harga_jual'][$i] && !$_POST['banyak'][$i] && !$_POST['subtotal'][$i]) {
+        continue;
+      }
       print_r($_POST['no']);
       $no_barang_masuk = mysqli_real_escape_string($db, trim($_POST['barang_masuk']));
       $harga_beli = mysqli_real_escape_string($db, trim($_POST['harga_beli'][$i]));
@@ -44,7 +47,6 @@ if (isset($_POST['simpan'])) {
       $bersih = $total - $diskon;
       $bayar = mysqli_real_escape_string($db, trim($_POST['bayar']));
       $kembalian = mysqli_real_escape_string($db, trim($_POST['kembalian']));
-      // $kembalian = abs($kembalian);
       $id_barang = mysqli_real_escape_string($db, trim($_POST['idBarang'][$i]));
       $nama_barang = mysqli_real_escape_string($db, trim($_POST['nama_barang'][$i]));
       $id_pengguna = mysqli_real_escape_string($db, trim($_SESSION['id_pengguna']));
@@ -60,7 +62,6 @@ if (isset($_POST['simpan'])) {
       }
       $query = "INSERT INTO barang_masuk VALUES ('', '$no_barang_masuk', '$id_barang', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$tanggal_beli', '$id_pengguna', '$id_supplier')";
       $sql = mysqli_query($db, $query);
-      // }
     }
     if ($sql) {
       $_SESSION['cetak'] = $_POST;
