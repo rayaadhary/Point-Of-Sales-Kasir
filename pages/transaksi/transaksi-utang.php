@@ -66,6 +66,7 @@ include_once "../layout/header.php"
                 <thead>
                   <tr>
                     <th>No Faktur</th>
+                    <th>Pelanggan</th>
                     <th>Tanggal</th>
                     <th>Jatuh Tempo</th>
                     <th>Total</th>
@@ -81,11 +82,12 @@ include_once "../layout/header.php"
                   ?>
                     <tr>
                       <td><?= $item['no_faktur']; ?></td>
+                      <td><?= $item['nama_pelanggan']; ?></td>
                       <td><?= $item['tanggal']; ?></td>
                       <td><?= $item['jatuh_tempo']; ?></td>
-                      <td><?= $item['total']; ?></td>
-                      <td><?= $item['bayar']; ?></td>
-                      <td><?= $item['kembali']; ?></td>
+                      <td><?= 'Rp. ' . number_format($item['total'], 0, ',', '.');  ?></td>
+                      <td><?= 'Rp. ' . number_format($item['bayar'], 0, ',', '.');   ?></td>
+                      <td><?= 'Rp. ' . number_format($item['kembali'], 0, ',', '.');   ?></td>
                       <td align="center">
                         <!-- a href -->
                         <a href="#" type="button" name="utang" value="utang" id="<?= $item["no_faktur"]; ?>" class="btn btn-info piutang">

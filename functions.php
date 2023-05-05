@@ -31,12 +31,12 @@ function kodeFaktur($waktu)
   $query = $db->query("SELECT max(no_faktur) as kodeTerbesar FROM transaksi");
   $data = $query->fetch_assoc();
   $kode_faktur = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_faktur, 7, 3);
+  $urutan = (int) substr($kode_faktur, 11, 4);
   $urutan++;
   $waktu_formatted = date_create_from_format('Y-m-d', $waktu);
-  $waktu_formatted = date_format($waktu_formatted, 'dm');
+  $waktu_formatted = date_format($waktu_formatted, 'dmY');
   $huruf = "INV";
-  $kode_faktur = $huruf . $waktu_formatted . sprintf("%03s", $urutan);
+  $kode_faktur = $huruf . $waktu_formatted . sprintf("%04s", $urutan);
   $query->free();
   $db->close();
   return $kode_faktur;
@@ -253,7 +253,7 @@ function getAllTransaksi()
 function getAllTransaksiUtang()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT * FROM transaksi WHERE status = 'utang' GROUP BY no_faktur");
+  $res = $db->query("SELECT * FROM transaksi, pelanggan WHERE pelanggan.id_pelanggan = transaksi.id_pelanggan AND status = 'utang' GROUP BY no_faktur");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -827,6 +827,11 @@ function bisa($db, $query)
     return 0;
   }
   $db->close();
+}
+
+function convert_to_number($rupiah)
+{
+  return intval(preg_replace('/,.*|[^0-9]/', '', $rupiah));
 }
 
 function setFlash($pesan, $aksi, $tipe)

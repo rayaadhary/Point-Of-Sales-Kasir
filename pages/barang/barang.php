@@ -83,9 +83,9 @@ include_once "../layout/header.php"
                       <td><?= $item['id_barang']; ?></td>
                       <td><?= $item['nama_barang']; ?></td>
                       <?php if ($_SESSION['role'] == 'pemilik') { ?>
-                        <td><?= $item['harga_beli']; ?></td>
+                        <td><?= 'Rp.' . number_format($item['harga_beli'], 0, ',', '.'); ?></td>
                       <?php } ?>
-                      <td><?= $item['harga_jual']; ?></td>
+                      <td><?= 'Rp.' . number_format($item['harga_jual'], 0, ',', '.'); ?></td>
                       <td><?= $item['stok']; ?></td>
                       <td><?= $item['nama_supplier']; ?></td>
                       <td>

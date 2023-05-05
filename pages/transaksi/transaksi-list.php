@@ -175,7 +175,7 @@ include_once "../layout/header.php"
   $(function() {
     $("#example1").DataTable({
       "responsive": true,
-      "lengthChange": false,
+      // "lengthChange": false,
       "autoWidth": true,
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
       language: {

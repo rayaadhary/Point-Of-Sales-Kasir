@@ -51,13 +51,16 @@ $pdf->SetFont('Arial', '', 11);
 $no =  $_SESSION['cetak']['no'] - 2;
 // var_dump($_SESSION['cetak']);
 // die;
-for ($i = 0; $i < $no; $i++) {
+for ($i = 0; $i <= $no; $i++) {
+  if (!$_SESSION['cetak']['nama_barang'][$i] && !$_SESSION['cetak']['banyak'][$i] && !$_SESSION['cetak']['harga'][$i] && !$_SESSION['cetak']['subtotal'][$i]) {
+    continue;
+  }
   $pdf->Cell(15, 5, '' . $i + 1, 1, 0, 'C');
   $pdf->Cell(80, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
   $pdf->Cell(30, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
   $pdf->Cell(20, 5, 'pcs', 1, 0, 'C');
-  $pdf->Cell(40, 5, 'Rp. ' . number_format($_SESSION['cetak']['harga'][$i], 2, ',', '.'), 1, 0, 'R');
-  $pdf->Cell(40, 5, 'Rp. ' . number_format($_SESSION['cetak']['subtotal'][$i], 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
+  $pdf->Cell(40, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['harga'][$i]), 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(40, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
 }
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
@@ -75,7 +78,7 @@ $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Potongan', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($_SESSION['cetak']['diskon'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['diskon']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0);
 $pdf->Cell(60, 5, '', 0, 0, 'C');
@@ -83,7 +86,7 @@ $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Total', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($_SESSION['cetak']['total'] - $_SESSION['cetak']['diskon'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['total']) - convert_to_number($_SESSION['cetak']['diskon']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0);
 $pdf->Cell(60, 5, '', 0, 0, 'C');
@@ -91,7 +94,7 @@ $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Bayar', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($_SESSION['cetak']['bayar'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['bayar']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(60, 5, '(   ' . $_SESSION['cetak']['nama_pelanggan'] . '   )', 0, 0, 'C');
@@ -101,7 +104,7 @@ $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Sisa', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($_SESSION['cetak']['kembalian'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['kembalian']), 2, ',', '.'), 0, 1, 'R');
 $pdf->AddPage();
 $pdf->Image('../../dist/img/logo_psm.jpeg', 10, 5, 15);
 $pdf->Ln(8);
@@ -137,7 +140,10 @@ $pdf->SetFont('Arial', '', 11);
 $no =  $_SESSION['cetak']['no'] - 2;
 // var_dump($_SESSION['cetak']);
 // die;
-for ($i = 0; $i < $no; $i++) {
+for ($i = 0; $i <= $no; $i++) {
+  if (!$_SESSION['cetak']['idBarang'][$i] && !$_SESSION['cetak']['banyak'][$i] && !$_SESSION['cetak']['nama_barang'][$i]) {
+    continue;
+  }
   $pdf->Cell(15, 5, '' . $i + 1, 1, 0, 'C');
   $pdf->Cell(30, 5, '' . $_SESSION['cetak']['idBarang'][$i], 1, 0, 'C');
   $pdf->Cell(80, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
@@ -147,7 +153,10 @@ for ($i = 0; $i < $no; $i++) {
 }
 $jumlah = 0;
 $i = 0;
-while ($i < $no) {
+while ($i <= $no) {
+  if (!$_SESSION['cetak']['banyak'][$i]) {
+    continue;
+  }
   $jumlah += $_SESSION['cetak']['banyak'][$i];
   $i++;
 }

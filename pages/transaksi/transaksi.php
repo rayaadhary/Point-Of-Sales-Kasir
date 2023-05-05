@@ -94,7 +94,7 @@ include_once "../layout/header.php"
                       $kode_faktur = kodeFaktur($waktu);
                       ?>
                       <label for="no-faktur">No Faktur</label>
-                      <input type="text" class="form-control" name="no_faktur" id="no-faktur" value="<?= $kode_faktur ?>" readonly style="width: 120px;">
+                      <input type="text" class="form-control" name="no_faktur" id="no-faktur" value="<?= $kode_faktur ?>" readonly style="width: 150px;">
                     </div>
                   </div>
                   <div class="col-md-2">
@@ -163,12 +163,12 @@ include_once "../layout/header.php"
                     <br>
                     <div class="row">
                       <span>Potongan</span>
-                      <input type="number" id="diskon" name="diskon" class="form-control" value="0">
+                      <input type="text" id="diskon" name="diskon" class="form-control" value="0">
                     </div>
                     <br>
                     <div class="row">
                       <span>Bayar</span>
-                      <input type="text" id="bayar" name="bayar" class="form-control">
+                      <input type="text" id="bayar" name="bayar" class="form-control" required>
                     </div>
                     <br>
                     <div class="row">
@@ -326,24 +326,60 @@ include_once "../layout/header.php"
     });
   });
 
-  function del(no) {
-    var stotal = parseInt($('#subTotal' + no).val());
-    var alltotal = parseInt($('#stotal').val());
-    var newtotal = alltotal - stotal;
-    $('#stotal').val(newtotal);
-    $('#row' + no).remove();
 
-    var diskon = parseInt($('#diskon').val());
-    var bayar = parseInt($('#bayar').val());
+  function formatRupiah(angka, prefix) {
+    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+      split = number_string.split(','),
+      sisa = split[0].length % 3,
+      rupiah = split[0].substr(0, sisa),
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // tambahkan titik jika yang di input sudah menjadi rupiah satuan ribuan
+    if (ribuan) {
+      separator = sisa ? '.' : '';
+      rupiah += separator + ribuan.join('.');
+    }
+
+    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+  }
+
+  function convertToRupiah(angka) {
+    var rupiah = '';
+    var angkarev = angka.toString().split('').reverse().join('');
+    for (var i = 0; i < angkarev.length; i++) {
+      if (i % 3 == 0) {
+        rupiah += angkarev.substr(i, 3) + '.';
+      }
+    }
+    // Menghilangkan titik terakhir dan menambahkan 'Rp. ' di depan
+    return 'Rp. ' + rupiah.split('', rupiah.length - 1).reverse().join('');
+  }
+
+
+
+  function convertToAngka(rupiah) {
+    return parseInt(rupiah.replace(/,.*|[^0-9]/g, ''), 10);
+  }
+
+
+  function del(no) {
+    var stotal = convertToAngka($('#subTotal' + no).val());
+    var alltotal = convertToAngka($('#stotal').val());
+    var newtotal = alltotal - stotal;
+    $('#stotal').val(convertToRupiah(newtotal));
+    $('#row' + no).remove();
+    var diskon = convertToAngka($('#diskon').val());
+    var bayar = convertToAngka($('#bayar').val());
     var kembalian = bayar - (newtotal - diskon >= 0 ? newtotal - diskon : 0);
     if (kembalian >= 0) {
-      $('#kembalian').val(kembalian);
+      $('#kembalian').val(convertToRupiah(kembalian));
       $('#status').val('Lunas');
       var tanggal = $('#tanggal').val();
       $('#jatuh-tempo').val(tanggal);
     } else {
       $('#status').val('Utang');
-      $('#kembalian').val(kembalian);
+      $('#kembalian').val(convertToRupiah(kembalian));
       jatuhTempo();
     }
   }
@@ -422,8 +458,8 @@ include_once "../layout/header.php"
       var id_barang = $('#id-barang').val();
       var nama_barang = $('#nama-barang option:selected').text();
       var banyak = $('#banyak').val();
-      var harga = $('#harga').val();
-      var total = $('#stotal').val();
+      var harga = convertToAngka($('#harga').val());
+      var total = convertToAngka($('#stotal').val());
       var subtotal = banyak * harga;
       var total = parseInt(total) + parseInt(subtotal);
       var html = '<div class="row mb-2" id="row' + no + '">' +
@@ -443,12 +479,12 @@ include_once "../layout/header.php"
         '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
         '</div>';
       $('.list').append(html);
-      $('#stotal').val(total);
+      $('#stotal').val(convertToRupiah(total));
       $('#namaBarang' + no).val(nama_barang);
       $('#idBarang' + no).val(id_barang);
-      $('#hargaBarang' + no).val(harga);
+      $('#hargaBarang' + no).val(convertToRupiah(harga));
       $('#qty' + no).val(banyak);
-      $('#subTotal' + no).val(subtotal);
+      $('#subTotal' + no).val(convertToRupiah(subtotal));
       $('#banyak').val('');
       var no = (no - 1) + 2;
       $('#no').val(no);
@@ -457,29 +493,33 @@ include_once "../layout/header.php"
     });
 
     $('#diskon').on('keyup', function() {
-      var total = parseInt($('#stotal').val());
-      var diskon = parseInt($(this).val());
-      var bayar = parseInt($('#bayar').val());
+      var total = convertToAngka($('#stotal').val());
+      var rupiah = formatRupiah($(this).val(), 'Rp. ');
+      $(this).val(rupiah);
+      var diskon = convertToAngka(rupiah);
+      var bayar = convertToAngka($('#bayar').val());
       var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
       if (kembalian >= 0) {
-        $('#kembalian').val(kembalian);
+        $('#kembalian').val(convertToRupiah(kembalian));
         $('#status').val('Lunas');
         var tanggal = $('#tanggal').val();
         $('#jatuh-tempo').val(tanggal);
       } else {
         $('#status').val('Utang');
-        $('#kembalian').val(kembalian);
+        $('#kembalian').val(convertToRupiah(kembalian));
         jatuhTempo();
       }
     })
 
     $('#bayar').on('keyup', function() {
-      var total = parseInt($('#stotal').val());
-      var diskon = parseInt($('#diskon').val());
-      var bayar = parseInt($(this).val());
+      var total = convertToAngka($('#stotal').val());
+      var diskon = convertToAngka($('#diskon').val());
+      var rupiah = formatRupiah($(this).val(), 'Rp. ');
+      $(this).val(rupiah);
+      var bayar = convertToAngka(rupiah);
       var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
       if (kembalian >= 0) {
-        $('#kembalian').val(kembalian);
+        $('#kembalian').val(convertToRupiah(kembalian));
         $('#status').val('Lunas');
         var tanggal = $('#tanggal').val();
         $('#jatuh-tempo').val(tanggal);
@@ -487,7 +527,7 @@ include_once "../layout/header.php"
         $('#status').val('');
       } else {
         $('#status').val('Utang');
-        $('#kembalian').val(kembalian);
+        $('#kembalian').val(convertToRupiah(kembalian));
         jatuhTempo();
       }
     })

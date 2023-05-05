@@ -18,6 +18,8 @@ if (isset($_POST['simpan'])) {
   }
   // operasi INSERT ke database
   else {
+    // var_dump($_POST);
+    // die;
     $no =  $_POST['no'] - 2;
     $id_pelanggan = mysqli_real_escape_string($db, trim($_POST['id_pelanggan']));
     $nama_pelanggan = mysqli_real_escape_string($db, trim($_POST['nama_pelanggan']));
@@ -31,7 +33,7 @@ if (isset($_POST['simpan'])) {
     $tanggal_kirim = mysqli_real_escape_string($db, trim($_POST['tanggal_kirim']));
     $telepon = mysqli_real_escape_string($db, trim($_POST['telepon']));
     $sql = mysqli_query($db, "INSERT INTO pengiriman VALUES ('$surat_jalan', '$alamat_tujuan', '$tanggal_kirim', '$telepon')");
-    for ($i = 0; $i < $no; $i++) {
+    for ($i = 0; $i <= $no; $i++) {
       if (!$_POST['idBarang'][$i] && !$_POST['banyak'][$i] && !$_POST['subtotal'][$i]) {
         continue;
       }
@@ -40,12 +42,12 @@ if (isset($_POST['simpan'])) {
       $tanggal = mysqli_real_escape_string($db, trim($_POST['tanggal']));
       $jatuh_tempo = mysqli_real_escape_string($db, trim($_POST['jatuh_tempo']));
       $banyak = mysqli_real_escape_string($db, trim($_POST['banyak'][$i]));
-      $diskon = mysqli_real_escape_string($db, trim($_POST['diskon']));
-      $subtotal = mysqli_real_escape_string($db, trim($_POST['subtotal'][$i]));
-      $total = mysqli_real_escape_string($db, trim($_POST['total']));
+      $diskon = mysqli_real_escape_string($db, trim(convert_to_number($_POST['diskon'])));
+      $subtotal = mysqli_real_escape_string($db, trim(convert_to_number($_POST['subtotal'][$i])));
+      $total = mysqli_real_escape_string($db, trim(convert_to_number($_POST['total'])));
       $bersih = $total - $diskon;
-      $bayar = mysqli_real_escape_string($db, trim($_POST['bayar']));
-      $kembalian = mysqli_real_escape_string($db, trim($_POST['kembalian']));
+      $bayar = mysqli_real_escape_string($db, trim(convert_to_number($_POST['bayar'])));
+      $kembalian = mysqli_real_escape_string($db, trim(convert_to_number($_POST['kembalian'])));
       // $kembalian = abs($kembalian);
       $id_barang = mysqli_real_escape_string($db, trim($_POST['idBarang'][$i]));
       $id_pengguna = mysqli_real_escape_string($db, trim($_SESSION['id_pengguna']));
