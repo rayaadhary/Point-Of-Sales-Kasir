@@ -193,7 +193,7 @@ function getAllPelanggan()
 function getAllBarang()
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "SELECT * FROM barang");
+  $res = mysqli_query($db, "select * from barang, barang_masuk, supplier where barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -659,7 +659,7 @@ function updateDataPengguna($data)
 function getDeleteBarang($id)
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "DELETE FROM barang WHERE id_barang = '$id'");
+  $res = mysqli_query($db, "nc '$id'");
   if ($res) {
     return 1;
   } else {

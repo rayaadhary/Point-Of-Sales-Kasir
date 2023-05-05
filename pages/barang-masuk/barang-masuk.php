@@ -293,14 +293,7 @@ include_once "../layout/header.php"
     });
   });
 
-  // format nominal rupiah
-  // var bayar = document.getElementById('bayar');
-  // bayar.addEventListener('keyup', function(e) {
-  // tambahkan 'Rp.' pada saat ketik nominal di form kolom input
-  // gunakan fungsi formatRupiah() untuk mengubah nominal angka yang di ketik menjadi format angka
-  //   bayar.value = formatRupiah(this.value, 'Rp. ');
-  // });
-  /* Fungsi formatRupiah */
+
   function formatRupiah(angka, prefix) {
     var number_string = angka.replace(/[^,\d]/g, '').toString(),
       split = number_string.split(','),
@@ -318,18 +311,23 @@ include_once "../layout/header.php"
     return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
   }
 
-
-  function formatToInteger(angka) {
-    var number_string = angka.replace(/[^,\d]/g, '').toString();
-    var angka_integer = parseInt(number_string);
-    return angka_integer;
+  function convertToRupiah(angka) {
+    var rupiah = '';
+    var angkarev = angka.toString().split('').reverse().join('');
+    for (var i = 0; i < angkarev.length; i++) {
+      if (i % 3 == 0) {
+        rupiah += angkarev.substr(i, 3) + '.';
+      }
+    }
+    // Menghilangkan titik terakhir dan menambahkan 'Rp. ' di depan
+    return 'Rp. ' + rupiah.split('', rupiah.length - 1).reverse().join('');
   }
 
 
 
-  // var bayarBaru = $('#bayar').val();
-  // var bayarInterger = formatToInteger(bayarBaru);
-  // $('#bayar').val(bayarInterger);
+  function convertToAngka(rupiah) {
+    return parseInt(rupiah.replace(/,.*|[^0-9]/g, ''), 10);
+  }
 
   function del(no) {
     var stotal = parseInt($('#subTotal' + no).val());
@@ -342,11 +340,11 @@ include_once "../layout/header.php"
     var bayar = parseInt($('#bayar').val());
     var kembalian = bayar - (newtotal - diskon >= 0 ? newtotal - diskon : 0);
     if (kembalian >= 0) {
-      $('#kembalian').val(kembalian);
+      $('#kembalian').val(formatRupiah(kembalian, 'Rp. '));
       $('#status').val('Lunas');
     } else {
       $('#status').val('Utang');
-      $('#kembalian').val(kembalian);
+      $('#kembalian').val(formatRupiah(kembalian, 'Rp. '));
     }
   }
 
@@ -423,15 +421,17 @@ include_once "../layout/header.php"
 
     $('#diskon').on('keyup', function() {
       var total = parseInt($('#stotal').val());
-      var diskon = parseInt($(this).val());
+      var rupiah = formatRupiah($(this).val(), 'Rp. ');
+      $(this).val(rupiah);
+      var diskon = formatToInteger(rupiah);
       var bayar = parseInt($('#bayar').val());
       var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
       if (kembalian >= 0) {
-        $('#kembalian').val(kembalian);
+        $('#kembalian').val(formatRupiah(kembalian, 'Rp. '));
         $('#status').val('Lunas');
       } else {
         $('#status').val('Utang');
-        $('#kembalian').val(kembalian);
+        $('#kembalian').val(formatRupiah(kembalian, 'Rp. '));
       }
     })
 
@@ -440,19 +440,21 @@ include_once "../layout/header.php"
       var diskon = parseInt($('#diskon').val());
       var rupiah = formatRupiah($(this).val(), 'Rp. ');
       $(this).val(rupiah);
-      var bayar = formatToInteger(rupiah);
-      // $('#kembalian').val(bayar);
+      var bayar = convertToAngka(rupiah); // menghilangkan tanda "Rp" dan titik-titik
       var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
       if (kembalian >= 0) {
-        $('#kembalian').val(kembalian);
+        var formatKembalian = convertToRupiah(kembalian);
+        $('#kembalian').val(formatKembalian);
         $('#status').val('Lunas');
       } else if (total == 0) {
         $('#status').val('');
       } else {
         $('#status').val('Utang');
-        $('#kembalian').val(kembalian);
+        var formatKembalian = convertToRupiah(kembalian);
+        $('#kembalian').val(formatKembalian);
       }
     })
+
   });
 </script>
 

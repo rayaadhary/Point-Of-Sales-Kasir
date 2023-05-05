@@ -67,9 +67,10 @@ include_once "../layout/header.php"
                     <th>Nama Barang</th>
                     <?php if ($_SESSION['role'] == 'pemilik') { ?>
                       <th>Harga Beli</th>
-                    <?php } ?>
+                    <?php   } ?>
                     <th>Harga Jual</th>
                     <th>Stok</th>
+                    <th>Supplier</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -86,6 +87,7 @@ include_once "../layout/header.php"
                       <?php } ?>
                       <td><?= $item['harga_jual']; ?></td>
                       <td><?= $item['stok']; ?></td>
+                      <td><?= $item['nama_supplier']; ?></td>
                       <td>
                         <!-- a href -->
                         <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
