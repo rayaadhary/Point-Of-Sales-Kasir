@@ -55,8 +55,8 @@ if (isset($_POST['simpan'])) {
 
       // mengurangi stok barang
       $cekBarang = mysqli_query($db, "SELECT * FROM barang WHERE id_barang = '$id_barang'");
-      $ambilStok = mysqli_fetch_array($cekBarang);
-      $stok = $ambilStok['stok'];
+      $ambilDataBarang = mysqli_fetch_array($cekBarang);
+      $stok = $ambilDataBarang['stok'];
       $sisaStok = $stok - $banyak;
       if ($stok < $banyak) {
         setFlash('gagal', 'stok kurang', 'danger');

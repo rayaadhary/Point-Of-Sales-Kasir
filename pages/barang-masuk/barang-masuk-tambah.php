@@ -57,8 +57,14 @@ if (isset($_POST['simpan'])) {
       $cekBarang = mysqli_query($db, "SELECT * FROM barang WHERE id_barang = '$id_barang'");
       $ambilBarang = mysqli_fetch_array($cekBarang);
       $stok = $ambilBarang['stok'];
+      $namaBarang = $ambilBarang['nama_barang'];
       $sisaStok = $stok + $banyak;
       if ($cekBarang->num_rows > 0) {
+        if ($nama_barang != $namaBarang) {
+          setFlash('gagal', 'ID Barang sudah digunakan', 'danger');
+          header('Location: ' . BASEURL . '/pages/transaksi/transaksi.php');
+          exit;
+        }
         $stok = mysqli_query($db, "UPDATE barang SET harga_beli='$harga_beli',harga_jual='$harga_jual',  stok='$sisaStok' WHERE id_barang = '$id_barang'");
       } else {
         $barang = mysqli_query($db, "INSERT INTO barang VALUES ('$id_barang', '$nama_barang', '$harga_beli', '$harga_jual', '$banyak')");
