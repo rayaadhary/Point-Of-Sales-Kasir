@@ -7,11 +7,14 @@ if (!isset($_SESSION["id_pengguna"]))
     "Location: " . BASEURL
   );
 $db = dbConnect();
+$db->autocommit(FALSE);
 
 if (isset($_POST['simpan'])) {
   // var_dump($_POST);
   // die;
   if (empty($_POST)) {
+    $db->rollback();
+    $db->close();
     setFlash('gagal', 'ditambahkan', 'danger');
     header('Location: ' . BASEURL . '/pages/barang-masuk/barang-masuk.php');
     exit;
@@ -64,6 +67,8 @@ if (isset($_POST['simpan'])) {
       $sql = mysqli_query($db, $query);
     }
     if ($sql) {
+      $db->commit();
+      $db->close();
       $_SESSION['cetak'] = $_POST;
       setFlash('berhasil', 'ditambahkan', 'primary');
       header('Location: ' . BASEURL . '/pages/barang-masuk/barang-masuk.php');

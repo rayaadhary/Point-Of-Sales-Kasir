@@ -193,7 +193,7 @@ include_once "../layout/header.php"
                     <br>
                     <div class="row">
                       <span>Bayar</span>
-                      <input type="text" id="bayar" name="bayar" class="form-control" value="0">
+                      <input type="text" id="bayar" name="bayar" class="form-control" required>
                     </div>
                     <br>
                     <div class="row">

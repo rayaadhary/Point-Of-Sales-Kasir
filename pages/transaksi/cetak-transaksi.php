@@ -48,9 +48,11 @@ $pdf->Cell(20, 5, 'Unit', 1, 0, 'C');
 $pdf->Cell(40, 5, 'Harga Satuan', 1, 0, 'C');
 $pdf->Cell(40, 5, 'Total', 1, 1, 'C'); // Pindah ke baris baru
 $pdf->SetFont('Arial', '', 11);
-$no =  $_SESSION['cetak']['no'] - 2;
+$no =  $_SESSION['cetak']['no'] - 1;
+($no == 0) ? $no = 1 : $no = $no;
 // var_dump($_SESSION['cetak']);
 // die;
+// ($_SESSION['cetak']['no'] = 2) ? $no =  $_SESSION['cetak']['no'] - 1 : $no =  $_SESSION['cetak']['no'] - 2;
 for ($i = 0; $i < $no; $i++) {
   if (!$_SESSION['cetak']['nama_barang'][$i] && !$_SESSION['cetak']['banyak'][$i] && !$_SESSION['cetak']['harga'][$i] && !$_SESSION['cetak']['subtotal'][$i]) {
     continue;
@@ -137,7 +139,7 @@ $pdf->Cell(30, 5, 'Banyak', 1, 0, 'C');
 $pdf->Cell(20, 5, 'Unit', 1, 0, 'C');
 $pdf->Cell(20, 5, 'Sub Item', 1, 1, 'C');
 $pdf->SetFont('Arial', '', 11);
-$no =  $_SESSION['cetak']['no'] - 2;
+// $no =  $_SESSION['cetak']['no'] - 2;
 // var_dump($_SESSION['cetak']);
 // die;
 for ($i = 0; $i < $no; $i++) {
