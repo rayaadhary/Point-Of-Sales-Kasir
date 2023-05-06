@@ -62,7 +62,7 @@ if (isset($_POST['simpan'])) {
       if ($cekBarang->num_rows > 0) {
         if ($nama_barang != $namaBarang) {
           setFlash('gagal', 'ID Barang sudah digunakan', 'danger');
-          header('Location: ' . BASEURL . '/pages/transaksi/transaksi.php');
+          header('Location: ' . BASEURL . '/pages/barang-masuk/barang-masuk.php');
           exit;
         }
         $stok = mysqli_query($db, "UPDATE barang SET harga_beli='$harga_beli',harga_jual='$harga_jual',  stok='$sisaStok' WHERE id_barang = '$id_barang'");
