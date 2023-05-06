@@ -51,7 +51,7 @@ $pdf->SetFont('Arial', '', 11);
 $no =  $_SESSION['cetak']['no'] - 2;
 // var_dump($_SESSION['cetak']);
 // die;
-for ($i = 0; $i <= $no; $i++) {
+for ($i = 0; $i < $no; $i++) {
   if (!$_SESSION['cetak']['nama_barang'][$i] && !$_SESSION['cetak']['banyak'][$i] && !$_SESSION['cetak']['harga'][$i] && !$_SESSION['cetak']['subtotal'][$i]) {
     continue;
   }
@@ -140,7 +140,7 @@ $pdf->SetFont('Arial', '', 11);
 $no =  $_SESSION['cetak']['no'] - 2;
 // var_dump($_SESSION['cetak']);
 // die;
-for ($i = 0; $i <= $no; $i++) {
+for ($i = 0; $i < $no; $i++) {
   if (!$_SESSION['cetak']['idBarang'][$i] && !$_SESSION['cetak']['banyak'][$i] && !$_SESSION['cetak']['nama_barang'][$i]) {
     continue;
   }
@@ -153,7 +153,7 @@ for ($i = 0; $i <= $no; $i++) {
 }
 $jumlah = 0;
 $i = 0;
-while ($i <= $no) {
+while ($i < $no) {
   if (!$_SESSION['cetak']['banyak'][$i]) {
     continue;
   }
