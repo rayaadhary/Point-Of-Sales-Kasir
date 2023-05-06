@@ -9,9 +9,9 @@ $db = dbConnect();
 
 if (isset($_POST["update_utang"])) {
   $no_barang_masuk = mysqli_real_escape_string($db, trim($_POST["no_barang_masuk"]));
-  $diskon = mysqli_real_escape_string($db, trim($_POST["diskon_baru"]));
-  $bayar = mysqli_real_escape_string($db, trim($_POST["bayar_baru"]));
-  $kembalian = mysqli_real_escape_string($db, trim($_POST["kembalian"]));
+  $diskon = mysqli_real_escape_string($db, trim(convert_to_number($_POST["diskon_baru"])));
+  $bayar = mysqli_real_escape_string($db, trim(convert_to_number($_POST["bayar_baru"])));
+  $kembalian = mysqli_real_escape_string($db, trim(convert_to_number($_POST["kembalian"])));
   $status = mysqli_real_escape_string($db, trim($_POST["status"]));
   $res = $db->prepare("UPDATE barang_masuk SET diskon=?, kembali=?, bayar=?, status=? WHERE no_barang_masuk=?");
   $res->bind_param("sssss", $diskon,  $kembalian, $bayar, $status, $no_barang_masuk);
