@@ -65,6 +65,8 @@ include_once "../layout/header.php"
                 <thead>
                   <tr>
                     <th>No Barang Masuk</th>
+                    <th>Barang</th>
+                    <th>Supplier</th>
                     <th>Tanggal</th>
                     <th>Total</th>
                     <th>Bayar</th>
@@ -79,6 +81,8 @@ include_once "../layout/header.php"
                   ?>
                     <tr>
                       <td><?= $item['no_barang_masuk']; ?></td>
+                      <td><?= $item['nama_barang']; ?></td>
+                      <td><?= $item['nama_supplier']; ?></td>
                       <td><?= $item['tanggal_beli']; ?></td>
                       <td><?= $item['total']; ?></td>
                       <td><?= $item['bayar']; ?></td>

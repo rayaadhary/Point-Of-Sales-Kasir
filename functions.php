@@ -353,7 +353,7 @@ function getAllBarangMasuk()
 function getAllBarangMasukUtang()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT * FROM barang_masuk WHERE status = 'utang' GROUP BY no_barang_masuk");
+  $res = $db->query("SELECT * FROM barang_masuk, barang, supplier WHERE barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier AND status = 'utang' GROUP BY no_barang_masuk");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
