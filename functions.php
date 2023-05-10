@@ -193,7 +193,7 @@ function getAllPelanggan()
 function getAllBarang()
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "select * from barang, barang_masuk, supplier where barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier");
+  $res = mysqli_query($db, "select * from barang, barang_masuk, supplier where barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier GROUP BY barang.id_barang ORDER BY tanggal_beli DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
