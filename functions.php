@@ -656,16 +656,18 @@ function updateDataPengguna($data)
 }
 
 
-function getDeleteBarang($id)
+function getDeleteBarang($id_barang, $no_barang_masuk)
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "nc '$id'");
-  if ($res) {
-    return 1;
+  $res1 = mysqli_query($db, "DELETE FROM barang_masuk WHERE no_barang_masuk = '$no_barang_masuk'");
+  if ($res1) {
+    $res2 = mysqli_query($db, "DELETE FROM barang WHERE id_barang = '$id_barang'");
+    if ($res2) {
+      return 1;
+    }
   } else {
     return 0;
   }
-  $res->free();
   $db->close();
 }
 

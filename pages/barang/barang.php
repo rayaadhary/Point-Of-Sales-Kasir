@@ -64,6 +64,7 @@ include_once "../layout/header.php"
                 <thead>
                   <tr>
                     <th>ID Barang</th>
+                    <th>No Barang Masuk</th>
                     <th>Nama Barang</th>
                     <?php if ($_SESSION['role'] == 'pemilik') { ?>
                       <th>Harga Beli</th>
@@ -81,6 +82,7 @@ include_once "../layout/header.php"
                   ?>
                     <tr>
                       <td><?= $item['id_barang']; ?></td>
+                      <td><?= $item['no_barang_masuk']; ?></td>
                       <td><?= $item['nama_barang']; ?></td>
                       <?php if ($_SESSION['role'] == 'pemilik') { ?>
                         <td><?= 'Rp.' . number_format($item['harga_beli'], 0, ',', '.'); ?></td>
@@ -98,7 +100,7 @@ include_once "../layout/header.php"
                         $tombolHapus = tombolHapus($item['id_barang']);
                         if ($tombolHapus > 0) {
                         ?>
-                          <a href="barang-hapus.php?id_barang=<?= $item['id_barang'] ?>>" class="btn btn-danger btn-circle btn-sm hapus">
+                          <a href="barang-hapus.php?id_barang=<?= $item['id_barang'] ?>&no_barang_masuk=<?= $item['no_barang_masuk'] ?>" class="btn btn-danger btn-circle btn-sm hapus">
                             <i class="fas fa-trash"></i>
                           </a>
                         <?php } ?>
