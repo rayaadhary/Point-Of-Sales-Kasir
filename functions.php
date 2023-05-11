@@ -166,6 +166,21 @@ function kodePrive()
   return $kode_prive;
 }
 
+function kodeModal()
+{
+  $db = dbConnect();
+  $query = $db->query("SELECT max(id_modal) as kodeTerbesar FROM modal");
+  $data = $query->fetch_assoc();
+  $kode_modal = $data['kodeTerbesar'];
+  $urutan = (int) substr($kode_modal, 2, 4);
+  $urutan++;
+  $huruf = "MD";
+  $kode_modal = $huruf . sprintf("%04s", $urutan);
+  $query->free();
+  $db->close();
+  return $kode_modal;
+}
+
 function gantiPassword($username, $password)
 {
   $db = dbConnect();
@@ -214,6 +229,16 @@ function getAllPrive()
 {
   $db = dbConnect();
   $res = mysqli_query($db, "SELECT * FROM prive ORDER BY tanggal DESC");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getAllModal()
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM modal ORDER BY tanggal_modal DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -454,6 +479,16 @@ function getPriveById($id)
   return $data;
 }
 
+function getModalById($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "SELECT * FROM modal WHERE id_modal = '$id'");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data;
+}
+
 
 function getPengirimanById($id)
 {
@@ -528,6 +563,20 @@ function insertDataPrive($data)
   $db->close();
 }
 
+function insertDataModal($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("INSERT INTO modal VALUES (?, ?, ?, ?)");
+  $res->bind_param("ssss", $data['id_modal'], $data['nama_modal'], $data['tanggal_modal'], $data['biaya']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
 function insertDataSupplier($data)
 {
   $db = dbConnect();
@@ -590,6 +639,20 @@ function updateDataPrive($data)
   $db = dbConnect();
   $res = $db->prepare("UPDATE prive SET nama_prive=?, tanggal=?, biaya=? WHERE id_prive=?");
   $res->bind_param("ssss",  $data['nama_prive'], $data['tanggal'], $data['biaya'], $data['id_prive']);
+  $res->execute();
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $db->close();
+}
+
+function updateDataModal($data)
+{
+  $db = dbConnect();
+  $res = $db->prepare("UPDATE modal SET nama_modal=?, tanggal_modal=?, biaya=? WHERE id_modal=?");
+  $res->bind_param("ssss",  $data['nama_modal'], $data['tanggal_modal'], $data['biaya'], $data['id_modal']);
   $res->execute();
   if ($res) {
     return 1;
@@ -688,6 +751,19 @@ function getDeletePrive($id)
 {
   $db = dbConnect();
   $res = mysqli_query($db, "DELETE FROM prive WHERE id_prive = '$id'");
+  if ($res) {
+    return 1;
+  } else {
+    return 0;
+  }
+  $res->free();
+  $db->close();
+}
+
+function getDeleteModal($id)
+{
+  $db = dbConnect();
+  $res = mysqli_query($db, "DELETE FROM modal WHERE id_modal = '$id'");
   if ($res) {
     return 1;
   } else {

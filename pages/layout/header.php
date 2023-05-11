@@ -275,6 +275,14 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="<?= BASEURL ?>/pages/modal/modal.php" class="nav-link <?= ($title == 'modal') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-money-check"></i>
+                  <p>
+                    Modal
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="<?= BASEURL ?>/pages/prive/prive.php" class="nav-link <?= ($title == 'prive') ? 'active' : '' ?>">
                   <i class="nav-icon fas fa-money-check"></i>
                   <p>
