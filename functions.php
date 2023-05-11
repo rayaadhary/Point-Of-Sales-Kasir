@@ -577,7 +577,7 @@ function insertDataModal($data)
 {
   $db = dbConnect();
   $res = $db->prepare("INSERT INTO modal VALUES (?, ?, ?, ?)");
-  $res->bind_param("ssss", $data['id_modal'], $data['nama_modal'], $data['tanggal_modal'], $data['biaya']);
+  $res->bind_param("ssss", $data['id_modal'], $data['nama_modal'], $data['tanggal'], $data['biaya']);
   $res->execute();
   if ($res) {
     return 1;
