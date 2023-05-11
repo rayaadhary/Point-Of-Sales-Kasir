@@ -262,12 +262,14 @@ include_once "../layout/header.php"
             // var diskon = convertToAngka($('#diskon').val());
             var kembalian = convertToAngka($('#kembalian').val());
             var sisaBayar = kembali + bayar;
-            if (bayar >= Math.abs(kembalian) || sisaBayar == 0) {
+            if (sisaBayar >= 0) {
               $('#kembalian').val(convertToRupiah(sisaBayar));
+              // $('#kembalian').val(Math.abs(kembalian));
               $('#keterangan').text("Lebih")
               $('#status').val("Lunas");
             } else {
               $('#kembalian').val(convertToRupiah(sisaBayar));
+              // $('#kembalian').val(Math.abs(kembalian));
               $('#keterangan').text("Kurang");
               $('#status').val("Utang");
             }

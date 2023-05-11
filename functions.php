@@ -325,6 +325,16 @@ function getTotalPrive()
   return $data['totalPrive'];
 }
 
+function getTotalModal()
+{
+  $db = dbConnect();
+  $res = $db->query("SELECT SUM(biaya) as totalModal FROM modal");
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalModal'];
+}
+
 function hitungTransaksi()
 {
   $db = dbConnect();
