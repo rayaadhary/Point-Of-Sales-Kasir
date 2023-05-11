@@ -261,7 +261,7 @@ include_once "../layout/header.php"
             var bayar = convertToAngka(rupiah);
             // var diskon = convertToAngka($('#diskon').val());
             var kembalian = convertToAngka($('#kembalian').val());
-            var sisaBayar = bayar - kembali;
+            var sisaBayar = kembali + bayar;
             if (bayar >= Math.abs(kembalian)) {
               $('#kembalian').val(convertToRupiah(sisaBayar));
               $('#keterangan').text("Lebih")
