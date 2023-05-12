@@ -135,7 +135,7 @@ include_once "../layout/header.php"
                                 </div>
                                 <div class="form-group">
                                   <label for="biaya">Biaya</label>
-                                  <input type="text" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Prive" value="Rp. <?= number_format($item['biaya'], 0, ',', '.') ?>">
+                                  <input type="text" class="form-control" id="biaya-edit" name="biaya" placeholder="Masukan Biaya Prive" value="Rp. <?= number_format($item['biaya'], 0, ',', '.') ?>">
                                 </div>
                               </div>
                           </div>
@@ -210,7 +210,7 @@ include_once "../layout/header.php"
             </div>
             <div class="form-group">
               <label for="biaya">Biaya</label>
-              <input type="text" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Prive">
+              <input type="text" class="form-control" id="biaya-tambah" name="biaya" placeholder="Masukan Biaya Prive">
             </div>
             <div class="form-group">
               <label for="tanggal">Tanggal</label>
@@ -285,13 +285,13 @@ include_once "../layout/header.php"
       changeYear: true
     });
     $(document).on('click', '.tambah', function() {
-      $('#biaya').on('keyup', function() {
+      $('#biaya-tambah').on('keyup', function() {
         var rupiah = formatRupiah($(this).val(), 'Rp. ');
         $(this).val(rupiah);
       })
     });
     $(document).on('click', '.edit', function() {
-      $('#biaya').on('keyup', function() {
+      $('#biaya-edit').on('keyup', function() {
         var rupiah = formatRupiah($(this).val(), 'Rp. ');
         $(this).val(rupiah);
       })

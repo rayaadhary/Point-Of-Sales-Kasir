@@ -89,7 +89,7 @@ include_once "../layout/header.php"
                       <td><?= $item['id_beban']; ?></td>
                       <td><?= $item['nama_beban']; ?></td>
                       <td><?= $item['tanggal']; ?></td>
-                      <td><?= $item['biaya']; ?></td>
+                      <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
                       <td>
                         <!-- a href -->
                         <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_beban'] ?>" class="btn btn-success btn-circle btn-sm">
@@ -132,7 +132,7 @@ include_once "../layout/header.php"
                                 </div>
                                 <div class="form-group">
                                   <label for="biaya">Biaya</label>
-                                  <input type="text" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Beban Usaha" value="Rp. <?= number_format($item['biaya'], 0, ',', '.') ?>">
+                                  <input type="text" class="form-control" id="biaya-edit" name="biaya" placeholder="Masukan Biaya Beban Usaha" value="Rp. <?= number_format($item['biaya'], 0, ',', '.') ?>">
                                 </div>
                               </div>
                           </div>
@@ -207,7 +207,7 @@ include_once "../layout/header.php"
             </div>
             <div class="form-group">
               <label for="biaya">Biaya</label>
-              <input type="text" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Beban Usaha">
+              <input type="text" class="form-control" id="biaya-tambah" name="biaya" placeholder="Masukan Biaya Beban Usaha">
             </div>
             <div class="form-group">
               <?php
@@ -251,6 +251,7 @@ include_once "../layout/header.php"
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/dist/js/pages/js-hapus.js"></script>
 <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+<script src="<?= BASEURL ?>/dist/js/pages/js-rupiah.js"></script>
 
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
@@ -283,13 +284,13 @@ include_once "../layout/header.php"
     });
 
     $(document).on('click', '.tambah', function() {
-      $('#biaya').on('keyup', function() {
+      $('#biaya-tambah').on('keyup', function() {
         var rupiah = formatRupiah($(this).val(), 'Rp. ');
         $(this).val(rupiah);
       })
     });
     $(document).on('click', '.edit', function() {
-      $('#biaya').on('keyup', function() {
+      $('#biaya-edit').on('keyup', function() {
         var rupiah = formatRupiah($(this).val(), 'Rp. ');
         $(this).val(rupiah);
       })
