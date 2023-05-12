@@ -111,7 +111,7 @@ include_once "../layout/header.php"
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                          <div class="modal-body">
+                          <div class="modal-body edit">
                             <form action="beban-edit.php" method="post">
                               <?php
                               $id_beban = $item['id_beban'];
@@ -132,7 +132,7 @@ include_once "../layout/header.php"
                                 </div>
                                 <div class="form-group">
                                   <label for="biaya">Biaya</label>
-                                  <input type="number" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Beban Usaha" value="<?= $data['biaya'] ?>">
+                                  <input type="text" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Beban Usaha" value="Rp. <?= number_format($item['biaya'], 0, ',', '.') ?>">
                                 </div>
                               </div>
                           </div>
@@ -191,7 +191,7 @@ include_once "../layout/header.php"
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body tambah">
         <form action="beban-tambah.php" method="post">
           <div class="card-body">
             <div class="form-group">
@@ -207,7 +207,7 @@ include_once "../layout/header.php"
             </div>
             <div class="form-group">
               <label for="biaya">Biaya</label>
-              <input type="number" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Beban Usaha">
+              <input type="text" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Beban Usaha">
             </div>
             <div class="form-group">
               <?php
@@ -280,6 +280,19 @@ include_once "../layout/header.php"
     $('#tanggal').datepicker({
       dateFormat: 'yy-mm-dd',
       changeYear: true
+    });
+
+    $(document).on('click', '.tambah', function() {
+      $('#biaya').on('keyup', function() {
+        var rupiah = formatRupiah($(this).val(), 'Rp. ');
+        $(this).val(rupiah);
+      })
+    });
+    $(document).on('click', '.edit', function() {
+      $('#biaya').on('keyup', function() {
+        var rupiah = formatRupiah($(this).val(), 'Rp. ');
+        $(this).val(rupiah);
+      })
     });
   })
 </script>

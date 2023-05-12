@@ -549,7 +549,7 @@ function insertDataBeban($data)
 {
   $db = dbConnect();
   $res = $db->prepare("INSERT INTO beban VALUES (?, ?, ?, ?)");
-  $res->bind_param("ssss", $data['id_beban'], $data['nama_beban'], $data['tanggal'], $data['biaya']);
+  $res->bind_param("ssss", $data['id_beban'], $data['nama_beban'], $data['tanggal'], convert_to_number($data['biaya']));
   $res->execute();
   if ($res) {
     return 1;
@@ -563,7 +563,7 @@ function insertDataPrive($data)
 {
   $db = dbConnect();
   $res = $db->prepare("INSERT INTO prive VALUES (?, ?, ?, ?)");
-  $res->bind_param("ssss", $data['id_prive'], $data['nama_prive'], $data['tanggal'], $data['biaya']);
+  $res->bind_param("ssss", $data['id_prive'], $data['nama_prive'], $data['tanggal'], convert_to_number($data['biaya']));
   $res->execute();
   if ($res) {
     return 1;
@@ -577,7 +577,7 @@ function insertDataModal($data)
 {
   $db = dbConnect();
   $res = $db->prepare("INSERT INTO modal VALUES (?, ?, ?, ?)");
-  $res->bind_param("ssss", $data['id_modal'], $data['nama_modal'], $data['tanggal'], $data['biaya']);
+  $res->bind_param("ssss", $data['id_modal'], $data['nama_modal'], $data['tanggal'], convert_to_number($data['biaya']));
   $res->execute();
   if ($res) {
     return 1;
@@ -648,7 +648,7 @@ function updateDataPrive($data)
 {
   $db = dbConnect();
   $res = $db->prepare("UPDATE prive SET nama_prive=?, tanggal=?, biaya=? WHERE id_prive=?");
-  $res->bind_param("ssss",  $data['nama_prive'], $data['tanggal'], $data['biaya'], $data['id_prive']);
+  $res->bind_param("ssss",  $data['nama_prive'], $data['tanggal'], convert_to_number($data['biaya']), $data['id_prive']);
   $res->execute();
   if ($res) {
     return 1;
@@ -662,7 +662,7 @@ function updateDataModal($data)
 {
   $db = dbConnect();
   $res = $db->prepare("UPDATE modal SET nama_modal=?, tanggal_modal=?, biaya=? WHERE id_modal=?");
-  $res->bind_param("ssss",  $data['nama_modal'], $data['tanggal_modal'], $data['biaya'], $data['id_modal']);
+  $res->bind_param("ssss",  $data['nama_modal'], $data['tanggal_modal'], convert_to_number($data['biaya']), $data['id_modal']);
   $res->execute();
   if ($res) {
     return 1;
@@ -690,7 +690,7 @@ function updateDataBeban($data)
 {
   $db = dbConnect();
   $res = $db->prepare("UPDATE beban SET nama_beban=?, tanggal=?, biaya=? WHERE id_beban=?");
-  $res->bind_param("ssss",  $data['nama_beban'], $data['tanggal'], $data['biaya'], $data['id_beban']);
+  $res->bind_param("ssss",  $data['nama_beban'], $data['tanggal'], convert_to_number($data['biaya']), $data['id_beban']);
   $res->execute();
   if ($res) {
     return 1;

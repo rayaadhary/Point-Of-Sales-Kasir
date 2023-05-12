@@ -92,7 +92,7 @@ include_once "../layout/header.php"
                       <td><?= $item['id_prive']; ?></td>
                       <td><?= $item['nama_prive']; ?></td>
                       <td><?= $item['tanggal']; ?></td>
-                      <td><?= $item['biaya']; ?></td>
+                      <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
                       <td>
                         <!-- a href -->
                         <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_prive'] ?>" class="btn btn-success btn-circle btn-sm">
@@ -114,7 +114,7 @@ include_once "../layout/header.php"
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                          <div class="modal-body">
+                          <div class="modal-body edit">
                             <form action="prive-edit.php" method="post">
                               <?php
                               $id_prive = $item['id_prive'];
@@ -135,7 +135,7 @@ include_once "../layout/header.php"
                                 </div>
                                 <div class="form-group">
                                   <label for="biaya">Biaya</label>
-                                  <input type="number" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Prive" value="<?= $data['biaya'] ?>">
+                                  <input type="text" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Prive" value="Rp. <?= number_format($item['biaya'], 0, ',', '.') ?>">
                                 </div>
                               </div>
                           </div>
@@ -194,7 +194,7 @@ include_once "../layout/header.php"
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body tambah">
         <form action="prive-tambah.php" method="post">
           <div class="card-body">
             <div class="form-group">
@@ -210,7 +210,7 @@ include_once "../layout/header.php"
             </div>
             <div class="form-group">
               <label for="biaya">Biaya</label>
-              <input type="number" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Prive">
+              <input type="text" class="form-control" id="biaya" name="biaya" placeholder="Masukan Biaya Prive">
             </div>
             <div class="form-group">
               <label for="tanggal">Tanggal</label>
@@ -253,6 +253,7 @@ include_once "../layout/header.php"
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/dist/js/pages/js-hapus.js"></script>
 <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+<script src="<?= BASEURL ?>/dist/js/pages/js-rupiah.js"></script>
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
@@ -282,6 +283,18 @@ include_once "../layout/header.php"
     $('#tanggal').datepicker({
       dateFormat: 'yy-mm-dd',
       changeYear: true
+    });
+    $(document).on('click', '.tambah', function() {
+      $('#biaya').on('keyup', function() {
+        var rupiah = formatRupiah($(this).val(), 'Rp. ');
+        $(this).val(rupiah);
+      })
+    });
+    $(document).on('click', '.edit', function() {
+      $('#biaya').on('keyup', function() {
+        var rupiah = formatRupiah($(this).val(), 'Rp. ');
+        $(this).val(rupiah);
+      })
     });
   })
 </script>
