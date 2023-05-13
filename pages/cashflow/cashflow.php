@@ -35,6 +35,7 @@ $totalBarangMasuk = getTotalBarangMasuk();
 $totalBeban = getTotalBeban();
 $totalPrive = getTotalPrive();
 $totalModal = getTotalModal();
+$totalSelisih = getTotalSelisih();
 
 $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive + $totalModal;
 
@@ -82,6 +83,20 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive + 
                 <label for="total-prive">Total Prive</label>
               </div>
               <input type="text" class="form-control" value="Rp. <?= number_format($totalPrive, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="total_prive" id="total-prive" readonly />
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="text-center">
+                <label for="total-modal">Total Modal</label>
+              </div>
+              <input type="text" class="form-control" value="Rp. <?= number_format($totalModal, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="total_modal" id="total-modal" readonly />
+            </div>
+            <div class="col-md-3">
+              <div class="text-center">
+                <label for="total-selisih">Total Selisih</label>
+              </div>
+              <input type="text" class="form-control" value="Rp. <?= number_format($totalSelisih, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="total_selisih" id="total-selisih" readonly />
             </div>
           </div>
           <div class="text-center">
@@ -243,6 +258,46 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive + 
         <!-- /.card -->
       </div>
       <!-- /.col -->
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Tabel Profit</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table class="table table-bordered dataTable">
+              <thead>
+                <tr>
+                  <!-- <th style="width: 10px">#</th> -->
+                  <th>Tanggal</th>
+                  <th>Keuntungan</th>
+                  <th>Jumlah</th>
+                  <th>Pelanggan</th>
+                  <!-- <th style="width: 40px">Label</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                $data = getAllTransaksi();
+                foreach ($data as $item) {
+                ?>
+                  <tr>
+                    <td><?= $item['tanggal'] ?></td>
+                    <td>Rp. <?= number_format($item['selisih'], 0, ',', '.') ?></td>
+                    <td><?= $item['jumlahBanyak'] ?></td>
+                    <td><?= $item['nama_pelanggan'] ?></td>
+                  </tr>
+                <?php
+                } ?>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
     </div>
     <!-- /.row -->
 </div><!-- /.container-fluid -->
