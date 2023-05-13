@@ -128,6 +128,8 @@ include_once "../layout/header.php"
                     </div>
                   </div>
                   <input type="hidden" id="harga">
+                  <input type="hidden" id="harga_beli">
+                  <input type="hidden" id="totalSelisih" name="totalSelisih">
                   <input type="hidden" name="no" id="no" value="1">
                   <div class="col-md-2">
                     <div class="d-flex justify-content-end">
@@ -428,7 +430,8 @@ include_once "../layout/header.php"
             results.push({
               id: item.id_barang,
               text: item.nama_barang,
-              harga: item.harga
+              harga: item.harga,
+              harga_beli: item.harga_beli
             });
           });
           return {
@@ -443,6 +446,7 @@ include_once "../layout/header.php"
       var data = e.params.data;
       $('#id-barang').val(data.id);
       $('#harga').val(data.harga);
+      $('#harga_beli').val(data.harga_beli);
     });
 
     $('#nama-pelanggan').autocomplete({
@@ -459,9 +463,12 @@ include_once "../layout/header.php"
       var nama_barang = $('#nama-barang option:selected').text();
       var banyak = $('#banyak').val();
       var harga = convertToAngka($('#harga').val());
+      var harga_beli = convertToAngka($('#harga_beli').val());
       var total = convertToAngka($('#stotal').val());
       var subtotal = banyak * harga;
       var total = parseInt(total) + parseInt(subtotal);
+      var selisih = harga - harga_beli * banyak;
+      var totalSelisih = parseInt(totalSelisih) + parseInt(selisih);
       var html = '<div class="row mb-2" id="row' + no + '">' +
         '<div class="col-md-4">' +
         '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" readonly>' +
@@ -475,14 +482,17 @@ include_once "../layout/header.php"
         '</div>' +
         '<div class="col-md-3">' +
         '<input class="form-control" id="subTotal' + no + '"  name="subtotal[]" readonly>' +
+        '<input type="hidden" id="selisih' + no + '" name="selisih[]" readonly>' +
         '</div>' +
         '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
         '</div>';
       $('.list').append(html);
       $('#stotal').val(convertToRupiah(total));
+      $('#totalSelisih').val(totalSelisih);
       $('#namaBarang' + no).val(nama_barang);
       $('#idBarang' + no).val(id_barang);
       $('#hargaBarang' + no).val(convertToRupiah(harga));
+      $('#selisih' + no).val(selisih);
       $('#qty' + no).val(banyak);
       $('#subTotal' + no).val(convertToRupiah(subtotal));
       $('#banyak').val('');

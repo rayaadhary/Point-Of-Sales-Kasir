@@ -43,6 +43,8 @@ if (isset($_POST['simpan'])) {
       $jatuh_tempo = mysqli_real_escape_string($db, trim($_POST['jatuh_tempo']));
       $banyak = mysqli_real_escape_string($db, trim($_POST['banyak'][$i]));
       $diskon = mysqli_real_escape_string($db, trim(convert_to_number($_POST['diskon'])));
+      $selisih = mysqli_real_escape_string($db, trim(convert_to_number($_POST['selisih'][$i])));
+      $totalSelisih = mysqli_real_escape_string($db, trim(convert_to_number($_POST['totalSelisih'])));
       $subtotal = mysqli_real_escape_string($db, trim(convert_to_number($_POST['subtotal'][$i])));
       $total = mysqli_real_escape_string($db, trim(convert_to_number($_POST['total'])));
       $bersih = $total - $diskon;
