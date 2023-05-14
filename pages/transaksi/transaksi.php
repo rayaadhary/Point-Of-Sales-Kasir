@@ -129,7 +129,6 @@ include_once "../layout/header.php"
                   </div>
                   <input type="hidden" id="harga">
                   <input type="hidden" id="harga_beli">
-                  <input type="hidden" id="totalSelisih" name="totalSelisih">
                   <input type="hidden" name="no" id="no" value="1">
                   <div class="col-md-2">
                     <div class="d-flex justify-content-end">
@@ -161,6 +160,7 @@ include_once "../layout/header.php"
                     <div class="row">
                       <span>Total</span>
                       <input type="text" id="stotal" name="total" class="form-control" value="0" readonly>
+                      <input type="hidden" id="totalSelisih" name="totalSelisih" class="form-control" value="0" readonly>
                     </div>
                     <br>
                     <div class="row">
@@ -369,7 +369,11 @@ include_once "../layout/header.php"
     var stotal = convertToAngka($('#subTotal' + no).val());
     var alltotal = convertToAngka($('#stotal').val());
     var newtotal = alltotal - stotal;
+    var selisih = convertToAngka($('#selisih' + no).val());
+    var totalSelisih = convertToAngka($('#totalSelisih').val());
+    var newselisih = totalSelisih - selisih;
     $('#stotal').val(convertToRupiah(newtotal));
+    $('#totalSelisih').val(newselisih);
     $('#row' + no).remove();
     var diskon = convertToAngka($('#diskon').val());
     var bayar = convertToAngka($('#bayar').val());
@@ -465,10 +469,10 @@ include_once "../layout/header.php"
       var harga = convertToAngka($('#harga').val());
       var harga_beli = convertToAngka($('#harga_beli').val());
       var total = convertToAngka($('#stotal').val());
+      var totalSelisih = convertToAngka($('#totalSelisih').val());
       var subtotal = banyak * harga;
       var total = parseInt(total) + parseInt(subtotal);
-      var selisih = harga - harga_beli * banyak;
-      var totalSelisih = parseInt(totalSelisih) + parseInt(selisih);
+      var selisih = (harga - harga_beli) * banyak;
       var html = '<div class="row mb-2" id="row' + no + '">' +
         '<div class="col-md-4">' +
         '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" readonly>' +
@@ -488,11 +492,12 @@ include_once "../layout/header.php"
         '</div>';
       $('.list').append(html);
       $('#stotal').val(convertToRupiah(total));
-      $('#totalSelisih').val(totalSelisih);
       $('#namaBarang' + no).val(nama_barang);
       $('#idBarang' + no).val(id_barang);
       $('#hargaBarang' + no).val(convertToRupiah(harga));
       $('#selisih' + no).val(selisih);
+      var totalSelisih = parseInt(totalSelisih) + convertToAngka($('#selisih' + no).val());
+      $('#totalSelisih').val(totalSelisih);
       $('#qty' + no).val(banyak);
       $('#subTotal' + no).val(convertToRupiah(subtotal));
       $('#banyak').val('');
