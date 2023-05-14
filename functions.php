@@ -328,7 +328,7 @@ function getTotalPrive()
 function getTotalSelisih()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM(selisih) as totalSelisih FROM transaksi");
+  $res = $db->query("SELECT SUM(totalSelisih) as totalSelisih FROM transaksi");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
