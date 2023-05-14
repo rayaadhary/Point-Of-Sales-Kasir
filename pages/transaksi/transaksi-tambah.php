@@ -48,6 +48,7 @@ if (isset($_POST['simpan'])) {
       $subtotal = mysqli_real_escape_string($db, trim(convert_to_number($_POST['subtotal'][$i])));
       $total = mysqli_real_escape_string($db, trim(convert_to_number($_POST['total'])));
       $bersih = $total - $diskon;
+      $bersihSelisih = $totalSelisih - $diskon;
       $bayar = mysqli_real_escape_string($db, trim(convert_to_number($_POST['bayar'])));
       $kembalian = mysqli_real_escape_string($db, trim(convert_to_number($_POST['kembalian'])));
       // $kembalian = abs($kembalian);
@@ -67,7 +68,7 @@ if (isset($_POST['simpan'])) {
       } else {
         // eksekusi query
         $stok = mysqli_query($db, "UPDATE barang SET stok='$sisaStok' WHERE id_barang = '$id_barang'");
-        $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna', '$surat_jalan', '$selisih', '$totalSelisih')";
+        $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna', '$surat_jalan', '$selisih', '$bersihSelisih')";
         $sql = mysqli_query($db, $query);
       }
     }

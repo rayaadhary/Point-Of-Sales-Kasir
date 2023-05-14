@@ -13,40 +13,44 @@ $tanggal_kirim = date_create($_SESSION['cetak']['tanggal_kirim']);
 
 $pdf = new FPDF('L', 'mm', array(241.3, 139.7));
 $pdf->AddPage();
-$pdf->Image('../../dist/img/logo_psm.jpeg', 10, 5, 15);
-$pdf->Ln(5);
+$pdf->Image('../../dist/img/logo_psm.jpeg', 10, 5, 15,);
+// $pdf->Ln(5);
 $pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(150, 10, 'Putra Subur Makmur', 0, 0);
-$pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(70, 10, 'FAKTUR', 1, 1, 'C', false);
+$pdf->Cell(15, 0, '', 0, 0);
+$pdf->Cell(150, 0, 'PUTRA SUBUR MAKMUR', 0, 1);
+$pdf->SetFont('Arial', 'B',  11);
+$pdf->Cell(15, 10, '', 0, 0);
+$pdf->Cell(150, 10, 'MELAYANI PARTAI/ECERAN', 0, 0);
+$pdf->SetFont('Arial', '',  11);
+$pdf->Cell(70, 5, 'Tanggal         : ' . date_format($tanggal, 'd-m-y'), 0, 1,  false);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(150, 10, 'Jl Pameuntasan-Gajah Mekar Kab. Bandung Jawa Barat 40911', 0, 0);
-$pdf->Cell(70, 5, '' . $_SESSION['cetak']['no_faktur'], 1, 1, 'C', false);
-$pdf->Cell(150, 10, '085863099783', 0, 0);
-$pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(35, 5, 'Tanggal', 1, 0, 'C');
-$pdf->Cell(35, 5, 'Jatuh Tempo', 1, 1, 'C');
+// $pdf->Cell(150, 10, 'Jl Pameuntasan-Gajah Mekar Kab. Bandung Jawa Barat 40911', 0, 0);
+$pdf->Cell(165, 10, 'Playwood/Triplek - Perlengkapan Meubel - Bahan Bahan Meubel - Dll', 0, 0);
+// $pdf->SetFont('Arial', 'B', 11);
+$pdf->Cell(70, 5, 'Jatuh Tempo : '  . date_format($jatuh_tempo, 'd-m-y'), 0, 1,  false);
+$pdf->Cell(165, 10, 'WA : 085863099783 IG : putrasuburmakmur', 0, 0);
+$pdf->Cell(70, 5, 'Kepada Yth,     ' . $_SESSION['cetak']['nama_pelanggan'], 0, 1);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(150, 10, '', 0, 0,);
-$pdf->SetFont('Arial', '', 11);
-$pdf->Cell(35, 5, '' . date_format($tanggal, 'd-m-Y'), 1, 0, 'C');
-$pdf->Cell(35, 5, '' . date_format($jatuh_tempo, 'd-m-Y'), 1, 1, 'C');
-$pdf->Cell(150, 10, '', 0, 0,);
+$pdf->Cell(165, 10, 'Jl Pameuntasan-Gajah Mekar Kab. Bandung Jawa Barat 40911', 0, 0,);
+// $pdf->SetFont('Arial', '', 11);
+$pdf->Cell(70, 5, 'No Surat Jalan : ' . $_SESSION['cetak']['surat_jalan'], 0, 0);
+// $pdf->Cell(35, 5, '' . date_format($jatuh_tempo, 'd-m-y'), 1, 1, 'C');
+$pdf->Cell(150, 10, '', 0, 1);
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(70, 5, 'No Surat Jalan', 1, 1, 'C');
+// $pdf->Cell(70, 5, 'No Surat Jalan', 1, 1, 'C');
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(150, 10, 'Kepada :  ' . $_SESSION['cetak']['nama_pelanggan'], 0, 0,);
-$pdf->SetFont('Arial', '', 11);
-$pdf->Cell(70, 5, '' . $_SESSION['cetak']['surat_jalan'], 1, 1, 'C');
+// $pdf->Cell(150, 10, 'Kepada :  ' . $transaksi['nama_pelanggan'], 0, 0,);
+// $pdf->Cell(70, 5, '' . $pengiriman['no_surat_jalan'], 1, 1, 'C');
 
-$pdf->Ln(5);
+// $pdf->Ln(5);
+$pdf->Cell(150, 5, 'Faktur :  ' . $_SESSION['cetak']['no_faktur'], 0, 1);
+$pdf->SetFont('Arial', '', 11);
 
 $pdf->Cell(15, 5, 'No', 1, 0, 'C');
 $pdf->Cell(80, 5, 'Nama Barang', 1, 0);
-$pdf->Cell(30, 5, 'Banyak', 1, 0, 'C');
-$pdf->Cell(20, 5, 'Unit', 1, 0, 'C');
-$pdf->Cell(40, 5, 'Harga Satuan', 1, 0, 'C');
-$pdf->Cell(40, 5, 'Total', 1, 1, 'C'); // Pindah ke baris baru
+$pdf->Cell(30, 5, 'Banyak nya', 1, 0, 'C');
+$pdf->Cell(50, 5, 'Harga', 1, 0, 'C');
+$pdf->Cell(50, 5, 'Jumlah', 1, 1, 'C'); // Pindah ke baris baru
 $pdf->SetFont('Arial', '', 11);
 $no =  $_SESSION['cetak']['no'] - 1;
 ($no == 0) ? $no = 1 : $no = $no;
@@ -60,9 +64,8 @@ for ($i = 0; $i < $no; $i++) {
   $pdf->Cell(15, 5, '' . $i + 1, 1, 0, 'C');
   $pdf->Cell(80, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
   $pdf->Cell(30, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
-  $pdf->Cell(20, 5, 'pcs', 1, 0, 'C');
-  $pdf->Cell(40, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['harga'][$i]), 2, ',', '.'), 1, 0, 'R');
-  $pdf->Cell(40, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
+  $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['harga'][$i]), 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
 }
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
