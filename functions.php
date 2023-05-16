@@ -308,7 +308,7 @@ function getTotalBarangMasuk()
 function getTotalBeban()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM(biaya) as totalBeban FROM beban");
+  $res = $db->query("SELECT SUM(DISTINCT biaya) as totalBeban FROM beban");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();

@@ -52,7 +52,7 @@ $totalSelisih = getTotalSelisih();
 $data_transaksi = getGroupTransaksi();
 $jumlah_transaksi = getJumlahTransaksi();
 $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive + $totalModal;
-$data_profit = getGroupProfit();
+$totalProfit = $totalSelisih - $totalBeban;
 
 // var_dump($data_profit);
 // die;
@@ -93,7 +93,7 @@ $data_profit = getGroupProfit();
               <div class="text-center">
                 <label for="profit">Profit</label>
               </div>
-              <input type="text" class="form-control" value="Rp. <?= number_format($totalSelisih, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="profit" id="profit" readonly />
+              <input type="text" class="form-control" value="Rp. <?= number_format($totalProfit, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="profit" id="profit" readonly />
             </div>
           </div>
         </div>
