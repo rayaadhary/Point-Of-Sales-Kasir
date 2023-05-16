@@ -298,7 +298,7 @@ function getTotalTransaksi()
 function getTotalBarangMasuk()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM(bayar) as totalBarangMasuk FROM barang_masuk");
+  $res = $db->query("SELECT SUM(DISTINCT bayar) as totalBarangMasuk FROM barang_masuk");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
@@ -328,7 +328,7 @@ function getTotalPrive()
 function getTotalSelisih()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM(totalSelisih) as totalSelisih FROM transaksi");
+  $res = $db->query("SELECT SUM(DISTINCT totalSelisih) as totalSelisih FROM transaksi");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
@@ -431,6 +431,22 @@ function getGroupTransaksi()
 {
   $db = dbConnect();
   $res = $db->query("SELECT tanggal AS tanggal_transaksi FROM transaksi GROUP BY tanggal");
+  $data = $res->fetch_all(MYSQLI_ASSOC);
+  $res->free();
+  $db->close();
+  return $data;
+}
+
+function getGroupProfit()
+{
+  $tahun_ini = date('Y');
+  $db = dbConnect();
+  $res = $db->query("SELECT MONTH(t.tanggal) AS bulan, SUM(DISTINCT t.totalSelisih) AS totalSelisih, SUM(DISTINCT b.biaya) AS beban, SUM(DISTINCT t.totalSelisih) - SUM(DISTINCT b.biaya) AS total
+FROM transaksi t 
+JOIN beban b ON MONTH(t.tanggal) = MONTH(b.tanggal)
+WHERE YEAR(t.tanggal) = '$tahun_ini'
+GROUP BY MONTH(t.tanggal)
+ORDER BY MONTH(t.tanggal)");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();

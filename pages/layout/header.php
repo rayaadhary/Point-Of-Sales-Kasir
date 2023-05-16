@@ -299,6 +299,14 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="<?= BASEURL ?>/pages/cashflow/profit.php" class="nav-link <?= ($title == 'profit') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-search-dollar"></i>
+                  <p>
+                    Profit
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="<?= BASEURL ?>/pages/pengguna/pengguna.php" class="nav-link <?= ($title == 'pengguna') ? 'active' : '' ?>">
                   <i class="nav-icon fas fa-users"></i>
                   <p>
