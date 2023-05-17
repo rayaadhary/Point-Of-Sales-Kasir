@@ -288,7 +288,7 @@ function getAllTransaksiUtang()
 function getTotalTransaksi()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM(DISTINCT bayar) as totalTransaksi FROM transaksi");
+  $res = $db->query("SELECT SUM(DISTINCT total) as totalTransaksi FROM transaksi");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();
@@ -298,7 +298,7 @@ function getTotalTransaksi()
 function getTotalBarangMasuk()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT SUM(DISTINCT bayar) as totalBarangMasuk FROM barang_masuk");
+  $res = $db->query("SELECT SUM(DISTINCT total) as totalBarangMasuk FROM barang_masuk");
   $data = $res->fetch_assoc();
   $res->free();
   $db->close();

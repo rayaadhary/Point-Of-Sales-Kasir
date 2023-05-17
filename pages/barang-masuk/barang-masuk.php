@@ -348,12 +348,36 @@ include_once "../layout/header.php"
   }
 
 
-
   $(function() {
 
-
     $('#nama-supplier').autocomplete({
-      source: "<?= BASEURL ?>/pages/barang-masuk/nama-supplier.php",
+      source: function(request, response) {
+        $.ajax({
+          url: "<?= BASEURL ?>/pages/barang-masuk/nama-supplier.php",
+          method: "POST",
+          dataType: "json",
+          data: {
+            term: request.term
+          },
+          success: function(data) {
+            // Mengisi data autocomplete
+            response(data);
+
+            // Mengatur nilai ID supplier jika ada hasil yang cocok
+            if (data.length > 0) {
+              $('#id-supplier').val(data[0].id_supplier);
+              $('#telepon-supplier').val(data[0].telepon_supplier);
+              $('#alamat-supplier').val(data[0].alamat_supplier);
+            } else {
+              // Tampilkan pesan bahwa nama_supplier tidak ditemukan
+              $('#id-supplier').val(''); // Kosongkan nilai ID supplier
+              $('#telepon-supplier').val(''); // Kosongkan nilai telepon supplier
+              $('#alamat-supplier').val(''); // Kosongkan nilai alamat supplier
+              alert('Nama supplier tidak ditemukan.');
+            }
+          }
+        });
+      },
       select: function(event, ui) {
         $('#id-supplier').val(ui.item.id_supplier);
         $('#telepon-supplier').val(ui.item.telepon_supplier);
@@ -361,14 +385,26 @@ include_once "../layout/header.php"
       }
     });
 
-    $('#nama-barang').autocomplete({
-      source: "<?= BASEURL ?>/pages/barang-masuk/nama-barang.php",
-      select: function(event, ui) {
-        $('#id-barang').val(ui.item.id_barang);
-        $('#harga-jual').val(convertToRupiah(ui.item.harga_jual));
-        $('#harga-beli').val(convertToRupiah(ui.item.harga_beli));
-      }
-    });
+
+
+    // $('#nama-supplier').autocomplete({
+    //   source: "<?= BASEURL ?>/pages/barang-masuk/nama-supplier.php",
+    //   select: function(event, ui) {
+    //     $('#id-supplier').val(ui.item.id_supplier);
+    //     $('#telepon-supplier').val(ui.item.telepon_supplier);
+    //     $('#alamat-supplier').val(ui.item.alamat_supplier);
+    //   },
+
+    // });
+
+    // $('#nama-barang').autocomplete({
+    //   source: "<?= BASEURL ?>/pages/barang-masuk/nama-barang.php",
+    //   select: function(event, ui) {
+    //     $('#id-barang').val(ui.item.id_barang);
+    //     $('#harga-jual').val(convertToRupiah(ui.item.harga_jual));
+    //     $('#harga-beli').val(convertToRupiah(ui.item.harga_beli));
+    //   }
+    // });
 
     $('#harga-jual').on('keyup', function() {
       $(this).val(formatRupiah($(this).val(), 'Rp. '));

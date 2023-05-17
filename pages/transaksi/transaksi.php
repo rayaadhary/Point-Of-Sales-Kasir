@@ -453,10 +453,41 @@ include_once "../layout/header.php"
       $('#harga_beli').val(data.harga_beli);
     });
 
+    // $('#nama-pelanggan').autocomplete({
+    //   source: "<?= BASEURL ?>/pages/transaksi/nama-pelanggan.php",
+    //   select: function(event, ui) {
+    //     $('#id-pelanggan').val(ui.item.id_pelanggan);
+    //   }
+    // });
+
     $('#nama-pelanggan').autocomplete({
-      source: "<?= BASEURL ?>/pages/transaksi/nama-pelanggan.php",
+      source: function(request, response) {
+        $.ajax({
+          url: "<?= BASEURL ?>/pages/transaksi/nama-pelanggan.php",
+          method: "POST",
+          dataType: "json",
+          data: {
+            term: request.term
+          },
+          success: function(data) {
+            // Mengisi data autocomplete
+            response(data);
+
+            // Mengatur nilai ID supplier jika ada hasil yang cocok
+            if (data.length > 0) {
+              $('#id-pelanggan').val(data[0].id_pelanggan);
+            } else {
+              // Tampilkan pesan bahwa nama_pelanggan tidak ditemukan
+              $('#id-pelanggan').val(''); // Kosongkan nilai ID pelanggan
+              alert('Nama pelanggan tidak ditemukan.');
+            }
+          }
+        });
+      },
       select: function(event, ui) {
-        $('#id-pelanggan').val(ui.item.id_pelanggan);
+        $('#id-supplier').val(ui.item.id_supplier);
+        $('#telepon-supplier').val(ui.item.telepon_supplier);
+        $('#alamat-supplier').val(ui.item.alamat_supplier);
       }
     });
 

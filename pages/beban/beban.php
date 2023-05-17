@@ -67,6 +67,7 @@ include_once "../layout/header.php"
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 Tambah
               </button>
+
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -128,7 +129,7 @@ include_once "../layout/header.php"
                                 </div>
                                 <div class="form-group">
                                   <label for="tanggal">Tanggal</label>
-                                  <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="Masukan Tanggal" value="<?= $data['tanggal'] ?>">
+                                  <input type="date" class="form-control" id="tanggal-edit" name="tanggal" placeholder="Masukan Tanggal" value="<?= $data['tanggal'] ?>">
                                 </div>
                                 <div class="form-group">
                                   <label for="biaya">Biaya</label>
@@ -214,7 +215,7 @@ include_once "../layout/header.php"
               $waktu = date_format(date_create(), 'Y-m-d');
               ?>
               <label for="tanggal">Tanggal</label>
-              <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?= date('Y-m-d'); ?>" placeholder="Masukan Tanggal Beban Usaha">
+              <input type="date" class="form-control" id="tanggal-tambah" name="tanggal" value="<?= date('Y-m-d'); ?>" placeholder="Masukan Tanggal Beban Usaha">
             </div>
           </div>
       </div>
@@ -276,12 +277,19 @@ include_once "../layout/header.php"
   });
   $(document).ready(function() {
     var today = moment().format('YYYY-MM-DD');
-    $('#tanggal').val(today);
 
-    $('#tanggal').datepicker({
+    $('#tanggal-tambah').datepicker({
       dateFormat: 'yy-mm-dd',
       changeYear: true
     });
+
+    $(document).on('focus', '#tanggal-edit', function() {
+      $(this).datepicker({
+        dateFormat: 'yy-mm-dd',
+        changeYear: true
+      });
+    });
+
 
     $(document).on('click', '.tambah', function() {
       $('#biaya-tambah').on('keyup', function() {
@@ -289,6 +297,8 @@ include_once "../layout/header.php"
         $(this).val(rupiah);
       })
     });
+
+
     $(document).on('click', '.edit', function() {
       $('#biaya-edit').on('keyup', function() {
         var rupiah = formatRupiah($(this).val(), 'Rp. ');

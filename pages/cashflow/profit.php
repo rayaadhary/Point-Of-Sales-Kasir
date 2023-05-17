@@ -65,7 +65,7 @@ $totalProfit = $totalSelisih - $totalBeban;
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Cashflow</h1>
+          <h1>Profit</h1>
         </div>
       </div>
     </div><!-- /.container-fluid -->
@@ -313,8 +313,24 @@ $totalProfit = $totalSelisih - $totalBeban;
     type: 'bar',
     data,
     options: {
+      plugins: {
+        tooltip: {
+          titleFont: {
+            size: 50
+          },
+          bodyFont: {
+            size: 30
+          },
+          footerFont: {
+            size: 20 // there is no footer by default
+          }
+        }
+      },
       interaction: {
-        mode: 'index'
+        mode: 'index',
+        font: {
+          size: 50,
+        }
       },
       scales: {
         y: {

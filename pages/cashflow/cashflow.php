@@ -100,7 +100,7 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive + 
             </div>
           </div>
           <div class="text-center">
-            <label for="total-keuntungan">Total Keuntungan</label>
+            <label for="total-keuntungan">Total Keuangan</label>
             <div class="d-flex justify-content-center">
               <div class="col-md-3">
                 <input type="text" class="form-control" value="Rp. <?= number_format($keuntungan, 0, ',', '.') ?>" style="background-color: #fff; text-align: right;" name="total_keuntungan" id="total-keuntungan" readonly />
@@ -288,6 +288,42 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive + 
                     <td>Rp. <?= number_format($item['selisih'], 0, ',', '.') ?></td>
                     <td><?= $item['jumlahBanyak'] ?></td>
                     <td><?= $item['nama_pelanggan'] ?></td>
+                  </tr>
+                <?php
+                } ?>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Tabel Modal</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table class="table table-bordered dataTable">
+              <thead>
+                <tr>
+                  <!-- <th style="width: 10px">#</th> -->
+                  <th>Tanggal</th>
+                  <th>Modal</th>
+                  <th>Keterangan</th>
+                  <!-- <th style="width: 40px">Label</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                $data = getAllModal();
+                foreach ($data as $item) {
+                ?>
+                  <tr>
+                    <td><?= $item['tanggal_modal'] ?></td>
+                    <td>Rp. <?= number_format($item['biaya'], 0, ',', '.') ?></td>
+                    <td><?= $item['nama_modal'] ?></td>
                   </tr>
                 <?php
                 } ?>

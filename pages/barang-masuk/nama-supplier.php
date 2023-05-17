@@ -6,8 +6,8 @@ if (!isset($_SESSION["id_pengguna"]))
   header(
     "Location: " . BASEURL
   );
-if (isset($_GET['term'])) {
-  $searchTerm = mysqli_real_escape_string($db, $_GET['term']);
+if (isset($_POST['term'])) {
+  $searchTerm = mysqli_real_escape_string($db, $_POST['term']);
   $query = "SELECT * FROM supplier WHERE nama_supplier LIKE '%" . $searchTerm . "%' ORDER BY nama_supplier ASC";
   $result = mysqli_query($db, $query);
   $data = array();

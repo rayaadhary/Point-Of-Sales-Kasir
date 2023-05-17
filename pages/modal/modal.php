@@ -34,6 +34,7 @@ if (!isset($_SESSION["id_pengguna"]))
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="../../dist/jquery/moment.js"></script>
 
+
   <link rel="stylesheet" href="<?= BASEURL ?>/dist/css/adminlte.min.css">
   <!-- Sweetalert 2 -->
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
@@ -131,7 +132,7 @@ include_once "../layout/header.php"
                                 </div>
                                 <div class="form-group">
                                   <label for="tanggal">Tanggal</label>
-                                  <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="Masukan Tanggal" value="<?= $data['tanggal_modal'] ?>">
+                                  <input type="date" class="form-control" id="tanggal-edit" name="tanggal" placeholder="Masukan Tanggal" value="<?= $data['tanggal_modal'] ?>">
                                 </div>
                                 <div class="form-group">
                                   <label for="biaya">Biaya</label>
@@ -214,7 +215,7 @@ include_once "../layout/header.php"
             </div>
             <div class="form-group">
               <label for="tanggal">Tanggal</label>
-              <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="Masukan Tanggal modal">
+              <input type="date" class="form-control" id="tanggal-tambah" name="tanggal" placeholder="Masukan Tanggal modal" value="<?= date('Y-m-d'); ?>">
             </div>
           </div>
       </div>
@@ -278,12 +279,19 @@ include_once "../layout/header.php"
   });
   $(document).ready(function() {
     var today = moment().format('YYYY-MM-DD');
-    $('#tanggal').val(today);
 
-    $('#tanggal').datepicker({
+    $('#tanggal-tambah').datepicker({
       dateFormat: 'yy-mm-dd',
       changeYear: true
     });
+
+    $(document).on('focus', '#tanggal-edit', function() {
+      $(this).datepicker({
+        dateFormat: 'yy-mm-dd',
+        changeYear: true
+      });
+    });
+
 
     $(document).on('click', '.tambah', function() {
       $('#biaya-tambah').on('keyup', function() {
