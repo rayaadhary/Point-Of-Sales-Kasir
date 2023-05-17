@@ -33,7 +33,7 @@ if (isset($_POST['simpan'])) {
     $nama_supplier_ada = $ambilSupplier['nama_supplier'];
     if ($sql->num_rows > 0) {
       if ($nama_supplier != $nama_supplier_ada) {
-        setFlash('gagal', 'ID Supplier tidak s esuai', 'danger');
+        setFlash('gagal', 'Nama Supplier tidak s esuai', 'danger');
         header('Location: ' . BASEURL . '/pages/barang-masuk/barang-masuk.php');
         exit;
       }
