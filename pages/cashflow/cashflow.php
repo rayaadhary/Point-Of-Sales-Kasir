@@ -136,7 +136,7 @@ $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive + 
                 ?>
                   <tr>
                     <td><?= $item['tanggal'] ?></td>
-                    <td>Rp. <?= number_format($item['bayar'], 0, ',', '.') ?></td>
+                    <td>Rp. <?= number_format($item['total'], 0, ',', '.') ?></td>
                     <td><?= $item['jumlahBanyak'] ?></td>
                     <td><?= $item['nama_pelanggan'] ?></td>
                   </tr>

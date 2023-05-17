@@ -22,18 +22,17 @@ if (isset($_POST['simpan'])) {
   // operasi INSERT ke database
   else {
     $no =  $_POST['no'] - 2;
-    // var_dump($_POST);
-    // die;
+
     $id_supplier = mysqli_real_escape_string($db, trim($_POST['id_supplier']));
     $nama_supplier = mysqli_real_escape_string($db, trim($_POST['nama_supplier']));
     $telepon_supplier = mysqli_real_escape_string($db, trim($_POST['telepon_supplier']));
     $alamat_supplier = mysqli_real_escape_string($db, trim($_POST['alamat_supplier']));
-    $sql = mysqli_query($db, "SELECT id_supplier FROM supplier WHERE id_supplier = '$id_supplier'");
-    $ambilSupplier = mysqli_fetch_array($sql);
+    $sql = mysqli_query($db, "SELECT * FROM supplier WHERE id_supplier = '$id_supplier'");
+    $ambilSupplier = mysqli_fetch_assoc($sql);
     $nama_supplier_ada = $ambilSupplier['nama_supplier'];
     if ($sql->num_rows > 0) {
       if ($nama_supplier != $nama_supplier_ada) {
-        setFlash('gagal', 'Nama Supplier tidak s esuai', 'danger');
+        setFlash('gagal', 'Nama Supplier tidak sesuai', 'danger');
         header('Location: ' . BASEURL . '/pages/barang-masuk/barang-masuk.php');
         exit;
       }

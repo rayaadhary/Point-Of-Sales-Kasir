@@ -23,8 +23,8 @@ if (isset($_POST['simpan'])) {
     $no =  $_POST['no'] - 2;
     $id_pelanggan = mysqli_real_escape_string($db, trim($_POST['id_pelanggan']));
     $nama_pelanggan = mysqli_real_escape_string($db, trim($_POST['nama_pelanggan']));
-    $sql = mysqli_query($db, "SELECT id_pelanggan FROM pelanggan WHERE id_pelanggan = '$id_pelanggan'");
-    $ambilPelanggan = mysqli_fetch_array($sql);
+    $sql = mysqli_query($db, "SELECT * FROM pelanggan WHERE id_pelanggan = '$id_pelanggan'");
+    $ambilPelanggan = mysqli_fetch_assoc($sql);
     $nama_pelanggan_ada = $ambilPelanggan['nama_pelanggan'];
     if ($sql->num_rows > 0) {
       if ($nama_pelanggan != $nama_pelanggan_ada) {
