@@ -401,8 +401,8 @@ include_once "../layout/header.php"
             // Mengatur nilai ID supplier jika ada hasil yang cocok
             if (data.length > 0) {
               $('#id-barang').val(data[0].id_barang);
-              $('#harga-jual').val(data[0].harga_jual);
-              $('#harga-beli').val(data[0].harga_beli);
+              $('#harga-jual').val(convertToRupiah(data[0].harga_jual));
+              $('#harga-beli').val(convertToRupiah(data[0].harga_beli));
             } else {
               // Tampilkan pesan bahwa nama_supplier tidak ditemukan
               $('#id-supplier').val(''); // Kosongkan nilai ID supplier
@@ -415,8 +415,8 @@ include_once "../layout/header.php"
       },
       select: function(event, ui) {
         $('#id-barang').val(ui.item.id_barang);
-        $('#harga-beli').val(ui.item.harga_beli);
-        $('#harga-jual').val(ui.item.harga_jual);
+        $('#harga-beli').val(convertToRupiah(ui.item.harga_beli));
+        $('#harga-jual').val(convertToRupiah(ui.item.harga_jual));
       }
     });
 
