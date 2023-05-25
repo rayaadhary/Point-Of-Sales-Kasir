@@ -385,6 +385,41 @@ include_once "../layout/header.php"
       }
     });
 
+    $('#nama-barang').autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "<?= BASEURL ?>/pages/barang-masuk/nama-barang.php",
+          method: "POST",
+          dataType: "json",
+          data: {
+            term: request.term
+          },
+          success: function(data) {
+            // Mengisi data autocomplete
+            response(data);
+
+            // Mengatur nilai ID supplier jika ada hasil yang cocok
+            if (data.length > 0) {
+              $('#id-barang').val(data[0].id_barang);
+              $('#harga-jual').val(data[0].harga_jual);
+              $('#harga-beli').val(data[0].harga_beli);
+            } else {
+              // Tampilkan pesan bahwa nama_supplier tidak ditemukan
+              $('#id-supplier').val(''); // Kosongkan nilai ID supplier
+              $('#harga-jual').val(''); // Kosongkan nilai telepon supplier
+              $('#harga-beli').val(''); // Kosongkan nilai alamat supplier
+              alert('Nama barang tidak ditemukan.');
+            }
+          }
+        });
+      },
+      select: function(event, ui) {
+        $('#id-barang').val(ui.item.id_barang);
+        $('#harga-beli').val(ui.item.harga_beli);
+        $('#harga-jual').val(ui.item.harga_jual);
+      }
+    });
+
 
 
     // $('#nama-supplier').autocomplete({
