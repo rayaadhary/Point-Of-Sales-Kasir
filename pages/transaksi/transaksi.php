@@ -372,9 +372,11 @@ include_once "../layout/header.php"
     var selisih = convertToAngka($('#selisih' + no).val());
     var totalSelisih = convertToAngka($('#totalSelisih').val());
     var newselisih = totalSelisih - selisih;
+    var jumlahNomor = $('#no').val();
     $('#stotal').val(convertToRupiah(newtotal));
     $('#totalSelisih').val(newselisih);
     $('#row' + no).remove();
+    (no == jumlahNomor) ? $('#no').val(no - 1): $('#no').val(no);
     var diskon = convertToAngka($('#diskon').val());
     var bayar = convertToAngka($('#bayar').val());
     var kembalian = bayar - (newtotal - diskon >= 0 ? newtotal - diskon : 0);
