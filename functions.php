@@ -31,8 +31,20 @@ function kodeFaktur($waktu)
   $query = $db->query("SELECT max(no_faktur) as kodeTerbesar FROM transaksi");
   $data = $query->fetch_assoc();
   $kode_faktur = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_faktur, 11, 4);
-  $urutan++;
+  $bulan_terakhir = substr($kode_faktur, 9, 2);
+  $tahun_terakhir = substr($kode_faktur, 11, 4);
+  $urutan_terakhir = (int) substr($kode_faktur, 15, 4);
+
+  $bulan_sekarang = date('m');
+  $tahun_sekarang = date('Y');
+
+  if ($bulan_terakhir != $bulan_sekarang || $tahun_terakhir != $tahun_sekarang) {
+    // Bulan telah berganti, reset urutan menjadi 1
+    $urutan = 1;
+  } else {
+    $urutan = $urutan_terakhir + 1;
+  }
+
   $waktu_formatted = date_create_from_format('Y-m-d', $waktu);
   $waktu_formatted = date_format($waktu_formatted, 'dmY');
   $huruf = "INV";
@@ -41,6 +53,7 @@ function kodeFaktur($waktu)
   $db->close();
   return $kode_faktur;
 }
+
 
 function kodePembelian($waktu)
 {

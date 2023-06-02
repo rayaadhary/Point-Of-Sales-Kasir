@@ -112,7 +112,7 @@ include_once "../layout/header.php"
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="nama-pelanggan">Nama Pelanggan</label>
-                      <input type="text" name="nama_pelanggan" id="nama-pelanggan" class="form-control" required>
+                      <input type="text" name="nama_pelanggan" id="nama-pelanggan" class="form-control" value="" required>
                     </div>
                   </div>
                   <div class="col-md-1">

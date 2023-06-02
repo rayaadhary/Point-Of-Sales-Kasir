@@ -153,7 +153,7 @@ $totalProfit = $totalSelisih - $totalBeban;
                 ?>
                   <tr>
                     <td><?= $item['tanggal'] ?></td>
-                    <td>Rp. <?= number_format($item['selisih'], 0, ',', '.') ?></td>
+                    <td>Rp. <?= number_format($item['totalSelisih'], 0, ',', '.') ?></td>
                     <td><?= $item['jumlahBanyak'] ?></td>
                     <td><?= $item['nama_pelanggan'] ?></td>
                   </tr>
