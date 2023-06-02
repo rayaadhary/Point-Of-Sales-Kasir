@@ -40,7 +40,7 @@ function kodeFaktur($waktu)
 
   if ($bulan_terakhir != $bulan_sekarang || $tahun_terakhir != $tahun_sekarang) {
     // Bulan telah berganti, reset urutan menjadi 1
-    $urutan = 1;
+    $urutan = $urutan_terakhir++;
   } else {
     $urutan = $urutan_terakhir + 1;
   }
