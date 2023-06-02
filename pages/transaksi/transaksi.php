@@ -109,6 +109,12 @@ include_once "../layout/header.php"
                       <input type="text" class="form-control" name="id_barang" id="id-barang" readonly>
                     </div>
                   </div>
+                  <div class="col-md-1">
+                    <div class="form-group">
+                      <label for="stok">stok</label>
+                      <input type="number" class="form-control" name="stok" id="stok">
+                    </div>
+                  </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="nama-pelanggan">Nama Pelanggan</label>
@@ -127,6 +133,7 @@ include_once "../layout/header.php"
                       <input type="number" class="form-control" name="banyak" id="banyak">
                     </div>
                   </div>
+
                   <input type="hidden" id="harga">
                   <input type="hidden" id="harga_beli">
                   <input type="hidden" name="no" id="no" value="1">
@@ -307,6 +314,7 @@ include_once "../layout/header.php"
     $('#tanggal').val(today);
     $('#jatuh-tempo').val(today);
     $('#tanggal-kirim').val(today);
+    $('#nama-pelanggan').val('');
 
     $('#tanggal-kirim').datepicker({
       dateFormat: 'yy-mm-dd',
@@ -357,7 +365,6 @@ include_once "../layout/header.php"
     // Menghilangkan titik terakhir dan menambahkan 'Rp. ' di depan
     return 'Rp. ' + rupiah.split('', rupiah.length - 1).reverse().join('');
   }
-
 
 
   function convertToAngka(rupiah) {
@@ -437,7 +444,8 @@ include_once "../layout/header.php"
               id: item.id_barang,
               text: item.nama_barang,
               harga: item.harga,
-              harga_beli: item.harga_beli
+              harga_beli: item.harga_beli,
+              stok: item.stok
             });
           });
           return {
@@ -453,6 +461,7 @@ include_once "../layout/header.php"
       $('#id-barang').val(data.id);
       $('#harga').val(data.harga);
       $('#harga_beli').val(data.harga_beli);
+      $('#stok').val(data.stok);
     });
 
     // $('#nama-pelanggan').autocomplete({
