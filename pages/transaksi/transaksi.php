@@ -112,7 +112,7 @@ include_once "../layout/header.php"
                   <div class="col-md-1">
                     <div class="form-group">
                       <label for="stok">stok</label>
-                      <input type="number" class="form-control" name="stok" id="stok">
+                      <input type="number" class="form-control" name="stok" id="stok" readonly>
                     </div>
                   </div>
                   <div class="col-md-2">
