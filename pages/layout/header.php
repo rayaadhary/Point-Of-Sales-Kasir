@@ -179,23 +179,23 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-            <li class="nav-item">
-              <a href="<?= BASEURL ?>/dashboard.php" class="nav-link <?= ($title == 'dashboard') ? 'active' : '' ?>">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>
-                  Dashboard
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="<?= BASEURL ?>/pages/barang/barang.php" class="nav-link <?= ($title == 'barang') ? 'active' : '' ?>">
-                <i class="nav-icon fas fa-box"></i>
-                <p>
-                  Barang
-                </p>
-              </a>
-            </li>
-            <?php if ($_SESSION['role'] == 'petugas') { ?>
+            <?php if ($_SESSION['role'] == 'pemilik') { ?>
+              <li class="nav-item">
+                <a href="<?= BASEURL ?>/dashboard.php" class="nav-link <?= ($title == 'dashboard') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <p>
+                    Dashboard
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= BASEURL ?>/pages/barang/barang.php" class="nav-link <?= ($title == 'barang') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-box"></i>
+                  <p>
+                    Barang
+                  </p>
+                </a>
+              </li>
               <li class="nav-item <?= ($menu == 'barang_masuk') ? 'menu-open' : '' ?>">
                 <a href="#" class="nav-link <?= ($menu == 'barang_masuk') ? 'active' : '' ?>">
                   <i class="nav-icon fas fa-boxes"></i>
@@ -219,6 +219,8 @@
                   </li>
                 </ul>
               </li>
+            <?php }
+            if ($_SESSION['role'] == 'petugas') { ?>
               <li class="nav-item <?= ($menu == 'transaksi') ? 'menu-open' : '' ?>">
                 <a href="#" class="nav-link <?= ($menu == 'transaksi') ? 'active' : '' ?>">
                   <i class="nav-icon fas fa-shopping-cart"></i>
@@ -249,23 +251,23 @@
                 </ul>
               </li>
             <?php } ?>
-            <li class="nav-item">
-              <a href="<?= BASEURL ?>/pages/pelanggan/pelanggan.php" class="nav-link <?= ($title == 'pelanggan') ? 'active' : '' ?>">
-                <i class="nav-icon fas fa-users"></i>
-                <p>
-                  Pelanggan
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="<?= BASEURL ?>/pages/supplier/supplier.php" class="nav-link <?= ($title == 'supplier') ? 'active' : '' ?>">
-                <i class="nav-icon fas fa-shipping-fast"></i>
-                <p>
-                  Supplier
-                </p>
-              </a>
-            </li>
             <?php if ($_SESSION['role'] == 'pemilik') { ?>
+              <li class="nav-item">
+                <a href="<?= BASEURL ?>/pages/pelanggan/pelanggan.php" class="nav-link <?= ($title == 'pelanggan') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>
+                    Pelanggan
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= BASEURL ?>/pages/supplier/supplier.php" class="nav-link <?= ($title == 'supplier') ? 'active' : '' ?>">
+                  <i class="nav-icon fas fa-shipping-fast"></i>
+                  <p>
+                    Supplier
+                  </p>
+                </a>
+              </li>
               <li class="nav-item">
                 <a href="<?= BASEURL ?>/pages/beban/beban.php" class="nav-link <?= ($title == 'beban') ? 'active' : '' ?>">
                   <i class="nav-icon fas fa-balance-scale-right"></i>
