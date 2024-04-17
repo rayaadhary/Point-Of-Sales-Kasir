@@ -112,7 +112,7 @@ include_once "../layout/header.php"
                   <div class="col-md-1">
                     <div class="form-group">
                       <label for="stok">Stok</label>
-                      <input type="number" class="form-control" name="stok" id="stok" readonly>
+                      <input type="number" class="form-control" min="1" name="stok" id="stok" readonly>
                     </div>
                   </div>
                   <div class="col-md-2">
@@ -567,6 +567,23 @@ include_once "../layout/header.php"
         jatuhTempo();
       }
     })
+
+    $('#banyak').on('keyup', function() {
+      var stok = $('#stok').val();
+      var banyak = $('#banyak').val();
+      if (banyak > stok) {
+        // Jika banyak melebihi stok, batasi nilai banyak dengan stok
+        $('#banyak').val(stok);
+
+        // Anda juga bisa memberikan pesan peringatan kepada pengguna
+        Swal.fire({
+          icon: 'warning',
+          title: 'Perhatian',
+          text: 'Jumlah yang dimasukkan tidak boleh lebih dari stok yang tersedia (' + stok + ')',
+          confirmButtonText: 'OK'
+        });
+      }
+    });
 
     $('#bayar').on('keyup', function() {
       var total = convertToAngka($('#stotal').val());

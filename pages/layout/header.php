@@ -220,7 +220,7 @@
                 </ul>
               </li>
             <?php }
-            if ($_SESSION['role'] == 'petugas') { ?>
+            if ($_SESSION['role'] == 'petugas' || 'pemilik') { ?>
               <li class="nav-item <?= ($menu == 'transaksi') ? 'menu-open' : '' ?>">
                 <a href="#" class="nav-link <?= ($menu == 'transaksi') ? 'active' : '' ?>">
                   <i class="nav-icon fas fa-shopping-cart"></i>
