@@ -188,6 +188,10 @@
                   </p>
                 </a>
               </li>
+            <?php
+            }
+            if ($_SESSION['role'] == 'pemilik' || 'petugas') {
+            ?>
               <li class="nav-item">
                 <a href="<?= BASEURL ?>/pages/barang/barang.php" class="nav-link <?= ($title == 'barang') ? 'active' : '' ?>">
                   <i class="nav-icon fas fa-box"></i>
@@ -196,6 +200,10 @@
                   </p>
                 </a>
               </li>
+            <?php
+            }
+            if ($_SESSION['role'] == 'pemilik') {
+            ?>
               <li class="nav-item <?= ($menu == 'barang_masuk') ? 'menu-open' : '' ?>">
                 <a href="#" class="nav-link <?= ($menu == 'barang_masuk') ? 'active' : '' ?>">
                   <i class="nav-icon fas fa-boxes"></i>

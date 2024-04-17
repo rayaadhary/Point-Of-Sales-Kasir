@@ -112,7 +112,7 @@ include_once "../layout/header.php"
                   <div class="col-md-1">
                     <div class="form-group">
                       <label for="stok">Stok</label>
-                      <input type="number" class="form-control" min="1" name="stok" id="stok" readonly>
+                      <input type="number" class="form-control" min="1" name="stok" max="" id="stok" readonly>
                     </div>
                   </div>
                   <div class="col-md-2">
@@ -483,24 +483,49 @@ include_once "../layout/header.php"
           success: function(data) {
             // Mengisi data autocomplete
             response(data);
-
-            // Mengatur nilai ID supplier jika ada hasil yang cocok
-            if (data.length > 0) {
-              $('#id-pelanggan').val(data[0].id_pelanggan);
-            } else {
-              // Tampilkan pesan bahwa nama_pelanggan tidak ditemukan
-              $('#id-pelanggan').val(''); // Kosongkan nilai ID pelanggan
-              alert('Nama pelanggan tidak ditemukan.');
-            }
           }
         });
       },
       select: function(event, ui) {
+        $('#id-pelanggan').val(ui.item.id_pelanggan);
         $('#id-supplier').val(ui.item.id_supplier);
         $('#telepon-supplier').val(ui.item.telepon_supplier);
         $('#alamat-supplier').val(ui.item.alamat_supplier);
       }
     });
+
+    $('#nama-pelanggan').on('input', function() {
+      var namaPelanggan = $(this).val();
+
+      if (namaPelanggan.trim() === '') {
+        $('#id-pelanggan').val('');
+        return; // Keluar dari fungsi untuk menghindari permintaan AJAX
+      }
+
+
+      // Lakukan permintaan AJAX untuk mencari ID pelanggan berdasarkan nama pelanggan yang diinput
+      $.ajax({
+        url: "<?= BASEURL ?>/pages/transaksi/nama-pelanggan.php",
+        method: "POST",
+        dataType: "json",
+        data: {
+          term: namaPelanggan // Kirim nama pelanggan yang dimasukkan pengguna
+        },
+        success: function(data) {
+          // Periksa apakah data ditemukan
+          if (data.length > 0) {
+            // Perbarui nilai #id-pelanggan dengan ID pelanggan yang sesuai
+            $('#id-pelanggan').val(data[0].id_pelanggan);
+          } else {
+            // Jika tidak ditemukan, kosongkan nilai #id-pelanggan
+            $('#id-pelanggan').val('');
+            // Anda juga dapat memberikan pesan peringatan atau tindakan lain jika diperlukan
+            alert('Nama pelanggan tidak ditemukan.');
+          }
+        }
+      });
+    });
+
 
     $('#tambah-transaksi').on('click', function() {
       var no = $('#no').val();
@@ -549,7 +574,7 @@ include_once "../layout/header.php"
       $('#id-barang').val(null).trigger('change');
     });
 
-    $('#diskon').on('keyup', function() {
+    $('#diskon').on('input', function() {
       var total = convertToAngka($('#stotal').val());
       var rupiah = formatRupiah($(this).val(), 'Rp. ');
       $(this).val(rupiah);
@@ -568,13 +593,24 @@ include_once "../layout/header.php"
       }
     })
 
-    $('#banyak').on('keyup', function() {
-      var stok = $('#stok').val();
-      var banyak = $('#banyak').val();
+    function setMaxStok() {
+      var stok = $('#stok').val(); // Ambil nilai stok
+      $('#banyak').attr('max', stok); // Atur atribut max pada elemen input
+    }
+
+    setMaxStok();
+
+    $('#stok').on('change', function() {
+      setMaxStok();
+    });
+
+    $('#banyak').on('input', function() {
+      var stok = parseInt($('#stok').val());
+      var banyak = parseInt($('#banyak').val());
       if (banyak > stok) {
         // Jika banyak melebihi stok, batasi nilai banyak dengan stok
         $('#banyak').val(stok);
-
+        $('#banyak').attr('max', stok); // Atur atribut max pada elemen input
         // Anda juga bisa memberikan pesan peringatan kepada pengguna
         Swal.fire({
           icon: 'warning',

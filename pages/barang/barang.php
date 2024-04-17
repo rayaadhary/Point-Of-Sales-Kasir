@@ -56,7 +56,9 @@ include_once "../layout/header.php"
               <!-- <h3 class="card-title">DataTable with default features</h3> -->
               <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
               <!-- Button trigger modal -->
-              <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="btn btn-primary" type="button">Tambah</a>
+              <?php if ($_SESSION['role'] == 'pemilik') { ?>
+                <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="btn btn-primary" type="button">Tambah</a>
+              <?php } ?>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
