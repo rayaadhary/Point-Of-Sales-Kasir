@@ -121,6 +121,8 @@ function kodePelanggan()
   return $kode_pelanggan;
 }
 
+
+
 function kodePengguna()
 {
   $db = dbConnect();

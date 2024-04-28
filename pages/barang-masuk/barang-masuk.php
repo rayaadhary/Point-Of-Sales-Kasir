@@ -294,6 +294,7 @@ include_once "../layout/header.php"
   });
 
 
+
   function formatRupiah(angka, prefix) {
     var number_string = angka.replace(/[^,\d]/g, '').toString(),
       split = number_string.split(','),
@@ -362,19 +363,6 @@ include_once "../layout/header.php"
           success: function(data) {
             // Mengisi data autocomplete
             response(data);
-
-            // Mengatur nilai ID supplier jika ada hasil yang cocok
-            if (data.length > 0) {
-              $('#id-supplier').val(data[0].id_supplier);
-              $('#telepon-supplier').val(data[0].telepon_supplier);
-              $('#alamat-supplier').val(data[0].alamat_supplier);
-            } else {
-              // Tampilkan pesan bahwa nama_supplier tidak ditemukan
-              $('#id-supplier').val(''); // Kosongkan nilai ID supplier
-              $('#telepon-supplier').val(''); // Kosongkan nilai telepon supplier
-              $('#alamat-supplier').val(''); // Kosongkan nilai alamat supplier
-              alert('Nama supplier tidak ditemukan.');
-            }
           }
         });
       },
@@ -383,6 +371,44 @@ include_once "../layout/header.php"
         $('#telepon-supplier').val(ui.item.telepon_supplier);
         $('#alamat-supplier').val(ui.item.alamat_supplier);
       }
+    });
+
+    $('#nama-supplier').on('input', function() {
+      var namaSupplier = $(this).val();
+
+      if (namaSupplier.trim() === '') {
+        $('#id-supplier').val('');
+        $('#telepon-supplier').val('');
+        $('#alamat-supplier').val('');
+        return; // Keluar dari fungsi untuk menghindari permintaan AJAX
+      }
+
+
+      // Lakukan permintaan AJAX untuk mencari ID pelanggan berdasarkan nama pelanggan yang diinput
+      $.ajax({
+        url: "<?= BASEURL ?>/pages/barang-masuk/nama-supplier.php",
+        method: "POST",
+        dataType: "json",
+        data: {
+          term: namaSupplier
+        },
+        success: function(data) {
+          // Periksa apakah data ditemukan
+          if (data.length > 0) {
+            // Perbarui nilai #id-pelanggan dengan ID pelanggan yang sesuai
+            $('#id-supplier').val(data[0].id_supplier);
+            $('#telepon-supplier').val(data[0].telepon_supplier);
+            $('#alamat-supplier').val(data[0].alamat_supplier);
+          } else {
+            // Jika tidak ditemukan, kosongkan nilai #id-pelanggan
+            $('#id-supplier').val('');
+            $('#telepon-supplier').val('');
+            $('#alamat-supplier').val('');
+            // Anda juga dapat memberikan pesan peringatan atau tindakan lain jika diperlukan
+            alert('Nama Supplier tidak ditemukan.');
+          }
+        }
+      });
     });
 
     $('#nama-barang').autocomplete({
@@ -397,19 +423,6 @@ include_once "../layout/header.php"
           success: function(data) {
             // Mengisi data autocomplete
             response(data);
-
-            // Mengatur nilai ID supplier jika ada hasil yang cocok
-            if (data.length > 0) {
-              $('#id-barang').val(data[0].id_barang);
-              $('#harga-jual').val(convertToRupiah(data[0].harga_jual));
-              $('#harga-beli').val(convertToRupiah(data[0].harga_beli));
-            } else {
-              // Tampilkan pesan bahwa nama_supplier tidak ditemukan
-              $('#id-supplier').val(''); // Kosongkan nilai ID supplier
-              $('#harga-jual').val(''); // Kosongkan nilai telepon supplier
-              $('#harga-beli').val(''); // Kosongkan nilai alamat supplier
-              alert('Nama barang tidak ditemukan.');
-            }
           }
         });
       },
@@ -420,6 +433,51 @@ include_once "../layout/header.php"
       }
     });
 
+    // Ambil kode pelanggan terbesar dari local storage
+    var latestPelangganId = localStorage.getItem('latest_pelanggan_id');
+
+    // Jika tidak ada kode pelanggan terbesar dalam local storage, setel ke null
+    if (!latestPelangganId) {
+      latestPelangganId = null;
+    }
+
+    $('#nama-barang').on('input', function() {
+      var namaBarang = $(this).val();
+
+      if (namaBarang.trim() === '') {
+        $('#id-barang').val('');
+        $('#harga-beli').val('');
+        $('#harga-jual').val('');
+        return; // Keluar dari fungsi untuk menghindari permintaan AJAX
+      }
+    });
+
+
+    // Lakukan permintaan AJAX untuk mencari ID pelanggan berdasarkan nama pelanggan yang diinput
+    // $.ajax({
+    //   url: "<?= BASEURL ?>/pages/barang-masuk/nama-barang.php",
+    //   method: "POST",
+    //   dataType: "json",
+    //   data: {
+    //     term: namaBarang
+    //   },
+    //   success: function(data) {
+    //     // Periksa apakah data ditemukan
+    //     if (data.length > 0) {
+    //       // Perbarui nilai #id-pelanggan dengan ID pelanggan yang sesuai
+    //       $('#id-barang').val(data[0].id_barang);
+    //       $('#harga-beli').val(convertToRupiah(data[0].harga_beli));
+    //       $('#harga-jual').val(convertToRupiah(data[0].harga_jual));
+    //     } else {
+    //       // Jika tidak ditemukan, kosongkan nilai #id-pelanggan
+    //       $('#id-barang').val('');
+    //       $('#harga-beli').val('');
+    //       $('#harga-jual').val('');
+    //       // Anda juga dapat memberikan pesan peringatan atau tindakan lain jika diperlukan
+    //       alert('Nama Barang tidak ditemukan.');
+    //     }
+    //   }
+    // });
 
 
     // $('#nama-supplier').autocomplete({
@@ -496,6 +554,8 @@ include_once "../layout/header.php"
       $('#harga-jual').val(null).trigger('change');
       $('#harga-beli').val(null).trigger('change');
     });
+
+
 
     $('#diskon').on('keyup', function() {
       var total = convertToAngka($('#stotal').val());
