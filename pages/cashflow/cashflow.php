@@ -37,7 +37,7 @@ $totalPrive = getTotalPrive();
 $totalModal = getTotalModal();
 $totalSelisih = getTotalSelisih();
 
-$keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive + $totalModal;
+$keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - ($totalPrive + $totalModal);
 
 ?>
 
