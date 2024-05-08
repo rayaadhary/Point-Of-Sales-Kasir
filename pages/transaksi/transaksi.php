@@ -109,7 +109,7 @@ include_once "../layout/header.php"
                       <input type="text" class="form-control" name="id_barang" id="id-barang" readonly>
                     </div>
                   </div>
-                  <div class="col-md-1">
+                  <div class="col-sm-1">
                     <div class="form-group">
                       <label for="stok">Stok</label>
                       <input type="number" class="form-control" min="1" name="stok" max="" id="stok" readonly>

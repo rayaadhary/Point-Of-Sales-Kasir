@@ -715,18 +715,78 @@ function insertDataPengguna($data)
   $db->close();
 }
 
+// function updateDataBarang($data)
+// {
+//   $db = dbConnect();
+//   $res = $db->prepare("UPDATE barang SET nama_barang=?, harga_jual=?, stok=? WHERE id_barang=?");
+//   $res->bind_param("ssss",  $data['nama_barang'], $data['harga_jual'], $data['stok'], $data['id_barang']);
+//   $res->execute();
+
+//   $cekStok = $db->prepare("SELECT stok FROM barang WHERE id_barang = ?");
+//   $cekStok->execute([$data['id_barang']]);
+//   $stok = $cekStok->fetchColumn();
+//   if ($res) {
+//     return 1;
+//   } else {
+//     return 0;
+//   }
+//   $db->close();
+// }
+
 function updateDataBarang($data)
 {
   $db = dbConnect();
-  $res = $db->prepare("UPDATE barang SET nama_barang=?, harga_jual=? WHERE id_barang=?");
-  $res->bind_param("sss",  $data['nama_barang'], $data['harga_jual'], $data['id_barang']);
-  $res->execute();
-  if ($res) {
-    return 1;
+  $nama_barang = mysqli_real_escape_string($db, $data['nama_barang']);
+  $harga_jual = mysqli_real_escape_string($db, $data['harga_jual']);
+  $stok = mysqli_real_escape_string($db, $data['stok']);
+  $id_barang = mysqli_real_escape_string($db, $data['id_barang']);
+
+  $cekStok = mysqli_query($db, "SELECT stok, harga_beli FROM barang WHERE id_barang = '$id_barang'");
+  $ambilDataBarang = mysqli_fetch_array($cekStok);
+  $stok_lama = $ambilDataBarang['stok'];
+  $harga_beli = $ambilDataBarang['harga_beli'];
+
+  if ($stok != $stok_lama) {
+    $query = "UPDATE barang SET nama_barang='$nama_barang', harga_jual='$harga_jual', stok='$stok' WHERE id_barang='$id_barang'";
+    $result = mysqli_query($db, $query);
+    if ($result) {
+      $transaksiLama = mysqli_query($db, "SELECT no_barang_masuk, subtotal, total, bayar FROM barang_masuk WHERE id_barang = '$id_barang'");
+      $ambilDataTransaksi = mysqli_fetch_array($transaksiLama);
+      $total_lama = $ambilDataTransaksi['total'];
+      $subtotal_lama = $ambilDataTransaksi['subtotal'];
+      $no_barang_masuk = $ambilDataTransaksi['no_barang_masuk'];
+      $bayar_lama = $ambilDataTransaksi['bayar'];
+
+      // $totalBaru = ((int)$total_lama - (int)$subtotal_lama) + (int)$subtotalBaru;
+      $subtotalBaru = $stok * $harga_beli;
+      $subtotalDiff = $subtotalBaru - $subtotal_lama;
+      $totalBaru = $total_lama + $subtotalDiff;
+
+      $kembali_baru = $bayar_lama - $totalBaru;
+
+      $statusBaru = ($kembali_baru < 0) ? 'Hutang' : 'Lunas';
+
+      $query = "UPDATE barang_masuk SET banyak='$stok', subtotal='$subtotalBaru' WHERE id_barang = '$id_barang'";
+      $result2 = mysqli_query($db, $query);
+
+      $query1 = "UPDATE barang_masuk SET total='$totalBaru', kembali='$kembali_baru', status='$statusBaru' WHERE no_barang_masuk = '$no_barang_masuk'";
+      $result3 = mysqli_query($db, $query1);
+
+      if ($result2 && $result3) {
+        return 1;
+      }
+    }
   } else {
-    return 0;
+    $query = "UPDATE barang SET nama_barang='$nama_barang', harga_jual='$harga_jual' WHERE id_barang='$id_barang'";
+    $result = mysqli_query($db, $query);
   }
-  $db->close();
+
+  if (!$result) {
+    return 0; // Jika query gagal, kembalikan 0
+  }
+
+  mysqli_close($db);
+  return 0; // Jika tidak ada perubahan pada stok, kembalikan 0
 }
 
 function updateDataPrive($data)

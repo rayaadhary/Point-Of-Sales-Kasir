@@ -67,6 +67,7 @@ include_once "../layout/header.php"
                   <tr>
                     <th>ID Barang</th>
                     <th>No Barang Masuk</th>
+                    <th>Tanggal Beli</th>
                     <th>Nama Barang</th>
                     <?php if ($_SESSION['role'] == 'pemilik') { ?>
                       <th>Harga Beli</th>
@@ -85,6 +86,7 @@ include_once "../layout/header.php"
                     <tr>
                       <td><?= $item['id_barang']; ?></td>
                       <td><?= $item['no_barang_masuk']; ?></td>
+                      <td><?= $item['tanggal_beli']; ?></td>
                       <td><?= $item['nama_barang']; ?></td>
                       <?php if ($_SESSION['role'] == 'pemilik') { ?>
                         <td><?= 'Rp.' . number_format($item['harga_beli'], 0, ',', '.'); ?></td>
@@ -137,10 +139,15 @@ include_once "../layout/header.php"
                                   <label for="harga_jual">Harga Jual</label>
                                   <input type="number" class="form-control" id="harga_jual" name="harga_jual" placeholder="Masukan Harga Barang" value="<?= $data['harga_jual'] ?>">
                                 </div>
-                                <div class="form-group">
-                                  <label for="stok">Stok Barang</label>
-                                  <input type="number" class="form-control" id="stok" name="stok" value="<?= $data['stok'] ?>" readonly>
-                                </div>
+                                <?php
+                                $tombolHapus = tombolHapus($id_barang);
+                                if ($tombolHapus > 0) {
+                                ?>
+                                  <div class="form-group">
+                                    <label for="stok">Stok Barang</label>
+                                    <input type="number" class="form-control" id="stok" name="stok" value="<?= $data['stok'] ?>">
+                                  </div>
+                                <?php } ?>
                               </div>
                           </div>
                           <div class="modal-footer">
