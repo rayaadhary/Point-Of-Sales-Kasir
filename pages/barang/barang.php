@@ -139,15 +139,10 @@ include_once "../layout/header.php"
                                   <label for="harga_jual">Harga Jual</label>
                                   <input type="number" class="form-control" id="harga_jual" name="harga_jual" placeholder="Masukan Harga Barang" value="<?= $data['harga_jual'] ?>">
                                 </div>
-                                <?php
-                                $tombolHapus = tombolHapus($id_barang);
-                                if ($tombolHapus > 0) {
-                                ?>
-                                  <div class="form-group">
-                                    <label for="stok">Stok Barang</label>
-                                    <input type="number" class="form-control" id="stok" name="stok" value="<?= $data['stok'] ?>">
-                                  </div>
-                                <?php } ?>
+                                <div class="form-group">
+                                  <label for="stok">Stok Barang</label>
+                                  <input type="number" class="form-control" id="stok" name="stok" value="<?= $data['stok'] ?>">
+                                </div>
                               </div>
                           </div>
                           <div class="modal-footer">
