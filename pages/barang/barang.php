@@ -75,7 +75,9 @@ include_once "../layout/header.php"
                     <th>Harga Jual</th>
                     <th>Stok</th>
                     <th>Supplier</th>
-                    <th>Aksi</th>
+                    <?php if ($_SESSION['role'] == 'pemilik') { ?>
+                      <th>Aksi</th>
+                    <?php   } ?>
                   </tr>
                 </thead>
                 <tbody>
