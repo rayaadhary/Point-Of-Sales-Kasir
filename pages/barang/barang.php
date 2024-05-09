@@ -94,21 +94,23 @@ include_once "../layout/header.php"
                       <td><?= 'Rp.' . number_format($item['harga_jual'], 0, ',', '.'); ?></td>
                       <td><?= $item['stok']; ?></td>
                       <td><?= $item['nama_supplier']; ?></td>
-                      <td>
-                        <!-- a href -->
-                        <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
-                          <i class="fas fa-edit"></i>
-                        </a>
-                        <!-- a href -->
-                        <?php
-                        $tombolHapus = tombolHapus($item['id_barang']);
-                        if ($tombolHapus > 0) {
-                        ?>
-                          <a href="barang-hapus.php?id_barang=<?= $item['id_barang'] ?>&no_barang_masuk=<?= $item['no_barang_masuk'] ?>" class="btn btn-danger btn-circle btn-sm hapus">
-                            <i class="fas fa-trash"></i>
+                      <?php if ($_SESSION['role'] == 'pemilik') { ?>
+                        <td>
+                          <!-- a href -->
+                          <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
+                            <i class="fas fa-edit"></i>
                           </a>
-                        <?php } ?>
-                      </td>
+                          <!-- a href -->
+                          <?php
+                          $tombolHapus = tombolHapus($item['id_barang']);
+                          if ($tombolHapus > 0) {
+                          ?>
+                            <a href="barang-hapus.php?id_barang=<?= $item['id_barang'] ?>&no_barang_masuk=<?= $item['no_barang_masuk'] ?>" class="btn btn-danger btn-circle btn-sm hapus">
+                              <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    <?php }
+                        } ?>
                     </tr>
                     <!-- Modal Edit Data -->
                     <div class="modal fade" id="myModal<?= $item['id_barang'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog">
