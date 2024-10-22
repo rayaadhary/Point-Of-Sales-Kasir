@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASEURL', 'http://localhost/kasir/admin');
+define('BASEURL', 'http://localhost/Point-Of-Sales-Kasir');
 
 
 function waktu()
@@ -225,7 +225,7 @@ function getAllPelanggan()
 function getAllBarang()
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "select * from barang, barang_masuk, supplier where barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier GROUP BY barang.id_barang ORDER BY tanggal_beli DESC");
+  $res = mysqli_query($db, "select * from barang, barang_masuk, supplier where barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier GROUP BY barang.id_barang, barang_masuk.id_barang_masuk, supplier.id_supplier ORDER BY tanggal_beli DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -285,7 +285,7 @@ function getAllPengguna()
 function getAllTransaksi()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT *,  SUM(banyak) as jumlahBanyak, subtotal / banyak AS hargaTransaksi FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan GROUP BY no_faktur ORDER BY tanggal DESC");
+  $res = $db->query("SELECT *,  SUM(banyak) as jumlahBanyak, subtotal / banyak AS hargaTransaksi FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan GROUP BY t.no_faktur, t.id_transaksi, p.id_pelanggan ORDER BY tanggal DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -295,7 +295,7 @@ function getAllTransaksi()
 function getAllTransaksiUtang()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT * FROM transaksi, pelanggan WHERE pelanggan.id_pelanggan = transaksi.id_pelanggan AND status = 'utang' GROUP BY no_faktur");
+  $res = $db->query("SELECT * FROM transaksi, pelanggan WHERE pelanggan.id_pelanggan = transaksi.id_pelanggan AND status = 'utang' GROUP BY no_faktur, id_transaksi, pelanggan.id_pelanggan");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -309,7 +309,7 @@ function getTotalTransaksi()
 FROM 
     (SELECT DISTINCT no_faktur, total 
     AS totalTransaksi 
-    FROM transaksi GROUP BY no_faktur) 
+    FROM transaksi GROUP BY no_faktur, id_transaksi) 
 AS unique_total_transaksi");
   $data = $res->fetch_assoc();
   $res->free();
@@ -431,7 +431,7 @@ function hitungSupplier()
 function getAllBarangMasuk()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT *, SUM(banyak) as jumlahBanyak FROM barang_masuk bm JOIN supplier s ON bm.id_supplier = s.id_supplier GROUP BY no_barang_masuk ORDER BY tanggal_beli DESC");
+  $res = $db->query("SELECT *, SUM(banyak) as jumlahBanyak FROM barang_masuk bm JOIN supplier s ON bm.id_supplier = s.id_supplier GROUP BY no_barang_masuk, id_barang_masuk ORDER BY tanggal_beli DESC");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -441,7 +441,7 @@ function getAllBarangMasuk()
 function getAllBarangMasukUtang()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT * FROM barang_masuk, barang, supplier WHERE barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier AND status = 'utang' GROUP BY no_barang_masuk");
+  $res = $db->query("SELECT * FROM barang_masuk, barang, supplier WHERE barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier AND status = 'utang' GROUP BY barang_masuk.id_barang_masuk, barang_masuk.no_barang_masuk, barang.id_barang, supplier.id_supplier");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -451,7 +451,7 @@ function getAllBarangMasukUtang()
 function getGroupBarang()
 {
   $db = dbConnect();
-  $res = $db->query("SELECT * FROM barang GROUP BY nama_barang");
+  $res = $db->query("SELECT * FROM barang GROUP BY id_barang, nama_barang");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();

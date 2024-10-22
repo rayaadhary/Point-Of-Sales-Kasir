@@ -76,7 +76,23 @@ if (isset($_POST['simpan'])) {
       } else {
         // eksekusi query
         $stok = mysqli_query($db, "UPDATE barang SET stok='$sisaStok' WHERE id_barang = '$id_barang'");
-        $query = "INSERT INTO transaksi VALUES ('', '$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna', '$surat_jalan', '$selisih', '$bersihSelisih')";
+        $query = "INSERT INTO transaksi (no_faktur, 
+    tanggal, 
+    jatuh_tempo, 
+    banyak, 
+    diskon, 
+    subtotal, 
+    total, 
+    bayar, 
+    kembali, 
+    status, 
+    id_pelanggan, 
+    id_barang, 
+    id_pengguna, 
+    no_surat_jalan, 
+    selisih, 
+    totalSelisih
+) VALUES ('$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna', '$surat_jalan', '$selisih', '$bersihSelisih')";
         $sql = mysqli_query($db, $query);
       }
     }

@@ -51,6 +51,7 @@ $totalModal = getTotalModal();
 $totalSelisih = getTotalSelisih();
 $data_transaksi = getGroupTransaksi();
 $jumlah_transaksi = getJumlahTransaksi();
+
 $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - $totalPrive + $totalModal;
 $totalProfit = $totalSelisih - $totalBeban;
 

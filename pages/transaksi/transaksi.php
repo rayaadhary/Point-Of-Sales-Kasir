@@ -78,16 +78,6 @@ include_once "../layout/header.php"
               <form action="transaksi-tambah.php" method="post">
                 <div class="row mb-4">
                   <div class="col-md-2">
-                    <label for="tanggal">Tanggal Transaksi</label>
-                    <input type="date" class="form-control" name="tanggal" id="tanggal" style="width: 140px;">
-                  </div>
-                  <div class="col-md-2">
-                    <label for="jatuh-tempo">Jatuh Tempo</label>
-                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" readonly style="width: 140px;">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-2">
                     <div class="form-group">
                       <?php
                       $waktu = date_format(date_create(), 'Y-m-d');
@@ -98,15 +88,26 @@ include_once "../layout/header.php"
                     </div>
                   </div>
                   <div class="col-md-2">
+                    <label for="tanggal">Tanggal Transaksi</label>
+                    <input type="date" class="form-control" name="tanggal" id="tanggal" style="width: 140px;">
+                  </div>
+                  <div class="col-md-2">
+                    <label for="jatuh-tempo">Jatuh Tempo</label>
+                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" readonly style="width: 140px;">
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="nama-pelanggan">Nama Pelanggan</label>
+                      <input type="text" name="nama_pelanggan" id="nama-pelanggan" class="form-control" value="" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+
+                  <div class="col-md-2">
                     <div class="form-group">
                       <label for="nama-barang">Nama Barang</label>
                       <select name="nama_barang" id="nama-barang" class="form-control"></select>
-                    </div>
-                  </div>
-                  <div class="col-md-1">
-                    <div class="form-group">
-                      <label for="id-barang">ID Barang</label>
-                      <input type="text" class="form-control" name="id_barang" id="id-barang" readonly>
                     </div>
                   </div>
                   <div class="col-sm-1">
@@ -117,20 +118,21 @@ include_once "../layout/header.php"
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
-                      <label for="nama-pelanggan">Nama Pelanggan</label>
-                      <input type="text" name="nama_pelanggan" id="nama-pelanggan" class="form-control" value="" required>
+                      <label for="harga">Harga</label>
+                      <input type="text" class="form-control" min="1" name="harga" max="" id="harga" readonly>
                     </div>
                   </div>
+
                   <div class="col-md-1">
                     <div class="form-group">
-                      <label for="id-pelanggan">ID</label>
-                      <input type="text" class="form-control" name="id_pelanggan" id="id-pelanggan" readonly>
-                    </div>
-                  </div>
-                  <div class="col-md-1">
-                    <div class="form-group">
-                      <label for="banyak">Banyak</label>
+                      <label for="banyak">Qty</label>
                       <input type="number" class="form-control" name="banyak" id="banyak">
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="diskon">Diskon</label>
+                      <input type="text" id="diskon" name="diskon" class="form-control">
                     </div>
                   </div>
 
@@ -145,20 +147,23 @@ include_once "../layout/header.php"
                 </div>
 
                 <div class="row">
-                  <div class="col-md-8">
+                  <div class="col-md-9">
                     <div class="list">
                       <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                           <span>Nama Barang</span>
                         </div>
                         <div class="col-md-2">
                           <span>Harga</span>
                         </div>
-                        <div class="col-md-2">
-                          <span>Banyak</span>
+                        <div class="col-md-1">
+                          <span>Qty</span>
                         </div>
                         <div class="col-md-3">
                           <span>Subtotal</span>
+                        </div>
+                        <div class="col-md-2">
+                          <span>Diskon</span>
                         </div>
                       </div>
                     </div>
@@ -171,8 +176,8 @@ include_once "../layout/header.php"
                     </div>
                     <br>
                     <div class="row">
-                      <span>Potongan</span>
-                      <input type="text" id="diskon" name="diskon" class="form-control" value="0">
+                      <span>Total Diskon</span>
+                      <input type="text" id="totalDiskon" name="totalDiskon" class="form-control" value="0" readonly>
                     </div>
                     <br>
                     <div class="row">
@@ -181,7 +186,7 @@ include_once "../layout/header.php"
                     </div>
                     <br>
                     <div class="row">
-                      <span>Sisa</span>
+                      <span>Kembali</span>
                       <input type="text" name="kembalian" id="kembalian" value="0" class="form-control" readonly>
                     </div>
                     <br>
@@ -442,7 +447,7 @@ include_once "../layout/header.php"
           $.each(data, function(index, item) {
             results.push({
               id: item.id_barang,
-              text: item.nama_barang,
+              text: item.nama_barang, // Hanya menyimpan nama barang
               harga: item.harga,
               harga_beli: item.harga_beli,
               stok: item.stok
@@ -453,13 +458,46 @@ include_once "../layout/header.php"
           };
         },
         cache: true
+      },
+      // Menampilkan hasil dengan stok di samping nama barang
+      templateResult: function(item) {
+        if (item.loading) {
+          return item.text;
+        }
+        // Tampilkan nama barang beserta stok di hasil pencarian
+        return $('<span>' + item.text + ' (Stok: ' + item.stok + ')</span>');
+      },
+      // Menampilkan pilihan yang sudah dipilih (hanya nama barang)
+      templateSelection: function(item) {
+        return item.text; // Tampilkan hanya nama barang pada pilihan yang dipilih
       }
     });
+
     // Fungsi untuk mengambil id barang dari input field terpisah saat user memilih nama barang
     $('#nama-barang').on('select2:select', function(e) {
       var data = e.params.data;
+
+      // Cek jika stok 0
+      if (parseInt(data.stok) === 0) {
+        // Tampilkan SweetAlert
+        Swal.fire({
+          icon: 'warning',
+          title: 'Stok Habis',
+          text: 'Barang ini tidak bisa dipilih karena stoknya habis.',
+        });
+
+        // Kosongkan pilihan di select2 agar tidak tetap terpilih
+        $('#id-barang').val(null).trigger('change');
+        $('#nama-barang').val(null).trigger('change');
+        $('#harga').val(null).trigger('change');
+        $('#stok').val(null).trigger('change');
+        return; // Hentikan eksekusi lebih lanjut
+      }
+
+      // Jika stok tidak 0, set nilai ke input field
       $('#id-barang').val(data.id);
-      $('#harga').val(data.harga);
+      var harga = parseInt(data.harga) || 0;
+      $('#harga').val(convertToRupiah(harga));
       $('#harga_beli').val(data.harga_beli);
       $('#stok').val(data.stok);
     });
@@ -526,6 +564,8 @@ include_once "../layout/header.php"
       });
     });
 
+    var totalDiskon = 0;
+
 
     $('#tambah-transaksi').on('click', function() {
       var no = $('#no').val();
@@ -533,27 +573,34 @@ include_once "../layout/header.php"
       var id_barang = $('#id-barang').val();
       var nama_barang = $('#nama-barang option:selected').text();
       var banyak = $('#banyak').val();
+      var diskon = convertToAngka($('#diskon').val());
       var harga = convertToAngka($('#harga').val());
       var harga_beli = convertToAngka($('#harga_beli').val());
       var total = convertToAngka($('#stotal').val());
       var totalSelisih = convertToAngka($('#totalSelisih').val());
-      var subtotal = banyak * harga;
-      var total = parseInt(total) + parseInt(subtotal);
+      var subtotal = (harga * banyak);
+      // var subtotal = banyak * harga;
+      var total = parseInt(total) + (parseInt(subtotal) - diskon);
+      totalDiskon += diskon;
+      $('#totalDiskon').val(convertToRupiah(totalDiskon));
       var selisih = (harga - harga_beli) * banyak;
       var html = '<div class="row mb-2" id="row' + no + '">' +
-        '<div class="col-md-4">' +
+        '<div class="col-md-3">' +
         '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" readonly>' +
         '<input type="hidden" id="idBarang' + no + '" name="idBarang[]" readonly>' +
         '</div>' +
         '<div class="col-md-2">' +
         '<input class="form-control" id="hargaBarang' + no + '" name="harga[]" readonly>' +
         '</div>' +
-        '<div class="col-md-2">' +
+        '<div class="col-md-1">' +
         '<input class="form-control" id="qty' + no + '" name="banyak[]" readonly>' +
         '</div>' +
         '<div class="col-md-3">' +
         '<input class="form-control" id="subTotal' + no + '"  name="subtotal[]" readonly>' +
         '<input type="hidden" id="selisih' + no + '" name="selisih[]" readonly>' +
+        '</div>' +
+        '<div class="col-md-2">' +
+        '<input class="form-control" id="diskon' + no + '" name="diskon[]" readonly>' +
         '</div>' +
         '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
         '</div>';
@@ -567,6 +614,7 @@ include_once "../layout/header.php"
       $('#totalSelisih').val(totalSelisih);
       $('#qty' + no).val(banyak);
       $('#subTotal' + no).val(convertToRupiah(subtotal));
+      $('#diskon' + no).val(convertToRupiah(diskon));
       $('#banyak').val('');
       var no = (no - 1) + 2;
       $('#no').val(no);
@@ -574,24 +622,29 @@ include_once "../layout/header.php"
       $('#id-barang').val(null).trigger('change');
     });
 
+    // $('#diskon').on('input', function() {
+    //   var total = convertToAngka($('#stotal').val());
+    //   var rupiah = formatRupiah($(this).val(), 'Rp. ');
+    //   $(this).val(rupiah);
+    //   var diskon = convertToAngka(rupiah);
+    //   var bayar = convertToAngka($('#bayar').val());
+    //   var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
+    //   if (kembalian >= 0) {
+    //     $('#kembalian').val(convertToRupiah(kembalian));
+    //     $('#status').val('Lunas');
+    //     var tanggal = $('#tanggal').val();
+    //     $('#jatuh-tempo').val(tanggal);
+    //   } else {
+    //     $('#status').val('Utang');
+    //     $('#kembalian').val(convertToRupiah(kembalian));
+    //     jatuhTempo();
+    //   }
+    // })
+
     $('#diskon').on('input', function() {
-      var total = convertToAngka($('#stotal').val());
       var rupiah = formatRupiah($(this).val(), 'Rp. ');
-      $(this).val(rupiah);
-      var diskon = convertToAngka(rupiah);
-      var bayar = convertToAngka($('#bayar').val());
-      var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
-      if (kembalian >= 0) {
-        $('#kembalian').val(convertToRupiah(kembalian));
-        $('#status').val('Lunas');
-        var tanggal = $('#tanggal').val();
-        $('#jatuh-tempo').val(tanggal);
-      } else {
-        $('#status').val('Utang');
-        $('#kembalian').val(convertToRupiah(kembalian));
-        jatuhTempo();
-      }
-    })
+        $(this).val(rupiah);
+    });
 
     function setMaxStok() {
       var stok = $('#stok').val(); // Ambil nilai stok
@@ -621,26 +674,34 @@ include_once "../layout/header.php"
       }
     });
 
-    $('#bayar').on('keyup', function() {
-      var total = convertToAngka($('#stotal').val());
-      var diskon = convertToAngka($('#diskon').val());
-      var rupiah = formatRupiah($(this).val(), 'Rp. ');
-      $(this).val(rupiah);
-      var bayar = convertToAngka(rupiah);
-      var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
-      if (kembalian >= 0) {
+    // $('#bayar').on('keyup', function() {
+    //   var total = convertToAngka($('#stotal').val());
+    //   var diskon = convertToAngka($('#diskon').val());
+    //   var rupiah = formatRupiah($(this).val(), 'Rp. ');
+    //   $(this).val(rupiah);
+    //   var bayar = convertToAngka(rupiah);
+    //   var kembalian = bayar - (total - diskon >= 0 ? total - diskon : 0);
+    //   if (kembalian >= 0) {
+    //     $('#kembalian').val(convertToRupiah(kembalian));
+    //     $('#status').val('Lunas');
+    //     var tanggal = $('#tanggal').val();
+    //     $('#jatuh-tempo').val(tanggal);
+    //   } else if (total == 0) {
+    //     $('#status').val('');
+    //   } else {
+    //     $('#status').val('Utang');
+    //     $('#kembalian').val(convertToRupiah(kembalian));
+    //     jatuhTempo();
+    //   }
+    // })
+
+    $('#bayar').on('input', function() {
+        let bayar = convertToAngka($(this).val());
+        let total = convertToAngka($('#stotal').val().replace('Rp. ', ''));
+        let kembalian = bayar - (total - totalDiskon);
         $('#kembalian').val(convertToRupiah(kembalian));
-        $('#status').val('Lunas');
-        var tanggal = $('#tanggal').val();
-        $('#jatuh-tempo').val(tanggal);
-      } else if (total == 0) {
-        $('#status').val('');
-      } else {
-        $('#status').val('Utang');
-        $('#kembalian').val(convertToRupiah(kembalian));
-        jatuhTempo();
-      }
-    })
+        $('#status').val(kembalian >= 0 ? 'Lunas' : 'Utang');
+    });
   });
 </script>
 

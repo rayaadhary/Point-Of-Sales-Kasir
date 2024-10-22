@@ -48,40 +48,54 @@ $pdf->SetFont('Arial', '', 11);
 
 $pdf->Cell(15, 5, 'No', 1, 0, 'C');
 $pdf->Cell(80, 5, 'Nama Barang', 1, 0);
-$pdf->Cell(30, 5, 'Banyak nya', 1, 0, 'C');
-$pdf->Cell(50, 5, 'Harga', 1, 0, 'C');
-$pdf->Cell(50, 5, 'Jumlah', 1, 1, 'C'); // Pindah ke baris baru
+$pdf->Cell(38, 5, 'Harga', 1, 0, 'C');
+$pdf->Cell(15, 5, 'Qty', 1, 0, 'C');
+$pdf->Cell(38, 5, 'Subtotal', 1, 0, 'C'); // Pindah ke baris baru
+$pdf->Cell(38, 5, 'Diskon', 1, 1, 'C'); // Pindah ke baris baru
 $pdf->SetFont('Arial', '', 11);
 $no =  $_SESSION['cetak']['no'] - 1;
+
 ($no == 0) ? $no = 1 : $no = $no;
 // var_dump($_SESSION['cetak']);
 // die;
 // ($_SESSION['cetak']['no'] = 2) ? $no =  $_SESSION['cetak']['no'] - 1 : $no =  $_SESSION['cetak']['no'] - 2;
+$subtotalSum = 0;
 for ($i = 0; $i < $no; $i++) {
   if (!$_SESSION['cetak']['nama_barang'][$i] && !$_SESSION['cetak']['banyak'][$i] && !$_SESSION['cetak']['harga'][$i] && !$_SESSION['cetak']['subtotal'][$i]) {
     continue;
   }
+  $subtotal = str_replace(['Rp. ', '.', ','], '', $_SESSION['cetak']['subtotal'][$i]);
+  // $subtotalFormatted = number_format((int)$subtotal, 0, ',', '.');
+  $subtotalInt = (int) $subtotal; // Pastikan subtotal dalam format angka
+    
+  // Jumlahkan subtotal ke subtotalSum
+  $subtotalSum += $subtotalInt;
+
+  $subtotalFormatted = number_format($subtotalInt, 2, ',', '.');
+
   $pdf->Cell(15, 5, '' . $i + 1, 1, 0, 'C');
   $pdf->Cell(80, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
-  $pdf->Cell(30, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
-  $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['harga'][$i]), 2, ',', '.'), 1, 0, 'R');
-  $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
+  $pdf->Cell(38, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['harga'][$i]), 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(15, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
+  // $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
+  $pdf->Cell(38, 5, 'Rp. ' . $subtotalFormatted, 1, 0, 'R');
+  $pdf->Cell(38, 5, 'Rp. ' . $subtotalFormatted, 1, 1, 'R');
 }
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, 'Tanda Terima', 0, 0, 'C');
 $pdf->Cell(60, 5, 'Hormat Kami', 0, 0, 'C');
 $pdf->Cell(25, 5, '', 0, 0, 'C');
-$pdf->Cell(30, 5, 'Subtotal', 0, 0);
+$pdf->Cell(30, 5, 'Jumlah', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format(array_sum($_SESSION['cetak']['subtotal']), 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format($subtotalSum, 2, ',', '.'), 0, 1, 'R');
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0, 'C');
 $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(30, 5, 'Potongan', 0, 0);
+$pdf->Cell(30, 5, 'Total Diskon', 0, 0);
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['diskon']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
@@ -107,7 +121,7 @@ $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(60, 5, '(   Putra Subur Makmur   )', 0, 0, 'C');
 $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(30, 5, 'Sisa', 0, 0);
+$pdf->Cell(30, 5, 'Kembali', 0, 0);
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['kembalian']), 2, ',', '.'), 0, 1, 'R');
 $pdf->AddPage();

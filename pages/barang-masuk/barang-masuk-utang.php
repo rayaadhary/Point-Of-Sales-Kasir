@@ -84,9 +84,9 @@ include_once "../layout/header.php"
                       <td><?= $item['nama_barang']; ?></td>
                       <td><?= $item['nama_supplier']; ?></td>
                       <td><?= $item['tanggal_beli']; ?></td>
-                      <td><?= $item['total']; ?></td>
-                      <td><?= $item['bayar']; ?></td>
-                      <td><?= $item['kembali']; ?></td>
+                      <td>Rp. <?= number_format($item['total'], 0, ',', '.'); ?></td>
+                      <td>Rp. <?= number_format($item['bayar'], 0, ',', '.'); ?></td>
+                      <td>Rp. <?= number_format($item['kembali'], 0, ',', '.'); ?></td>
                       <td align="center">
                         <!-- a href -->
                         <a href="#" type="button" name="utang" value="utang" id="<?= $item["no_barang_masuk"]; ?>" class="btn btn-info piutang">
