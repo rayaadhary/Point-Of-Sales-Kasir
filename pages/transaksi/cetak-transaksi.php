@@ -7,6 +7,7 @@
 include_once "../../functions.php";
 include_once "../../dist/fpdf/fpdf.php";
 
+
 $tanggal = date_create($_SESSION['cetak']['tanggal']);
 $jatuh_tempo = date_create($_SESSION['cetak']['jatuh_tempo']);
 $tanggal_kirim = date_create($_SESSION['cetak']['tanggal_kirim']);
@@ -79,7 +80,7 @@ for ($i = 0; $i < $no; $i++) {
   $pdf->Cell(15, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
   // $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
   $pdf->Cell(38, 5, 'Rp. ' . $subtotalFormatted, 1, 0, 'R');
-  $pdf->Cell(38, 5, 'Rp. ' . $subtotalFormatted, 1, 1, 'R');
+  $pdf->Cell(38, 5,  'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['diskon'][$i]), 2, ',', '.'), 1, 1, 'R');
 }
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
@@ -97,7 +98,7 @@ $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Total Diskon', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['diskon']), 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['totalDiskon']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0);
 $pdf->Cell(60, 5, '', 0, 0, 'C');
@@ -105,7 +106,7 @@ $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Total', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['total']) - convert_to_number($_SESSION['cetak']['diskon']), 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['total']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0);
 $pdf->Cell(60, 5, '', 0, 0, 'C');

@@ -50,13 +50,14 @@ if (isset($_POST['simpan'])) {
       $tanggal = mysqli_real_escape_string($db, trim($_POST['tanggal']));
       $jatuh_tempo = mysqli_real_escape_string($db, trim($_POST['jatuh_tempo']));
       $banyak = mysqli_real_escape_string($db, trim($_POST['banyak'][$i]));
-      $diskon = mysqli_real_escape_string($db, trim(convert_to_number($_POST['diskon'])));
+      $diskon = mysqli_real_escape_string($db, trim(convert_to_number($_POST['diskon'][$i])));
+      $totalDiskon = mysqli_real_escape_string($db, trim(convert_to_number($_POST['totalDiskon']))); // tambahkan ini
       $selisih = mysqli_real_escape_string($db, trim(convert_to_number($_POST['selisih'][$i])));
       $totalSelisih = mysqli_real_escape_string($db, trim(convert_to_number($_POST['totalSelisih'])));
       $subtotal = mysqli_real_escape_string($db, trim(convert_to_number($_POST['subtotal'][$i])));
       $total = mysqli_real_escape_string($db, trim(convert_to_number($_POST['total'])));
-      $bersih = $total - $diskon;
-      $bersihSelisih = $totalSelisih - $diskon;
+      // $bersih = $total - $diskon;
+      // $bersihSelisih = $totalSelisih;
       $bayar = mysqli_real_escape_string($db, trim(convert_to_number($_POST['bayar'])));
       $kembalian = mysqli_real_escape_string($db, trim(convert_to_number($_POST['kembalian'])));
       // $kembalian = abs($kembalian);
@@ -81,6 +82,7 @@ if (isset($_POST['simpan'])) {
     jatuh_tempo, 
     banyak, 
     diskon, 
+     totalDiskon,
     subtotal, 
     total, 
     bayar, 
@@ -92,7 +94,7 @@ if (isset($_POST['simpan'])) {
     no_surat_jalan, 
     selisih, 
     totalSelisih
-) VALUES ('$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$subtotal', '$bersih', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna', '$surat_jalan', '$selisih', '$bersihSelisih')";
+) VALUES ('$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$totalDiskon', '$subtotal', '$total', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna', '$surat_jalan', '$selisih', '$totalSelisih')";
         $sql = mysqli_query($db, $query);
       }
     }

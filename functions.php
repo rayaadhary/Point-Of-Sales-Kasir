@@ -3,6 +3,10 @@ session_start();
 
 define('BASEURL', 'http://localhost/Point-Of-Sales-Kasir');
 
+const DB_USER = 'root';
+const DB_PASS = '';
+const DB_NAME = 'kasir';
+const DB_HOST = 'localhost';
 
 function waktu()
 {

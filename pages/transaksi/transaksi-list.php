@@ -80,39 +80,7 @@ include_once "../layout/header.php"
                   </tr>
                 </thead>
                 <tbody>
-                  <?php
-                  $data = getAllTransaksi();
-                  foreach ($data as $item) {
-                  ?>
-                    <tr>
-                      <td><?= $item['no_faktur']; ?></td>
-                      <td><?= $item['nama_pelanggan']; ?></td>
-                      <td><?= $item['tanggal']; ?></td>
-                      <td><?= $item['jatuh_tempo']; ?></td>
-                      <td>Rp. <?= number_format($item["diskon"], 0, ",", "."); ?></td>
-                      <td>Rp. <?= number_format($item["total"], 0, ",", "."); ?></td>
-                      <td>Rp. <?= number_format($item["bayar"], 0, ",", "."); ?></td>
-                      <td>Rp. <?= number_format($item["kembali"], 0, ",", "."); ?></td>
-                      <td><?= $item['status']; ?></td>
-                      <td>
-                        <!-- a href -->
-                        <!-- <div class="d-flex"> -->
-                        <a href="surat-jalan-list.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" type="button" title="surat jalan" class="btn btn-info btn-circle btn-sm">
-                          <i class="fas fa-shipping-fast"></i>
-                        </a>
-                        <!-- a href -->
-                        <a href="cetak-transaksi-list.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" title="cetak transaksi" class="btn btn-success btn-circle btn-sm">
-                          <i class="fas fa-money-check"></i>
-                        </a>
-                        <a href="transaksi-hapus.php?idPengiriman=<?= $item['no_surat_jalan'] ?>&idTransaksi=<?= $item['no_faktur'] ?>" class="btn btn-danger btn-circle btn-sm hapus" title="hapus transaksi">
-                          <i class="fas fa-trash"></i>
-                        </a>
-                        <!-- </div> -->
-                      </td>
-                    </tr>
-                  <?php
-                  }
-                  ?>
+                </tbody>
               </table>
             </div>
             <!-- /.card-body -->
@@ -172,21 +140,37 @@ include_once "../layout/header.php"
 <script src="../../dist/js/demo.js"></script>
 <!-- Page specific script -->
 <script>
-  $(function() {
+$(function() {
     $("#example1").DataTable({
-      "responsive": true,
-      "order": [
-        [3, 'desc']
-      ],
-      // "lengthChange": false,
-      "autoWidth": true,
-      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'
-      }
+        "responsive": true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "getDaftarTransaksi.php", // Ensure this URL is correct
+            datatype: "json",
+        },
+        "columns": [
+            { "data": "no_faktur" },   // Column for no_faktur
+            { "data": "nama_pelanggan" },   // Column for no_faktur
+            { "data": "tanggal" },      // Column for tanggal
+            { "data": "jatuh_tempo" },  // Column for jatuh_tempo
+            { "data": "diskon" },       // Column for diskon
+            { "data": "total" },        // Column for total
+            { "data": "bayar" },        // Column for bayar
+            { "data": "kembali" },      // Column for kembali
+            { "data": "status" },       // Column for status
+            { "data": "actions" }       // Column for action buttons
+        ],
+        "order": [
+            [0, 'desc'] // Order by the first column (no_faktur)
+        ],
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json' // Indonesian language support
+        }
     });
-  });
+});
 </script>
+
 </body>
 
 </html>
