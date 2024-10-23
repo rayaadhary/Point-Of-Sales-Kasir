@@ -170,14 +170,19 @@ include_once "../layout/header.php"
                   </div>
                   <div class="col-md-3 col-md-offset-1">
                     <div class="row">
-                      <span>Total</span>
-                      <input type="text" id="stotal" name="total" class="form-control" value="0" readonly>
-                      <input type="hidden" id="totalSelisih" name="totalSelisih" class="form-control" value="0" readonly>
+                      <span>Jumlah</span>
+                      <input type="text" id="jumlah" name="jumlah" class="form-control" value="0" readonly>
                     </div>
                     <br>
                     <div class="row">
                       <span>Total Diskon</span>
                       <input type="text" id="totalDiskon" name="totalDiskon" class="form-control" value="0" readonly>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <span>Total</span>
+                      <input type="text" id="stotal" name="total" class="form-control" value="0" readonly>
+                      <input type="hidden" id="totalSelisih" name="totalSelisih" class="form-control" value="0" readonly>
                     </div>
                     <br>
                     <div class="row">
@@ -381,28 +386,40 @@ include_once "../layout/header.php"
     var stotal = convertToAngka($('#subTotal' + no).val());
     var alltotal = convertToAngka($('#stotal').val());
     var newtotal = alltotal - stotal;
+    
     var selisih = convertToAngka($('#selisih' + no).val());
     var totalSelisih = convertToAngka($('#totalSelisih').val());
     var newselisih = totalSelisih - selisih;
+    
     var jumlahNomor = $('#no').val();
+    
     $('#stotal').val(convertToRupiah(newtotal));
     $('#totalSelisih').val(newselisih);
     $('#row' + no).remove();
-    (no == jumlahNomor) ? $('#no').val(no - 1): $('#no').val(no);
-    var diskon = convertToAngka($('#diskon').val());
+    
+    (no == jumlahNomor) ? $('#no').val(no - 1) : $('#no').val(no);
+    
+    // Mengupdate total diskon
+    var totalDiskon = convertToAngka($('#totalDiskon').val());
+    var diskonItem = convertToAngka($('#diskon' + no).val()); // Ambil diskon dari item yang dihapus
+    totalDiskon -= diskonItem; // Kurangi diskon item dari total diskon
+    $('#totalDiskon').val(convertToRupiah(totalDiskon)); // Perbarui total diskon
+
     var bayar = convertToAngka($('#bayar').val());
-    var kembalian = bayar - (newtotal - diskon >= 0 ? newtotal - diskon : 0);
+    var kembalian = bayar - (newtotal - totalDiskon >= 0 ? newtotal - totalDiskon : 0);
+    
     if (kembalian >= 0) {
-      $('#kembalian').val(convertToRupiah(kembalian));
-      $('#status').val('Lunas');
-      var tanggal = $('#tanggal').val();
-      $('#jatuh-tempo').val(tanggal);
+        $('#kembalian').val(convertToRupiah(kembalian));
+        $('#status').val('Lunas');
+        var tanggal = $('#tanggal').val();
+        $('#jatuh-tempo').val(tanggal);
     } else {
-      $('#status').val('Utang');
-      $('#kembalian').val(convertToRupiah(kembalian));
-      jatuhTempo();
+        $('#status').val('Utang');
+        $('#kembalian').val(convertToRupiah(kembalian));
+        jatuhTempo();
     }
-  }
+}
+
 
   function jatuhTempo() {
     const tanggal = moment($('#tanggal').val());
@@ -580,8 +597,9 @@ include_once "../layout/header.php"
       var totalSelisih = convertToAngka($('#totalSelisih').val());
       var subtotal = (harga * banyak);
       // var subtotal = banyak * harga;
-      var total = parseInt(total) + (parseInt(subtotal) - diskon);
+      var jumlah = parseInt(total) + parseInt(subtotal);
       totalDiskon += diskon;
+      var total = jumlah - totalDiskon;
       $('#totalDiskon').val(convertToRupiah(totalDiskon));
       var selisih = (harga - harga_beli) * banyak;
       var html = '<div class="row mb-2" id="row' + no + '">' +
@@ -605,6 +623,7 @@ include_once "../layout/header.php"
         '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
         '</div>';
       $('.list').append(html);
+      $('#jumlah').val(convertToRupiah(jumlah));
       $('#stotal').val(convertToRupiah(total));
       $('#namaBarang' + no).val(nama_barang);
       $('#idBarang' + no).val(id_barang);
@@ -620,6 +639,9 @@ include_once "../layout/header.php"
       $('#no').val(no);
       $('#nama-barang').val(null).trigger('change');
       $('#id-barang').val(null).trigger('change');
+      $('#diskon').val(null).trigger('change');
+      $('#harga').val(null).trigger('change');
+      $('#stok').val(null).trigger('change');
     });
 
     // $('#diskon').on('input', function() {
@@ -697,8 +719,9 @@ include_once "../layout/header.php"
 
     $('#bayar').on('input', function() {
         let bayar = convertToAngka($(this).val());
+        let jumlah = convertToAngka($('#jumlah').val().replace('Rp. ', ''));
         let total = convertToAngka($('#stotal').val().replace('Rp. ', ''));
-        let kembalian = bayar - (total - totalDiskon);
+        let kembalian = bayar - (jumlah - totalDiskon);
         $('#kembalian').val(convertToRupiah(kembalian));
         $('#status').val(kembalian >= 0 ? 'Lunas' : 'Utang');
     });
