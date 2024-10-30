@@ -51,8 +51,8 @@ $pdf->Cell(15, 5, 'No', 1, 0, 'C');
 $pdf->Cell(80, 5, 'Nama Barang', 1, 0);
 $pdf->Cell(38, 5, 'Harga', 1, 0, 'C');
 $pdf->Cell(15, 5, 'Qty', 1, 0, 'C');
-$pdf->Cell(38, 5, 'Subtotal', 1, 0, 'C'); // Pindah ke baris baru
-$pdf->Cell(38, 5, 'Diskon', 1, 1, 'C'); // Pindah ke baris baru
+$pdf->Cell(38, 5, 'Diskon', 1, 0, 'C'); // Pindah ke baris baru
+$pdf->Cell(38, 5, 'Subtotal', 1, 1, 'C'); // Pindah ke baris baru
 $pdf->SetFont('Arial', '', 11);
 $no =  $_SESSION['cetak']['no'] - 1;
 
@@ -66,21 +66,23 @@ for ($i = 0; $i < $no; $i++) {
     continue;
   }
   $subtotal = str_replace(['Rp. ', '.', ','], '', $_SESSION['cetak']['subtotal'][$i]);
+  $jumlahTransaksi = (int) str_replace(['Rp. ', '.', ','], '', $_SESSION['cetak']['jumlah']);
   // $subtotalFormatted = number_format((int)$subtotal, 0, ',', '.');
   $subtotalInt = (int) $subtotal; // Pastikan subtotal dalam format angka
-    
+
   // Jumlahkan subtotal ke subtotalSum
   $subtotalSum += $subtotalInt;
 
   $subtotalFormatted = number_format($subtotalInt, 2, ',', '.');
+  $jumlahTransaksiFormatted = number_format($jumlahTransaksi, 2, ',', '.');
 
   $pdf->Cell(15, 5, '' . $i + 1, 1, 0, 'C');
   $pdf->Cell(80, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
   $pdf->Cell(38, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['harga'][$i]), 2, ',', '.'), 1, 0, 'R');
   $pdf->Cell(15, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
   // $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
-  $pdf->Cell(38, 5, 'Rp. ' . $subtotalFormatted, 1, 0, 'R');
-  $pdf->Cell(38, 5,  'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['diskon'][$i]), 2, ',', '.'), 1, 1, 'R');
+  $pdf->Cell(38, 5,  'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['diskon'][$i]), 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(38, 5, 'Rp. ' . $subtotalFormatted, 1, 1, 'R');
 }
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
@@ -89,7 +91,7 @@ $pdf->Cell(60, 5, 'Hormat Kami', 0, 0, 'C');
 $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->Cell(30, 5, 'Jumlah', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($subtotalSum, 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . $jumlahTransaksiFormatted, 0, 1, 'R');
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0, 'C');
