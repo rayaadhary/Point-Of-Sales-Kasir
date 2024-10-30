@@ -34,8 +34,12 @@ $query = "
 // Get the total number of records before filtering
 $totalData = getTotalRecords($sql_details, $query);
 
+// Limit the total records displayed to 50
+$maxRecords = 50;
+$totalData = min($totalData, $maxRecords);
+
 // Get the filtered records based on the request from DataTables
-$filteredData = getFilteredRecords($sql_details, $query, $_GET);
+$filteredData = getFilteredRecords($sql_details, $query, $_GET, $maxRecords);
 
 // Combine the total and filtered data into the format DataTables expects
 $data = [
@@ -56,31 +60,42 @@ function getTotalRecords($sql_details, $query) {
 }
 
 // Function to get filtered records
-function getFilteredRecords($sql_details, $query, $request) {
+function getFilteredRecords($sql_details, $query, $request, $maxRecords) {
     $conn = new PDO("mysql:host={$sql_details['host']};dbname={$sql_details['db']}", $sql_details['user'], $sql_details['pass']);
     
-    // You may want to add WHERE conditions based on the request
+    // Base query for total filtered records
+    $baseQuery = $query;
+
     // Example: Searching functionality (optional)
     $searchValue = $request['search']['value'];
     if (!empty($searchValue)) {
-        $query .= " WHERE t.no_faktur LIKE :search OR p.nama_pelanggan LIKE :search";
+        $baseQuery .= " WHERE t.no_faktur LIKE :search OR p.nama_pelanggan LIKE :search";
     }
+
+    $baseQuery .= " GROUP BY t.no_faktur, t.tanggal, t.jatuh_tempo, t.diskon, t.total, t.bayar, t.kembali, t.status, p.nama_pelanggan, t.no_surat_jalan";
+
     
     // Get total filtered records
-    $stmt = $conn->prepare($query);
+    $stmt = $conn->prepare($baseQuery);
     if (!empty($searchValue)) {
         $stmt->bindValue(':search', "%{$searchValue}%", PDO::PARAM_STR);
     }
     $stmt->execute();
-    $recordsFiltered = $stmt->rowCount();
+    $recordsFiltered = min($stmt->rowCount(), $maxRecords); // Limit filtered records to max 50
 
     // Paginate the results
     $start = intval($request['start']);
     $length = intval($request['length']);
-    $query .= " LIMIT {$start}, {$length}";
+    
+    // If the total records filtered is greater than maxRecords, adjust pagination
+    if ($recordsFiltered > $maxRecords) {
+        $length = min($length, $maxRecords - $start); // Limit length to fit within maxRecords
+    }
+
+    $baseQuery .= " ORDER BY t.tanggal DESC LIMIT {$start}, {$length}";
 
     // Get the data
-    $stmt = $conn->prepare($query);
+    $stmt = $conn->prepare($baseQuery);
     if (!empty($searchValue)) {
         $stmt->bindValue(':search', "%{$searchValue}%", PDO::PARAM_STR);
     }

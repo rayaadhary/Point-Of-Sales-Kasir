@@ -145,10 +145,13 @@ $(function() {
         "responsive": true,
         processing: true,
         serverSide: true,
+        "searching": true,
         ajax: {
             url: "getDaftarTransaksi.php", // Ensure this URL is correct
             datatype: "json",
         },
+        "pageLength": 10,  
+        "lengthMenu": [[10], [10]],
         "columns": [
             { "data": "no_faktur" },   // Column for no_faktur
             { "data": "nama_pelanggan" },   // Column for no_faktur
@@ -166,7 +169,7 @@ $(function() {
         ],
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json' // Indonesian language support
-        }
+        },
     });
 });
 </script>
