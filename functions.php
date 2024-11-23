@@ -219,7 +219,7 @@ function gantiPassword($username, $password)
 function getAllPelanggan()
 {
   $db = dbConnect();
-  $res = mysqli_query($db, "SELECT * FROM pelanggan");
+  $res = mysqli_query($db, "SELECT * FROM pelanggan LIMIT 100");
   $data = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   $db->close();
@@ -236,15 +236,36 @@ function getAllBarang()
   return $data;
 }
 
-function getAllBeban()
+function getAllBeban($filter_tanggal_awal = '', $filter_tanggal_akhir = '')
 {
-  $db = dbConnect();
-  $res = mysqli_query($db, "SELECT * FROM beban ORDER BY tanggal DESC");
-  $data = $res->fetch_all(MYSQLI_ASSOC);
-  $res->free();
-  $db->close();
-  return $data;
+    // Menghubungkan ke database
+    $db = dbConnect();
+    
+    // Jika ada filter tanggal
+    if ($filter_tanggal_awal && $filter_tanggal_akhir) {
+        // Query untuk rentang tanggal
+        $query = "SELECT * FROM beban WHERE tanggal BETWEEN ? AND ? ORDER BY tanggal DESC";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("ss", $filter_tanggal_awal, $filter_tanggal_akhir);
+    } else {
+        // Query tanpa filter tanggal, membatasi hasil menjadi 50
+        $query = "SELECT * FROM beban ORDER BY tanggal DESC LIMIT 50";
+        $stmt = $db->prepare($query);
+    }
+
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    
+    $stmt->free_result();
+    $stmt->close();
+    $db->close();
+
+    return $data;
 }
+
+
 
 function getAllPrive()
 {
@@ -773,59 +794,87 @@ function insertDataPengguna($data)
 
 function updateDataBarang($data)
 {
+  // Start database connection
   $db = dbConnect();
+  
+  // Start a transaction
+  mysqli_begin_transaction($db);
+  
+  // Escape input data
   $nama_barang = mysqli_real_escape_string($db, $data['nama_barang']);
   $harga_jual = mysqli_real_escape_string($db, $data['harga_jual']);
   $stok = mysqli_real_escape_string($db, $data['stok']);
   $id_barang = mysqli_real_escape_string($db, $data['id_barang']);
-
+  
+  // Fetch current stock and purchase price
   $cekStok = mysqli_query($db, "SELECT stok, harga_beli FROM barang WHERE id_barang = '$id_barang'");
   $ambilDataBarang = mysqli_fetch_array($cekStok);
   $stok_lama = $ambilDataBarang['stok'];
   $harga_beli = $ambilDataBarang['harga_beli'];
+  
+  $result = false;
+  $result2 = false;
+  $result3 = false;
 
-  if ($stok != $stok_lama) {
-    $query = "UPDATE barang SET nama_barang='$nama_barang', harga_jual='$harga_jual', stok='$stok' WHERE id_barang='$id_barang'";
-    $result = mysqli_query($db, $query);
-    if ($result) {
+  try {
+    // Check if stock has changed
+    if ($stok != $stok_lama) {
+      // Update the barang table
+      $query = "UPDATE barang SET nama_barang='$nama_barang', harga_jual='$harga_jual', stok='$stok' WHERE id_barang='$id_barang'";
+      $result = mysqli_query($db, $query);
+      if (!$result) {
+        throw new Exception("Failed to update barang");
+      }
+
+      // Fetch previous transaction data from barang_masuk
       $transaksiLama = mysqli_query($db, "SELECT no_barang_masuk, subtotal, total, bayar FROM barang_masuk WHERE id_barang = '$id_barang'");
       $ambilDataTransaksi = mysqli_fetch_array($transaksiLama);
       $total_lama = $ambilDataTransaksi['total'];
       $subtotal_lama = $ambilDataTransaksi['subtotal'];
       $no_barang_masuk = $ambilDataTransaksi['no_barang_masuk'];
       $bayar_lama = $ambilDataTransaksi['bayar'];
-
-      // $totalBaru = ((int)$total_lama - (int)$subtotal_lama) + (int)$subtotalBaru;
+      
+      // Calculate new subtotal, total, and change (kembali)
       $subtotalBaru = $stok * $harga_beli;
       $subtotalDiff = $subtotalBaru - $subtotal_lama;
       $totalBaru = $total_lama + $subtotalDiff;
-
       $kembali_baru = $bayar_lama - $totalBaru;
-
       $statusBaru = ($kembali_baru < 0) ? 'Hutang' : 'Lunas';
 
+      // Update barang_masuk table for stock and subtotal
       $query = "UPDATE barang_masuk SET banyak='$stok', subtotal='$subtotalBaru' WHERE id_barang = '$id_barang'";
       $result2 = mysqli_query($db, $query);
+      if (!$result2) {
+        throw new Exception("Failed to update barang_masuk for stock and subtotal");
+      }
 
+      // Update barang_masuk table for total, change, and status
       $query1 = "UPDATE barang_masuk SET total='$totalBaru', kembali='$kembali_baru', status='$statusBaru' WHERE no_barang_masuk = '$no_barang_masuk'";
       $result3 = mysqli_query($db, $query1);
-
-      if ($result2 && $result3) {
-        return 1;
+      if (!$result3) {
+        throw new Exception("Failed to update barang_masuk for total, change, and status");
+      }
+    } else {
+      // If stock hasn't changed, just update the name and price
+      $query = "UPDATE barang SET nama_barang='$nama_barang', harga_jual='$harga_jual' WHERE id_barang='$id_barang'";
+      $result = mysqli_query($db, $query);
+      if (!$result) {
+        throw new Exception("Failed to update barang for name and price");
       }
     }
-  } else {
-    $query = "UPDATE barang SET nama_barang='$nama_barang', harga_jual='$harga_jual' WHERE id_barang='$id_barang'";
-    $result = mysqli_query($db, $query);
-  }
 
-  if (!$result) {
-    return 0; // Jika query gagal, kembalikan 0
+    // Commit the transaction if all queries were successful
+    mysqli_commit($db);
+    mysqli_close($db);
+    return 1;  // Success
+  } catch (Exception $e) {
+    // Rollback the transaction if any query fails
+    mysqli_rollback($db);
+    mysqli_close($db);
+    return 0;  // Failure
   }
-
-  mysqli_close($db);
-  return 0; // Jika tidak ada perubahan pada stok, kembalikan 0
 }
+
 
 function updateDataPrive($data)
 {
@@ -914,18 +963,42 @@ function updateDataPengguna($data)
 
 function getDeleteBarang($id_barang, $no_barang_masuk)
 {
-  $db = dbConnect();
-  $res1 = mysqli_query($db, "DELETE FROM barang_masuk WHERE no_barang_masuk = '$no_barang_masuk'");
-  if ($res1) {
-    $res2 = mysqli_query($db, "DELETE FROM barang WHERE id_barang = '$id_barang'");
-    if ($res2) {
-      return 1;
+    $db = dbConnect();
+    
+    $res1 = mysqli_query($db, "UPDATE barang_masuk SET status_enable = 'false' WHERE no_barang_masuk = '$no_barang_masuk'");
+    if ($res1) {
+        $res2 = mysqli_query($db, "UPDATE barang SET status_enable = 'false' WHERE id_barang = '$id_barang'");
+        if ($res2) {
+            $db->close();
+            return 1; // Success
+        }
     }
-  } else {
-    return 0;
-  }
-  $db->close();
+    
+    $db->close();
+    return 0; // Failure
 }
+
+function restoreBarang($id_barang, $no_barang_masuk)
+{
+    $db = dbConnect();
+    
+    // Update status_enable to 'true' in barang_masuk
+    $res1 = mysqli_query($db, "UPDATE barang_masuk SET status_enable = 'true' WHERE no_barang_masuk = '$no_barang_masuk'");
+    if ($res1) {
+        // Update status_enable to 'true' in barang
+        $res2 = mysqli_query($db, "UPDATE barang SET status_enable = 'true' WHERE id_barang = '$id_barang'");
+        if ($res2) {
+            $db->close();
+            return 1; // Success
+        }
+    }
+    
+    $db->close();
+    return 0; // Failure
+}
+
+
+
 
 function getDeleteBeban($id)
 {

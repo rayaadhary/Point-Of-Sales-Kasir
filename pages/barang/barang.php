@@ -62,108 +62,69 @@ include_once "../layout/header.php"
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>ID Barang</th>
-                    <th>No Barang Masuk</th>
-                    <th>Tanggal Beli</th>
-                    <th>Nama Barang</th>
-                    <?php if ($_SESSION['role'] == 'pemilik') { ?>
-                      <th>Harga Beli</th>
-                    <?php   } ?>
-                    <th>Harga Jual</th>
-                    <th>Stok</th>
-                    <th>Supplier</th>
-                    <?php if ($_SESSION['role'] == 'pemilik') { ?>
-                      <th>Aksi</th>
-                    <?php   } ?>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  $data = getAllBarang();
-                  foreach ($data as $item) {
-                  ?>
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
                     <tr>
-                      <td><?= $item['id_barang']; ?></td>
-                      <td><?= $item['no_barang_masuk']; ?></td>
-                      <td><?= $item['tanggal_beli']; ?></td>
-                      <td><?= $item['nama_barang']; ?></td>
+                      <th>ID Barang</th>
+                      <th>No Barang Masuk</th>
+                      <th>Tanggal Beli</th>
+                      <th>Nama Barang</th>
                       <?php if ($_SESSION['role'] == 'pemilik') { ?>
-                        <td><?= 'Rp.' . number_format($item['harga_beli'], 0, ',', '.'); ?></td>
+                        <th>Harga Beli</th>
                       <?php } ?>
-                      <td><?= 'Rp.' . number_format($item['harga_jual'], 0, ',', '.'); ?></td>
-                      <td><?= $item['stok']; ?></td>
-                      <td><?= $item['nama_supplier']; ?></td>
+                      <th>Harga Jual</th>
+                      <th>Stok</th>
+                      <th>Supplier</th>
                       <?php if ($_SESSION['role'] == 'pemilik') { ?>
-                        <td>
-                          <!-- a href -->
-                          <a href="#" type="button" data-toggle="modal" data-target="#myModal<?= $item['id_barang'] ?>" class="btn btn-success btn-circle btn-sm">
-                            <i class="fas fa-edit"></i>
-                          </a>
-                          <!-- a href -->
-                          <?php
-                          $tombolHapus = tombolHapus($item['id_barang']);
-                          if ($tombolHapus > 0) {
-                          ?>
-                            <a href="barang-hapus.php?id_barang=<?= $item['id_barang'] ?>&no_barang_masuk=<?= $item['no_barang_masuk'] ?>" class="btn btn-danger btn-circle btn-sm hapus">
-                              <i class="fas fa-trash"></i>
-                            </a>
-                        </td>
-                    <?php }
-                        } ?>
+                        <th>Aksi</th>
+                      <?php } ?>
                     </tr>
-                    <!-- Modal Edit Data -->
-                    <div class="modal fade" id="myModal<?= $item['id_barang'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Form Edit Barang</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form action="barang-edit.php" method="post">
-                              <?php
-                              $id_barang = $item['id_barang'];
-                              $data = getBarangById($id_barang);
-                              ?>
-                              <div class="card-body">
-                                <div class="form-group">
-                                  <label for="id_barang">ID Barang</label>
-                                  <input type="text" class="form-control" name="id_barang" id="id_barang" value="<?= $data['id_barang'] ?>" readonly>
-                                </div>
-                                <div class="form-group">
-                                  <label for="nama_barang">Nama Barang</label>
-                                  <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang" value="<?= $data['nama_barang'] ?>">
-                                </div>
-                                <div class="form-group">
-                                  <label for="harga_jual">Harga Jual</label>
-                                  <input type="number" class="form-control" id="harga_jual" name="harga_jual" placeholder="Masukan Harga Barang" value="<?= $data['harga_jual'] ?>">
-                                </div>
-                                <div class="form-group">
-                                  <label for="stok">Stok Barang</label>
-                                  <input type="number" class="form-control" id="stok" name="stok" value="<?= $data['stok'] ?>">
-                                </div>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <div class="text-center">
-                              <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
-                            </div>
-                          </div>
-                          </form>
+                  </thead>
+                  <tbody>
+                    <!-- Data is loaded dynamically via DataTables -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Form Edit Barang</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="barang-edit.php" method="post">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="id_barang">ID Barang</label>
+                          <input type="text" class="form-control" name="id_barang" id="id_barang" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="nama_barang">Nama Barang</label>
+                          <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang">
+                        </div>
+                        <div class="form-group">
+                          <label for="harga_jual">Harga Jual</label>
+                          <input type="number" class="form-control" id="harga_jual" name="harga_jual" placeholder="Masukan Harga Barang">
+                        </div>
+                        <div class="form-group">
+                          <label for="stok">Stok Barang</label>
+                          <input type="number" class="form-control" id="stok" name="stok">
                         </div>
                       </div>
-                    </div>
-                    <!-- Akhir modal -->
-                  <?php
-                  }
-                  ?>
-              </table>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
@@ -226,17 +187,122 @@ include_once "../layout/header.php"
 <!-- Page specific script -->
 <script>
   $(function() {
-    $("#example1").DataTable({
-      "responsive": true,
-      // "lengthChange": false,
-      "autoWidth": false,
-      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    var table = $("#example1").DataTable({
+      responsive: true,
+      processing: true,
+      serverSide: true,
+      searching: true,
+      ajax: {
+        url: "getDaftarBarang.php",
+        datatype: "json",
+      },
+      pageLength: 10,
+      lengthMenu: [
+        [10],
+        [10]
+      ],
+      columns: [{
+          data: "id_barang"
+        },
+        {
+          data: "no_barang_masuk"
+        },
+        {
+          data: "tanggal_beli"
+        },
+        {
+          data: "nama_barang"
+        },
+        {
+          data: "harga_beli",
+          render: $.fn.dataTable.render.number(',', '.', 0, 'Rp ')
+        },
+        {
+          data: "harga_jual",
+          render: $.fn.dataTable.render.number(',', '.', 0, 'Rp ')
+        },
+        {
+          data: "stok"
+        },
+        {
+          data: "nama_supplier"
+        },
+        {
+          data: null,
+          orderable: false,
+          render: function(data, type, row) {
+            // Render tombol edit dan hapus
+            return `
+              <a href="#" type="button" data-id="${row.id_barang}" class="btn btn-success btn-circle btn-sm edit-modal">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="barang-hapus.php?id_barang=${row.id_barang}&no_barang_masuk=${row.no_barang_masuk}" class="btn btn-danger btn-circle btn-sm hapus">
+                <i class="fas fa-trash"></i>
+              </a>`;
+          }
+        }
+      ],
+      order: [
+        [0, 'desc']
+      ],
       language: {
         url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'
       }
     });
+
+    // Re-bind modal triggers after DataTables redraws
+    $('#example1').on('click', '.edit-modal', function(e) {
+      e.preventDefault();
+      var id_barang = $(this).data('id');
+      console.log(id_barang);
+
+      // Fetch data for the modal
+      $.ajax({
+        // url: `getBarangById.php?id_barang=${id_barang}`,
+        url: 'getBarangById.php?id_barang=' + id_barang,
+        type: "GET",
+        success: function(response) {
+          var data = JSON.parse(response); 
+
+          $('#id_barang').val(data.id_barang);
+          $('#nama_barang').val(data.nama_barang);
+          $('#harga_jual').val(data.harga_jual);
+          $('#stok').val(data.stok);
+
+          // Show modal
+          $('#myModal').modal('show');
+        }
+      });
+    });
   });
+
+  $(document).on('click', '.hapus', function(e) {
+    e.preventDefault();  // Prevent the default behavior (redirect)
+
+    var deleteUrl = $(this).attr('href');  // Get the URL for deletion from the href attribute
+
+    // Show SweetAlert confirmation dialog
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data ini akan dihapus secara permanen.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If the user confirms, navigate to the delete URL to execute the deletion
+            window.location.href = deleteUrl;
+        }
+    });
+});
+
 </script>
+
+
+
+
 </body>
 
 </html>
