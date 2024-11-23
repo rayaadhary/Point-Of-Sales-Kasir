@@ -611,12 +611,46 @@ function getSupplierById($id)
 
 function getTransaksiById($id)
 {
-  $db = dbConnect();
-  $res = mysqli_query($db, "SELECT *, SUM(banyak) as jumlahBanyak, subtotal / banyak AS hargaTransaksi FROM transaksi t JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan  WHERE no_faktur = '$id'");
-  $data = $res->fetch_assoc();
-  $res->free();
-  $db->close();
-  return $data;
+    $db = dbConnect();
+
+    // Ensure all selected columns that are not aggregated are included in the GROUP BY clause
+    $res = mysqli_query($db, "SELECT 
+            t.tanggal,
+            t.jatuh_tempo,
+            t.no_faktur, 
+            t.total,
+            t.diskon,
+            t.bayar,
+            t.totalDiskon,
+            t.kembali,
+            t.id_barang, 
+            p.nama_pelanggan, 
+            SUM(t.banyak) AS jumlahBanyak, 
+            SUM(t.subtotal) AS totalSubtotal,
+            SUM(t.subtotal) / SUM(t.banyak) AS hargaTransaksi
+        FROM 
+            transaksi t 
+        JOIN 
+            pelanggan p ON t.id_pelanggan = p.id_pelanggan  
+        WHERE 
+            t.no_faktur = '$id'  
+        GROUP BY 
+            t.no_faktur, 
+            t.id_barang, 
+            p.nama_pelanggan,
+             t.tanggal,
+                  t.total,
+            t.diskon,
+            t.totalDiskon,
+            t.bayar,
+            t.kembali,
+            t.jatuh_tempo
+    ");
+
+    $data = $res->fetch_assoc();
+    $res->free();
+    $db->close();
+    return $data;
 }
 
 
@@ -1017,7 +1051,7 @@ function getPelangganById($id)
 {
   $db = dbConnect();
   $res = mysqli_query($db, "SELECT * FROM pelanggan WHERE id_pelanggan = '$id'");
-  $data = $res->fetch_assoc();
+$data = $res->fetch_assoc();
   $res->free();
   $db->close();
   return $data;

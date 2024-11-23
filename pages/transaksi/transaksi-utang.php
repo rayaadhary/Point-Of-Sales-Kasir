@@ -76,28 +76,7 @@ include_once "../layout/header.php"
                   </tr>
                 </thead>
                 <tbody>
-                  <?php
-                  $data = getAllTransaksiUtang();
-                  foreach ($data as $item) {
-                  ?>
-                    <tr>
-                      <td><?= $item['no_faktur']; ?></td>
-                      <td><?= $item['nama_pelanggan']; ?></td>
-                      <td><?= $item['tanggal']; ?></td>
-                      <td><?= $item['jatuh_tempo']; ?></td>
-                      <td><?= 'Rp. ' . number_format($item['total'], 0, ',', '.');  ?></td>
-                      <td><?= 'Rp. ' . number_format($item['bayar'], 0, ',', '.');   ?></td>
-                      <td><?= 'Rp. ' . number_format($item['kembali'], 0, ',', '.');   ?></td>
-                      <td align="center">
-                        <!-- a href -->
-                        <a href="#" type="button" name="utang" value="utang" id="<?= $item["no_faktur"]; ?>" class="btn btn-info piutang">
-                          <i class="fas fa-money-check"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  <?php
-                  }
-                  ?>
+                </tbody>
               </table>
             </div>
             <!-- /.card-body -->
@@ -203,18 +182,51 @@ include_once "../layout/header.php"
 <!-- AdminLTE for demo purposes -->
 <script src="../../dist/js/demo.js"></script>
 <!-- Page specific script -->
+
 <script>
-  $(function() {
+$(function() {
     $("#example1").DataTable({
-      "responsive": true,
-      // "lengthChange": false,
-      "autoWidth": false,
-      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'
-      }
+        "responsive": true,
+        processing: true,
+        serverSide: true,
+        "searching": true,
+        ajax: {
+            url: "getDaftarTransaksiUtang.php", // Ensure this URL is correct
+            datatype: "json",
+        },
+        "pageLength": 10,  
+        "lengthMenu": [[10], [10]],
+        "columns": [
+            { "data": "no_faktur" },
+            { "data": "nama_pelanggan" },
+            { "data": "tanggal" },
+            { "data": "jatuh_tempo" },
+            { "data": "total" },
+            { "data": "bayar" },
+            { "data": "kembali" },
+            { "data": "actions" }
+        ],
+        "order": [
+            [0, 'desc'] // Order by the first column (no_faktur)
+        ],
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json' // Indonesian language support
+        },
     });
-  });
+});
+</script>
+<script>
+  // $(function() {
+  //   $("#example1").DataTable({
+  //     "responsive": true,
+  //     // "lengthChange": false,
+  //     "autoWidth": false,
+  //     // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+  //     language: {
+  //       url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'
+  //     }
+  //   });
+  // });
 
   $(document).ready(function() {
     $(document).on('click', '.piutang', function() {

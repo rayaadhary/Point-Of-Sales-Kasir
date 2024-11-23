@@ -1,7 +1,12 @@
 <?php
 
+// if (!isset($_SESSION['cetak']["id_pengguna"]))
+//   header(
+//     "Location: " . BASEURL
+//   );
 include_once "../../functions.php";
 include_once "../../dist/fpdf/fpdf.php";
+
 if (!isset($_SESSION["id_pengguna"]))
   header(
     "Location: " . BASEURL
@@ -54,67 +59,56 @@ $pdf->Cell(150, 5, 'Faktur :  ' . $transaksi['no_faktur'], 0, 1);
 $pdf->SetFont('Arial', '', 11);
 
 $pdf->Cell(15, 5, 'No', 1, 0, 'C');
-$pdf->Cell(80, 5, 'Nama Barang', 1, 0, 'C');
-$pdf->Cell(30, 5, 'Banyak nya', 1, 0, 'C');
-$pdf->Cell(50, 5, 'Harga', 1, 0, 'C');
-$pdf->Cell(50, 5, 'Jumlah', 1, 1, 'C'); // Pindah ke baris baru
+$pdf->Cell(80, 5, 'Nama Barang', 1, 0);
+$pdf->Cell(38, 5, 'Harga', 1, 0, 'C');
+$pdf->Cell(15, 5, 'Qty', 1, 0, 'C');
+$pdf->Cell(38, 5, 'Diskon', 1, 0, 'C'); // Pindah ke baris baru
+$pdf->Cell(38, 5, 'Subtotal', 1, 1, 'C'); // Pindah ke baris baru
 $pdf->SetFont('Arial', '', 11);
-// $no =  $_SESSION['cetak']['no'] - 1;
 // var_dump($_SESSION['cetak']);
 // die;
-
-// function harga_saat_transaksi($db, $transaksiId)
-// {
-//   $harga = 0;
-//   $res = mysqli_query($db, "SELECT * FROM transaksi WHERE no_faktur = '$transaksiId'");
-//   while ($item = mysqli_fetch_assoc($res)) {
-//     $harga = $item['subtotal'] / $item['banyak'];
-//   }
-//   return $harga;
-// }
-
-// function jumlah_subtotal($db, $transaksiId)
-// {
-//   $jumlah = 0;
-//   $res = mysqli_query($db, "SELECT * FROM transaksi WHERE no_faktur = '$transaksiId'");
-//   while ($item = mysqli_fetch_assoc($res)) {
-//     $jumlah += $item['subtotal'];
-//   }
-//   return $jumlah;
-// }
-
-// $harga = harga_saat_transaksi($db, $transaksiId);
-// $jumlah = jumlah_subtotal($db, $transaksiId);
+// ($_SESSION['cetak']['no'] = 2) ? $no =  $_SESSION['cetak']['no'] - 1 : $no =  $_SESSION['cetak']['no'] - 2;
 $i = 1;
+$subtotalSum = 0;
 while ($item = mysqli_fetch_assoc($res)) {
+  $subtotal = str_replace(['Rp. ', '.', ','], '', $item['subtotal']);
+  $jumlahTransaksi = (int) str_replace(['Rp. ', '.', ','], '', $item['subtotal']) + (int) convert_to_number($item['diskon']);
+  // $subtotalFormatted = number_format((int)$subtotal, 0, ',', '.');
+  $subtotalInt = (int) $subtotal; // Pastikan subtotal dalam format angka
+
+  // Jumlahkan subtotal ke subtotalSum
+  $subtotalSum += $subtotalInt;
+
+  $subtotalFormatted = number_format($subtotalInt, 2, ',', '.');
+  $jumlahTransaksiFormatted = number_format($jumlahTransaksi, 2, ',', '.');
+
   $pdf->Cell(15, 5, '' . $i, 1, 0, 'C');
   $pdf->Cell(80, 5, '' . $item['nama_barang'], 1, 0);
-  $pdf->Cell(30, 5, '' . $item['banyak'], 1, 0, 'C');
-  $hargaTransaksi = $item['subtotal'] / $item['banyak'];
-  $pdf->Cell(50, 5, 'Rp. ' . number_format($hargaTransaksi, 2, ',', '.'), 1, 0, 'R');
-  $pdf->Cell(50, 5, 'Rp. ' . number_format($item['subtotal'], 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
+  $hargaTransaksi = ($item['subtotal'] + $item['diskon']) / $item['banyak'];
+  $pdf->Cell(38, 5, 'Rp. ' . number_format(convert_to_number($hargaTransaksi), 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(15, 5, '' . $item['banyak'], 1, 0, 'C');
+  // $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($item['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
+  $pdf->Cell(38, 5,  'Rp. ' . number_format(convert_to_number($item['diskon']), 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(38, 5,  'Rp. ' . $subtotalFormatted, 1, 1, 'R');
   $i++;
 }
-
-
-
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, 'Tanda Terima', 0, 0, 'C');
 $pdf->Cell(60, 5, 'Hormat Kami', 0, 0, 'C');
 $pdf->Cell(25, 5, '', 0, 0, 'C');
-$pdf->Cell(30, 5, 'Subtotal', 0, 0);
+$pdf->Cell(30, 5, 'Jumlah', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($transaksi['total'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . $jumlahTransaksiFormatted, 0, 1, 'R');
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0, 'C');
 $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(30, 5, 'Potongan', 0, 0);
+$pdf->Cell(30, 5, 'Total Diskon', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($transaksi['diskon'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($transaksi['totalDiskon']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0);
 $pdf->Cell(60, 5, '', 0, 0, 'C');
@@ -122,7 +116,7 @@ $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Total', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($transaksi['total'] - $transaksi['diskon'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($transaksi['total']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0);
 $pdf->Cell(60, 5, '', 0, 0, 'C');
@@ -130,7 +124,7 @@ $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Bayar', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($transaksi['bayar'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($transaksi['bayar']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(60, 5, '(   ' . $transaksi['nama_pelanggan'] . '   )', 0, 0, 'C');
@@ -138,7 +132,7 @@ $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(60, 5, '(   Putra Subur Makmur   )', 0, 0, 'C');
 $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(30, 5, 'Sisa', 0, 0);
+$pdf->Cell(30, 5, 'Kembali', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format($transaksi['kembali'], 2, ',', '.'), 0, 1, 'R');
+$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($transaksi['kembali']), 2, ',', '.'), 0, 1, 'R');
 $pdf->Output();
