@@ -30,6 +30,12 @@ if (!isset($_SESSION["id_pengguna"]))
   <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
 
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <link rel="stylesheet" href="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.css">
+  <script src="../../dist/jquery/jquery-3.6.3.min.js"></script>
+  <script src="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.js"></script>
+
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="../../dist/jquery/moment.js"></script>
 </head>
 
 <?php
@@ -57,10 +63,26 @@ include_once "../layout/header.php"
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <!-- <h3 class="card-title">DataTable with default features</h3> -->
-              <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
-              <!-- Button trigger modal -->
-              <a href="<?= BASEURL ?>/pages/transaksi/transaksi.php" class="btn btn-primary" type="button">Tambah</a>
+              <div class="d-flex justify-content-between align-items-center">
+                <!-- Tombol Tambah -->
+                <a href="<?= BASEURL ?>/pages/transaksi/transaksi.php" class="btn btn-primary" type="button">Tambah</a>
+
+                <form method="GET" action="" class="form-inline">
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_awal" class="mr-2">Tanggal Awal:</label>
+                    <input type="date" name="filter_tanggal_awal" id="filter_tanggal_awal" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_awal']) ? $_GET['filter_tanggal_awal'] : '' ?>" required>
+                  </div>
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_akhir" class="mr-2">Tanggal Akhir:</label>
+                    <input type="date" name="filter_tanggal_akhir" id="filter_tanggal_akhir" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_akhir']) ? $_GET['filter_tanggal_akhir'] : '' ?>" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary filter">Filter</button>
+                </form>
+
+
+              </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -113,7 +135,7 @@ include_once "../layout/header.php"
 
 
 <!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- <script src="../../plugins/jquery/jquery.min.js"></script> -->
 <!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables  & Plugins -->
@@ -132,6 +154,7 @@ include_once "../layout/header.php"
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/dist/js/pages/js-hapus.js"></script>
 <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+<script src="<?= BASEURL ?>/dist/js/pages/js-rupiah.js"></script>
 
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
@@ -140,38 +163,104 @@ include_once "../layout/header.php"
 <script src="../../dist/js/demo.js"></script>
 <!-- Page specific script -->
 <script>
-$(function() {
-    $("#example1").DataTable({
-        "responsive": true,
-        processing: true,
-        serverSide: true,
-        "searching": true,
-        ajax: {
-            url: "getDaftarTransaksi.php", // Ensure this URL is correct
-            datatype: "json",
+  $(function() {
+    const table = $("#example1").DataTable({
+      responsive: true,
+      processing: true,
+      serverSide: true,
+      searching: true,
+      ajax: {
+        url: "getDaftarTransaksi.php",
+        type: "GET",
+        data: function(d) {
+          d.start_date = $("#filter_tanggal_awal").val(); // Tambahkan parameter tanggal awal
+          d.end_date = $("#filter_tanggal_akhir").val(); // Tambahkan parameter tanggal akhir
+          console.log(d.start_date);
         },
-        "pageLength": 10,  
-        "lengthMenu": [[10], [10]],
-        "columns": [
-            { "data": "no_faktur" },   // Column for no_faktur
-            { "data": "nama_pelanggan" },   // Column for no_faktur
-            { "data": "tanggal" },      // Column for tanggal
-            { "data": "jatuh_tempo" },  // Column for jatuh_tempo
-            { "data": "diskon" },       // Column for diskon
-            { "data": "total" },        // Column for total
-            { "data": "bayar" },        // Column for bayar
-            { "data": "kembali" },      // Column for kembali
-            { "data": "status" },       // Column for status
-            { "data": "actions" }       // Column for action buttons
-        ],
-        "order": [
-            [0, 'desc'] // Order by the first column (no_faktur)
-        ],
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json' // Indonesian language support
+      },
+      pageLength: 10,
+      lengthMenu: [
+        [10],
+        [10]
+      ],
+      columns: [{
+          data: "no_faktur"
         },
+        {
+          data: "nama_pelanggan"
+        },
+        {
+          data: "tanggal"
+        },
+        {
+          data: "jatuh_tempo"
+        },
+        {
+          data: "diskon"
+        },
+        {
+          data: "total"
+        },
+        {
+          data: "bayar"
+        },
+        {
+          data: "kembali"
+        },
+        {
+          data: "status"
+        },
+        {
+          data: "actions"
+        },
+      ],
+      order: [
+        [2, "desc"]
+      ], // Order by tanggal
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json",
+      },
     });
+
+    // Event filter
+    $("#filter_date").on("click", function() {
+      table.ajax.reload(); // Reload table data sesuai filter
+    });
+  });
+
+  $("input[type=date]").on('click', function() {
+    return false;
+  });
+  $(document).on('click', '.filter', function(e) {
+  // Ambil nilai dari input tanggal
+  var tanggal_awal = $('#filter_tanggal_awal').val();
+  var tanggal_akhir = $('#filter_tanggal_akhir').val();
+
+  // Cek apakah kedua tanggal sudah diisi
+  if (!tanggal_awal || !tanggal_akhir) {
+    // Jika salah satu atau kedua tanggal tidak diisi, tampilkan SweetAlert
+    e.preventDefault(); // Mencegah form untuk disubmit
+    Swal.fire({
+      icon: 'error',
+      title: 'Peringatan!',
+      text: 'Kedua tanggal harus diisi!',
+    });
+  }
 });
+
+  $(document).ready(function() {
+
+    var today = moment().format('YYYY-MM-DD');
+
+    $(document).ready(function() {
+      // Inisialisasi datepicker untuk tanggal awal dan tanggal akhir
+      $('#filter_tanggal_awal, #filter_tanggal_akhir').datepicker({
+        dateFormat: 'yy-mm-dd', // Format tanggal
+        changeYear: true, // Menampilkan pemilih tahun
+        changeMonth: true,
+      });
+    });
+  })
 </script>
 
 </body>
