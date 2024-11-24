@@ -67,12 +67,27 @@ include_once "../layout/header.php"
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <!-- <h3 class="card-title">DataTable with default features</h3> -->
-              <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
-              <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                Tambah
-              </button>
+              <div class="d-flex justify-content-between align-items-center">
+                <!-- Tombol Tambah -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                  Tambah
+                </button>
+                <form method="GET" action="" class="form-inline">
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_awal" class="mr-2">Tanggal Awal:</label>
+                    <input type="date" name="filter_tanggal_awal" id="filter_tanggal_awal" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_awal']) ? $_GET['filter_tanggal_awal'] : '' ?>" required>
+                  </div>
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_akhir" class="mr-2">Tanggal Akhir:</label>
+                    <input type="date" name="filter_tanggal_akhir" id="filter_tanggal_akhir" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_akhir']) ? $_GET['filter_tanggal_akhir'] : '' ?>" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary filter">Filter</button>
+                </form>
+
+
+              </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -88,7 +103,11 @@ include_once "../layout/header.php"
                 </thead>
                 <tbody>
                   <?php
-                  $data = getAllPrive();
+
+                  $filter_tanggal_awal = isset($_GET['filter_tanggal_awal']) ? $_GET['filter_tanggal_awal'] : '';
+                  $filter_tanggal_akhir = isset($_GET['filter_tanggal_akhir']) ? $_GET['filter_tanggal_akhir'] : '';
+
+                  $data = getAllPrive($filter_tanggal_awal, $filter_tanggal_akhir);
                   foreach ($data as $item) {
                   ?>
                     <tr>
@@ -292,6 +311,15 @@ include_once "../layout/header.php"
       $(this).datepicker({
         dateFormat: 'yy-mm-dd',
         changeYear: true
+      });
+    });
+
+    $(document).ready(function() {
+      // Inisialisasi datepicker untuk tanggal awal dan tanggal akhir
+      $('#filter_tanggal_awal, #filter_tanggal_akhir').datepicker({
+        dateFormat: 'yy-mm-dd', // Format tanggal
+        changeYear: true, // Menampilkan pemilih tahun
+        changeMonth: true,
       });
     });
 

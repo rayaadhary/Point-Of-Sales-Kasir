@@ -267,25 +267,66 @@ function getAllBeban($filter_tanggal_awal = '', $filter_tanggal_akhir = '')
 
 
 
-function getAllPrive()
+
+function getAllPrive($filter_tanggal_awal = '', $filter_tanggal_akhir = '')
 {
-  $db = dbConnect();
-  $res = mysqli_query($db, "SELECT * FROM prive ORDER BY tanggal DESC");
-  $data = $res->fetch_all(MYSQLI_ASSOC);
-  $res->free();
-  $db->close();
-  return $data;
+    // Menghubungkan ke database
+    $db = dbConnect();
+    
+    // Jika ada filter tanggal
+    if ($filter_tanggal_awal && $filter_tanggal_akhir) {
+        // Query untuk rentang tanggal
+        $query = "SELECT * FROM prive WHERE tanggal BETWEEN ? AND ? ORDER BY tanggal DESC";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("ss", $filter_tanggal_awal, $filter_tanggal_akhir);
+    } else {
+        // Query tanpa filter tanggal, membatasi hasil menjadi 50
+        $query = "SELECT * FROM prive ORDER BY tanggal DESC LIMIT 50";
+        $stmt = $db->prepare($query);
+    }
+
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    
+    $stmt->free_result();
+    $stmt->close();
+    $db->close();
+
+    return $data;
 }
 
-function getAllModal()
+
+function getAllModal($filter_tanggal_awal = '', $filter_tanggal_akhir = '')
 {
-  $db = dbConnect();
-  $res = mysqli_query($db, "SELECT * FROM modal ORDER BY tanggal_modal DESC");
-  $data = $res->fetch_all(MYSQLI_ASSOC);
-  $res->free();
-  $db->close();
-  return $data;
+    // Menghubungkan ke database
+    $db = dbConnect();
+    
+    // Jika ada filter tanggal
+    if ($filter_tanggal_awal && $filter_tanggal_akhir) {
+        // Query untuk rentang tanggal
+        $query = "SELECT * FROM modal WHERE tanggal_modal BETWEEN ? AND ? ORDER BY tanggal_modal DESC";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("ss", $filter_tanggal_awal, $filter_tanggal_akhir);
+    } else {
+        // Query tanpa filter tanggal, membatasi hasil menjadi 50
+        $query = "SELECT * FROM modal ORDER BY tanggal_modal DESC LIMIT 50";
+        $stmt = $db->prepare($query);
+    }
+
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    
+    $stmt->free_result();
+    $stmt->close();
+    $db->close();
+
+    return $data;
 }
+
 
 function getAllSupplier()
 {
