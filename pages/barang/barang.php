@@ -25,7 +25,15 @@ if (!isset($_SESSION["id_pengguna"]))
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= BASEURL ?>/dist/css/adminlte.min.css">
   <!-- Sweetalert 2 -->
+  <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <link rel="stylesheet" href="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.css">
+  <script src="../../dist/jquery/jquery-3.6.3.min.js"></script>
+  <script src="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.js"></script>
+
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="../../dist/jquery/moment.js"></script>
 </head>
 
 <?php
@@ -53,15 +61,29 @@ include_once "../layout/header.php"
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <!-- <h3 class="card-title">DataTable with default features</h3> -->
-              <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
-              <!-- Button trigger modal -->
-              <?php if ($_SESSION['role'] == 'pemilik') { ?>
+              <div class="d-flex justify-content-between align-items-center">
+                <!-- Tombol Tambah -->
+                <?php if ($_SESSION['role'] == 'pemilik') { ?>
                 <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="btn btn-primary" type="button">Tambah</a>
               <?php } ?>
+                <form method="GET" action="" class="form-inline">
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_awal" class="mr-2">Tanggal Awal:</label>
+                    <input type="date" name="filter_tanggal_awal" id="filter_tanggal_awal" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_awal']) ? $_GET['filter_tanggal_awal'] : '' ?>" required>
+                  </div>
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_akhir" class="mr-2">Tanggal Akhir:</label>
+                    <input type="date" name="filter_tanggal_akhir" id="filter_tanggal_akhir" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_akhir']) ? $_GET['filter_tanggal_akhir'] : '' ?>" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary filter">Filter</button>
+                </form>
+
+
+              </div>
             </div>
             <!-- /.card-header -->
-            <div class="card-body">
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
@@ -122,7 +144,6 @@ include_once "../layout/header.php"
                     </form>
                   </div>
                 </div>
-              </div>
             </div>
 
             <!-- /.card-body -->
@@ -155,10 +176,6 @@ include_once "../layout/header.php"
 
 <!-- Modal Tambah Data -->
 
-
-<!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables  & Plugins -->
 <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
@@ -175,11 +192,10 @@ include_once "../layout/header.php"
 <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/dist/js/pages/js-hapus.js"></script>
-<script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
-
 <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+<script src="<?= BASEURL ?>/dist/js/pages/js-rupiah.js"></script>
 
-<!-- SweetAlert2 -->
+<script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
@@ -194,7 +210,11 @@ include_once "../layout/header.php"
       searching: true,
       ajax: {
         url: "getDaftarBarang.php",
-        datatype: "json",
+        type: "GET",
+        data: function(d) {
+          d.start_date = $("#filter_tanggal_awal").val(); // Tambahkan parameter tanggal awal
+          d.end_date = $("#filter_tanggal_akhir").val(); // Tambahkan parameter tanggal akhir
+        },
       },
       pageLength: 10,
       lengthMenu: [
@@ -296,6 +316,24 @@ include_once "../layout/header.php"
             window.location.href = deleteUrl;
         }
     });
+});
+
+$("input[type=date]").on('click', function() {
+    return false;
+  });
+
+$(document).ready(function() {
+
+var today = moment().format('YYYY-MM-DD');
+
+$(document).ready(function() {
+  // Inisialisasi datepicker untuk tanggal awal dan tanggal akhir
+  $('#filter_tanggal_awal, #filter_tanggal_akhir').datepicker({
+    dateFormat: 'yy-mm-dd', // Format tanggal
+    changeYear: true, // Menampilkan pemilih tahun
+    changeMonth: true,
+  });
+});
 });
 
 </script>

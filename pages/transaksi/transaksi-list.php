@@ -175,7 +175,6 @@ include_once "../layout/header.php"
         data: function(d) {
           d.start_date = $("#filter_tanggal_awal").val(); // Tambahkan parameter tanggal awal
           d.end_date = $("#filter_tanggal_akhir").val(); // Tambahkan parameter tanggal akhir
-          console.log(d.start_date);
         },
       },
       pageLength: 10,

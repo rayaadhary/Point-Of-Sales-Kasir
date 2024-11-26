@@ -67,6 +67,14 @@ function getFilteredRecords($sql_details, $query, $request, $maxRecords) {
     // Base query for total filtered records
     $baseQuery = $query;
 
+    $tanggalAwal = $request['start_date'];
+    $tanggalAkhir = $request['end_date'];
+
+    if (!empty($tanggalAwal) && !empty($tanggalAkhir)) {
+        $baseQuery .= " WHERE t.tanggal BETWEEN '$tanggalAwal' AND '$tanggalAkhir'";
+    }
+
+
     // Example: Searching functionality (optional)
     $searchValue = $request['search']['value'];
     if (!empty($searchValue)) {

@@ -53,26 +53,37 @@ $data = [
 echo json_encode($data);
 
 // Function to get total records without filtering
-function getTotalRecords($sql_details, $query) {
+function getTotalRecords($sql_details, $query)
+{
     $conn = new PDO("mysql:host={$sql_details['host']};dbname={$sql_details['db']}", $sql_details['user'], $sql_details['pass']);
     $stmt = $conn->query("SELECT COUNT(*) FROM ({$query}) AS total");
     return $stmt->fetchColumn();
 }
 
 // Function to get filtered records
-function getFilteredRecords($sql_details, $query, $request, $maxRecords) {
+function getFilteredRecords($sql_details, $query, $request, $maxRecords)
+{
     $conn = new PDO("mysql:host={$sql_details['host']};dbname={$sql_details['db']}", $sql_details['user'], $sql_details['pass']);
-    
+
     // Base query for total filtered records
     $baseQuery = $query;
 
+    $baseQuery .= " WHERE (barang.status_enable IS NULL OR barang.status_enable = 'true')
+    AND (barang_masuk.status_enable IS NULL OR barang_masuk.status_enable = 'true')";
+
+    $tanggalAwal = $request['start_date'];
+    $tanggalAkhir = $request['end_date'];
+
+    if (!empty($tanggalAwal) && !empty($tanggalAkhir)) {
+        $baseQuery .= " AND barang_masuk.tanggal_beli BETWEEN '$tanggalAwal' AND '$tanggalAkhir'";
+    }
+
     // Searching functionality
     $searchValue = $request['search']['value'];
-        $baseQuery .= "WHERE (barang.status_enable IS NULL OR barang.status_enable = 'true')
-  AND (barang_masuk.status_enable IS NULL OR barang_masuk.status_enable = 'true')";
     if (!empty($searchValue)) {
-        $baseQuery .= " WHERE barang.nama_barang LIKE :search OR supplier.nama_supplier LIKE :search";
+        $baseQuery .= " AND (barang.nama_barang LIKE :search OR supplier.nama_supplier LIKE :search)";
     }
+
 
     // Get total filtered records
     $stmt = $conn->prepare($baseQuery);
@@ -85,7 +96,7 @@ function getFilteredRecords($sql_details, $query, $request, $maxRecords) {
     // Paginate the results
     $start = intval($request['start']);
     $length = intval($request['length']);
-    
+
     // Adjust pagination to fit within maxRecords
     if ($recordsFiltered > $maxRecords) {
         $length = min($length, $maxRecords - $start);
@@ -108,7 +119,8 @@ function getFilteredRecords($sql_details, $query, $request, $maxRecords) {
 }
 
 // Function to format data for the DataTable
-function formatData($data) {
+function formatData($data)
+{
     foreach ($data as &$row) {
         $row = [
             'id_barang' => $row['id_barang'],
@@ -123,4 +135,3 @@ function formatData($data) {
     }
     return $data;
 }
-?>

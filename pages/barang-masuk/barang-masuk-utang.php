@@ -15,8 +15,8 @@ if (!isset($_SESSION["id_pengguna"]))
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Putra Subur Makmur</title>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+ <!-- Google Font: Source Sans Pro -->
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/fontawesome-free/css/all.min.css">
   <!-- DataTables -->
@@ -26,7 +26,15 @@ if (!isset($_SESSION["id_pengguna"]))
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= BASEURL ?>/dist/css/adminlte.min.css">
   <!-- Sweetalert 2 -->
+  <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
+
   <link rel="stylesheet" href="<?= BASEURL ?>/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <link rel="stylesheet" href="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.css">
+  <script src="../../dist/jquery/jquery-3.6.3.min.js"></script>
+  <script src="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.js"></script>
+
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="../../dist/jquery/moment.js"></script>
 </head>
 
 <?php
@@ -54,10 +62,25 @@ include_once "../layout/header.php"
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <!-- <h3 class="card-title">DataTable with default features</h3> -->
-              <!-- <a href="barang-tambah.php"><button type="button" class="btn btn-primary rounded">Tambah</button></a> -->
-              <!-- Button trigger modal -->
-              <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="btn btn-primary">Tambah</a>
+              <div class="d-flex justify-content-between align-items-center">
+                <!-- Tombol Tambah -->
+                <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="btn btn-primary">Tambah</a>
+                <form method="GET" action="" class="form-inline">
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_awal" class="mr-2">Tanggal Awal:</label>
+                    <input type="date" name="filter_tanggal_awal" id="filter_tanggal_awal" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_awal']) ? $_GET['filter_tanggal_awal'] : '' ?>" required>
+                  </div>
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_akhir" class="mr-2">Tanggal Akhir:</label>
+                    <input type="date" name="filter_tanggal_akhir" id="filter_tanggal_akhir" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_akhir']) ? $_GET['filter_tanggal_akhir'] : '' ?>" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary filter">Filter</button>
+                </form>
+
+
+              </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -76,7 +99,10 @@ include_once "../layout/header.php"
                 </thead>
                 <tbody>
                   <?php
-                  $data = getAllBarangMasukUtang();
+                 $filter_tanggal_awal = isset($_GET['filter_tanggal_awal']) ? $_GET['filter_tanggal_awal'] : '';
+                 $filter_tanggal_akhir = isset($_GET['filter_tanggal_akhir']) ? $_GET['filter_tanggal_akhir'] : '';
+
+                 $data = getAllBarangMasukUtang($filter_tanggal_awal, $filter_tanggal_akhir);
                   foreach ($data as $item) {
                   ?>
                     <tr>
@@ -171,12 +197,6 @@ include_once "../layout/header.php"
 </div>
 <!-- ./wrapper -->
 
-
-
-
-<!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables  & Plugins -->
 <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
@@ -193,11 +213,9 @@ include_once "../layout/header.php"
 <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- Sweetalert -->
 <script src="<?= BASEURL ?>/dist/js/pages/js-hapus.js"></script>
-
 <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
 <script src="<?= BASEURL ?>/dist/js/pages/js-rupiah.js"></script>
 
-<!-- SweetAlert2 -->
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
@@ -205,6 +223,25 @@ include_once "../layout/header.php"
 <script src="../../dist/js/demo.js"></script>
 <!-- Page specific script -->
 <script>
+  
+$("input[type=date]").on('click', function() {
+    return false;
+  });
+
+$(document).ready(function() {
+
+var today = moment().format('YYYY-MM-DD');
+
+$(document).ready(function() {
+  // Inisialisasi datepicker untuk tanggal awal dan tanggal akhir
+  $('#filter_tanggal_awal, #filter_tanggal_akhir').datepicker({
+    dateFormat: 'yy-mm-dd', // Format tanggal
+    changeYear: true, // Menampilkan pemilih tahun
+    changeMonth: true,
+  });
+});
+});
+
   $(function() {
     $("#example1").DataTable({
       "responsive": true,

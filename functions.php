@@ -504,14 +504,48 @@ function getAllBarangMasuk()
   return $data;
 }
 
-function getAllBarangMasukUtang()
+
+function getAllBarangMasukUtang($filter_tanggal_awal = '', $filter_tanggal_akhir = '')
 {
-  $db = dbConnect();
-  $res = $db->query("SELECT * FROM barang_masuk, barang, supplier WHERE barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier AND status = 'utang' GROUP BY barang_masuk.id_barang_masuk, barang_masuk.no_barang_masuk, barang.id_barang, supplier.id_supplier");
-  $data = $res->fetch_all(MYSQLI_ASSOC);
-  $res->free();
-  $db->close();
-  return $data;
+    // Menghubungkan ke database
+    $db = dbConnect();
+    
+    // Jika ada filter tanggal
+    if ($filter_tanggal_awal && $filter_tanggal_akhir) {
+        // Query untuk rentang tanggal
+        $query = "SELECT 
+            * 
+        FROM 
+            barang_masuk
+        JOIN 
+            barang ON barang.id_barang = barang_masuk.id_barang
+        JOIN 
+            supplier ON supplier.id_supplier = barang_masuk.id_supplier
+        WHERE 
+            status = 'utang' 
+            AND barang_masuk.tanggal_beli BETWEEN ? AND ? 
+        GROUP BY 
+            barang_masuk.id_barang_masuk, barang_masuk.no_barang_masuk, barang.id_barang, supplier.id_supplier 
+        ORDER BY 
+            barang_masuk.tanggal_beli DESC";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("ss", $filter_tanggal_awal, $filter_tanggal_akhir);
+    } else {
+        // Query tanpa filter tanggal, membatasi hasil menjadi 50
+        $query = "SELECT * FROM barang_masuk, barang, supplier WHERE barang.id_barang = barang_masuk.id_barang AND supplier.id_supplier = barang_masuk.id_supplier AND status = 'utang' GROUP BY barang_masuk.id_barang_masuk, barang_masuk.no_barang_masuk, barang.id_barang, supplier.id_supplier ORDER BY barang_masuk.tanggal_beli DESC LIMIT 50";
+        $stmt = $db->prepare($query);
+    }
+
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    
+    $stmt->free_result();
+    $stmt->close();
+    $db->close();
+
+    return $data;
 }
 
 function getGroupBarang()
