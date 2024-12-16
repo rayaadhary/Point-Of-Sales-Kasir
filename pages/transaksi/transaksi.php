@@ -602,6 +602,7 @@ include_once "../layout/header.php"
       var harga_beli = convertToAngka($('#harga_beli').val());
       var total = convertToAngka($('#stotal').val());
       var totalSelisih = convertToAngka($('#totalSelisih').val());
+      diskon =banyak*diskon;
       var subtotal = (harga * banyak) - diskon;
 
       // Update total
