@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASEURL', 'http://localhost/Point-Of-Sales-Kasir');
+define('BASEURL', 'http://point-of-sales-kasir.test/');
 
 const DB_USER = 'root';
 const DB_PASS = '';
@@ -382,6 +382,215 @@ AS unique_total_transaksi");
   $db->close();
   return $data['totalTransaksi'];
 }
+function getTotalTransaksiTanggal($bulan)
+{
+
+    list($tahun, $bulan) = explode('-', $bulan);
+    // Get database connection
+    $db = dbConnect();
+
+    $query = "SELECT SUM(totalTransaksi) as totalTransaksi 
+              FROM (
+                  SELECT DISTINCT no_faktur, total AS totalTransaksi 
+                  FROM transaksi 
+                  WHERE YEAR(tanggal) = ? AND MONTH(tanggal) = ?
+                  GROUP BY no_faktur, id_transaksi
+              ) AS unique_total_transaksi";
+
+    // Prepare the statement
+    if ($stmt = $db->prepare($query)) {
+        $stmt->bind_param("ii", $tahun, $bulan);
+
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        if (!$data) {
+            throw new Exception("No results found for the given year and month.");
+        }
+
+        $result->free();
+        $stmt->close();
+    } else {
+        throw new Exception("Query preparation failed: " . $db->error);
+    }
+
+    // Close the database connection
+    $db->close();
+
+    // Return the total or 0 if no result or it's NULL
+    return $data['totalTransaksi'] ?? 0;
+}
+function getTotalTransaksiComparison($bulan = '0')
+{
+    // Jika bulan tidak diisi, set nilai default
+    if (!$bulan || $bulan === '0') {
+        return [
+            'currentTotal' => 0,
+            'lastMonthTotal' => 0,
+            'changePercentage' => 0,
+            'direction' => 'same', // Default arah "same" jika tidak ada perubahan
+        ];
+    }
+
+    // Memecah bulan dan tahun
+    list($tahun, $bulan) = explode('-', $bulan);
+
+    // Koneksi ke database
+    $db = dbConnect();
+
+    // Query untuk transaksi bulan saat ini
+    $query = "SELECT SUM(totalTransaksi) as totalTransaksi 
+              FROM (
+                  SELECT DISTINCT no_faktur, total AS totalTransaksi 
+                  FROM transaksi 
+                  WHERE YEAR(tanggal) = ? AND MONTH(tanggal) = ?
+              ) AS unique_total_transaksi";
+
+    // Persiapkan statement untuk bulan saat ini
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahun, $bulan);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $currentData = $result->fetch_assoc();
+    $currentTotal = $currentData['totalTransaksi'] ?? 0;
+
+    $stmt->close();
+
+    // Hitung bulan sebelumnya
+    $bulanSebelumnya = $bulan - 1;
+    $tahunSebelumnya = $tahun;
+
+    // Jika bulan sebelumnya kurang dari 1, mundur ke tahun sebelumnya
+    if ($bulanSebelumnya < 1) {
+        $bulanSebelumnya = 12;
+        $tahunSebelumnya--;
+    }
+
+    // Persiapkan statement untuk bulan sebelumnya
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahunSebelumnya, $bulanSebelumnya);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $lastMonthData = $result->fetch_assoc();
+    $lastMonthTotal = $lastMonthData['totalTransaksi'] ?? 0;
+
+    $stmt->close();
+    $db->close();
+
+    // Hitung persentase perubahan
+    if ($lastMonthTotal > 0) {
+        $changePercentage = (($currentTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
+    }else if($lastMonthTotal == $currentTotal){
+      $changePercentage = 0; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    } 
+    else {
+        $changePercentage = 100; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+
+    // Tentukan arah perubahan
+    $direction = 'same';
+    if ($currentTotal > $lastMonthTotal) {
+        $direction = 'up';
+    } elseif ($currentTotal < $lastMonthTotal) {
+        $direction = 'down';
+    }
+
+    // Kembalikan hasil
+    return [
+        'currentTotal' => $currentTotal,
+        'lastMonthTotal' => $lastMonthTotal,
+        'changePercentage' => $changePercentage,
+        'direction' => $direction,
+    ];
+}
+
+
+function getTotalBarangMasukComparison($bulan = '0')
+{
+    // Jika bulan tidak diisi, set nilai default
+    if (!$bulan || $bulan === '0') {
+        return [
+            'currentTotal' => 0,
+            'lastMonthTotal' => 0,
+            'changePercentage' => 0,
+            'direction' => 'same', // Default arah "same" jika tidak ada perubahan
+        ];
+    }
+
+    // Memecah bulan dan tahun
+    list($tahun, $bulan) = explode('-', $bulan);
+
+    // Koneksi ke database
+    $db = dbConnect();
+
+    // Query untuk transaksi bulan saat ini
+    $query = "SELECT SUM(total) AS totalBarangMasuk
+FROM (
+    SELECT DISTINCT no_barang_masuk, total
+    FROM barang_masuk
+                  WHERE YEAR(tanggal_beli) = ? AND MONTH(tanggal_beli) = ?
+              ) AS unique_barangMasuk";
+
+    // Persiapkan statement untuk bulan saat ini
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahun, $bulan);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $currentData = $result->fetch_assoc();
+    $currentTotal = $currentData['totalBarangMasuk'] ?? 0;
+
+    $stmt->close();
+
+    // Hitung bulan sebelumnya
+    $bulanSebelumnya = $bulan - 1;
+    $tahunSebelumnya = $tahun;
+
+    // Jika bulan sebelumnya kurang dari 1, mundur ke tahun sebelumnya
+    if ($bulanSebelumnya < 1) {
+        $bulanSebelumnya = 12;
+        $tahunSebelumnya--;
+    }
+
+    // Persiapkan statement untuk bulan sebelumnya
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahunSebelumnya, $bulanSebelumnya);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $lastMonthData = $result->fetch_assoc();
+    $lastMonthTotal = $lastMonthData['totalBarangMasuk'] ?? 0;
+
+    $stmt->close();
+    $db->close();
+
+    // Hitung persentase perubahan
+    if ($lastMonthTotal > 0) {
+        $changePercentage = (($currentTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
+    }
+    else if($lastMonthTotal == $currentTotal){
+      $changePercentage = 0; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+    else {
+        $changePercentage = 100; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+
+    // Tentukan arah perubahan
+    $direction = 'same';
+    if ($currentTotal > $lastMonthTotal) {
+        $direction = 'up';
+    } elseif ($currentTotal < $lastMonthTotal) {
+        $direction = 'down';
+    }
+
+    // Kembalikan hasil
+    return [
+        'currentTotal' => $currentTotal,
+        'lastMonthTotal' => $lastMonthTotal,
+        'changePercentage' => $changePercentage,
+        'direction' => $direction,
+    ];
+}
+
 
 function getTotalBarangMasuk()
 {
@@ -396,6 +605,537 @@ FROM (
   $res->free();
   $db->close();
   return $data['totalBarangMasuk'];
+}
+
+function getKeuntunganPerBulanSetahun($tahun) {
+
+
+    // Loop untuk setiap bulan dalam setahun
+    for ($bulan = 1; $bulan <= 12; $bulan++) {
+        // Format bulan menjadi dua digit
+        $bulanFormatted = str_pad($bulan, 2, '0', STR_PAD_LEFT);
+        $tanggal = "{$tahun}-{$bulanFormatted}";
+
+        // Dapatkan data untuk setiap komponen
+        $dataTypes = [
+            'transaksi' => getTotalTransaksiTanggal($tanggal),
+            'barangMasuk' => getTotalBarangMasukTanggal($tahun,$bulan),
+            'beban' => getTotalBebanTanggal($tahun,$bulan),
+            'modal' => getTotalModalTanggal($tahun,$bulan),
+            'prive' => getTotalPriveTanggal($tahun,$bulan)
+        ];
+
+        // Hitung keuntungan
+        $keuntungan = 
+            $dataTypes['transaksi'] - 
+            $dataTypes['barangMasuk'] - 
+            $dataTypes['beban'] - 
+            ($dataTypes['prive'] + $dataTypes['modal']);
+
+        if($tahun == ''){
+          $keuntunganPerBulan = [];
+        } else {
+        // Simpan dalam array dengan nama bulan
+        $keuntunganPerBulan[] = [
+            'bulan' => date('F', mktime(0, 0, 0, $bulan, 10)),
+            'keuntungan' => $keuntungan
+        ];
+      }
+
+   
+        
+    }
+
+    return $keuntunganPerBulan;
+}
+
+function getTotalBarangMasukTanggal($tahun = null, $bulan = null)
+{
+  $db = dbConnect();
+  $query = "SELECT SUM(totalBarangMasuk) AS totalBarangMasuk
+            FROM (
+              SELECT DISTINCT no_barang_masuk, total AS totalBarangMasuk 
+              FROM barang_masuk 
+              WHERE 1=1";
+
+  if ($tahun) {
+    $query .= " AND YEAR(tanggal_beli) = '$tahun'";
+  }
+  if ($bulan) {
+    $query .= " AND MONTH(tanggal_beli) = '$bulan'";
+  }
+
+  $query .= ") AS unique_barangMasuk";
+
+  $res = $db->query($query);
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalBarangMasuk'];
+}
+
+
+function getTotalBebanTanggal($tahun = null, $bulan = null)
+{
+  $db = dbConnect();
+  $query = "SELECT SUM(totalBeban) AS totalBeban
+            FROM (
+              SELECT DISTINCT id_beban, SUM(biaya) AS totalBeban 
+              FROM beban 
+              WHERE 1=1";
+
+  if ($tahun) {
+    $query .= " AND YEAR(tanggal) = '$tahun'";
+  }
+  if ($bulan) {
+    $query .= " AND MONTH(tanggal) = '$bulan'";
+  }
+
+  $query .= " GROUP BY id_beban
+            ) AS unique_beban";
+
+  $res = $db->query($query);
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalBeban'];
+}
+
+
+
+function getTotalBebanComparison($bulan = '0')
+{
+    // Jika bulan tidak diisi, set nilai default
+    if (!$bulan || $bulan === '0') {
+        return [
+            'currentTotal' => 0,
+            'lastMonthTotal' => 0,
+            'changePercentage' => 0,
+            'direction' => 'same', // Default arah "same" jika tidak ada perubahan
+        ];
+    }
+
+    // Memecah bulan dan tahun
+    list($tahun, $bulan) = explode('-', $bulan);
+
+    // Koneksi ke database
+    $db = dbConnect();
+
+    // Query untuk transaksi bulan saat ini
+    $query = "SELECT SUM(totalBeban) AS totalBeban
+FROM (
+   SELECT DISTINCT id_beban, SUM(biaya) AS totalBeban 
+    FROM beban
+                  WHERE YEAR(tanggal) = ? AND MONTH(tanggal) = ?
+              ";
+
+$query .= "GROUP BY id_beban
+) AS unique_beban";
+
+    // Persiapkan statement untuk bulan saat ini
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahun, $bulan);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $currentData = $result->fetch_assoc();
+    $currentTotal = $currentData['totalBeban'] ?? 0;
+
+    $stmt->close();
+
+    // Hitung bulan sebelumnya
+    $bulanSebelumnya = $bulan - 1;
+    $tahunSebelumnya = $tahun;
+
+    // Jika bulan sebelumnya kurang dari 1, mundur ke tahun sebelumnya
+    if ($bulanSebelumnya < 1) {
+        $bulanSebelumnya = 12;
+        $tahunSebelumnya--;
+    }
+
+    // Persiapkan statement untuk bulan sebelumnya
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahunSebelumnya, $bulanSebelumnya);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $lastMonthData = $result->fetch_assoc();
+    $lastMonthTotal = $lastMonthData['totalBeban'] ?? 0;
+
+    $stmt->close();
+    $db->close();
+
+    // Hitung persentase perubahan
+    if ($lastMonthTotal > 0) {
+        $changePercentage = (($currentTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
+    }
+    else if($lastMonthTotal == $currentTotal){
+      $changePercentage = 0; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+    else {
+        $changePercentage = 100; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+
+    // Tentukan arah perubahan
+    $direction = 'same';
+    if ($currentTotal > $lastMonthTotal) {
+        $direction = 'up';
+    } elseif ($currentTotal < $lastMonthTotal) {
+        $direction = 'down';
+    }
+
+    // Kembalikan hasil
+    return [
+        'currentTotal' => $currentTotal,
+        'lastMonthTotal' => $lastMonthTotal,
+        'changePercentage' => $changePercentage,
+        'direction' => $direction,
+    ];
+}
+
+
+
+function getTotalPriveComparison($bulan = '0')
+{
+    // Jika bulan tidak diisi, set nilai default
+    if (!$bulan || $bulan === '0') {
+        return [
+            'currentTotal' => 0,
+            'lastMonthTotal' => 0,
+            'changePercentage' => 0,
+            'direction' => 'same', // Default arah "same" jika tidak ada perubahan
+        ];
+    }
+
+    // Memecah bulan dan tahun
+    list($tahun, $bulan) = explode('-', $bulan);
+
+    // Koneksi ke database
+    $db = dbConnect();
+
+    // Query untuk transaksi bulan saat ini
+    $query = "SELECT SUM(totalPrive) AS totalPrive
+FROM (
+   SELECT DISTINCT id_prive, SUM(biaya) AS totalPrive 
+    FROM prive
+                  WHERE YEAR(tanggal) = ? AND MONTH(tanggal) = ?";
+
+    $query .= " GROUP BY id_prive
+    ) AS unique_prive";
+
+    // Persiapkan statement untuk bulan saat ini
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahun, $bulan);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $currentData = $result->fetch_assoc();
+    $currentTotal = $currentData['totalPrive'] ?? 0;
+
+    $stmt->close();
+
+    // Hitung bulan sebelumnya
+    $bulanSebelumnya = $bulan - 1;
+    $tahunSebelumnya = $tahun;
+
+    // Jika bulan sebelumnya kurang dari 1, mundur ke tahun sebelumnya
+    if ($bulanSebelumnya < 1) {
+        $bulanSebelumnya = 12;
+        $tahunSebelumnya--;
+    }
+
+    // Persiapkan statement untuk bulan sebelumnya
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahunSebelumnya, $bulanSebelumnya);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $lastMonthData = $result->fetch_assoc();
+    $lastMonthTotal = $lastMonthData['totalPrive'] ?? 0;
+
+    $stmt->close();
+    $db->close();
+
+    // Hitung persentase perubahan
+    if ($lastMonthTotal > 0) {
+        $changePercentage = (($currentTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
+    }
+    else if($lastMonthTotal == $currentTotal){
+      $changePercentage = 0; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+    else {
+        $changePercentage = 100; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+
+    // Tentukan arah perubahan
+    $direction = 'same';
+    if ($currentTotal > $lastMonthTotal) {
+        $direction = 'up';
+    } elseif ($currentTotal < $lastMonthTotal) {
+        $direction = 'down';
+    }
+
+    // Kembalikan hasil
+    return [
+        'currentTotal' => $currentTotal,
+        'lastMonthTotal' => $lastMonthTotal,
+        'changePercentage' => $changePercentage,
+        'direction' => $direction,
+    ];
+}
+
+function getTotalSelisihComparison($bulan = '0')
+{
+    // Jika bulan tidak diisi, set nilai default
+    if (!$bulan || $bulan === '0') {
+        return [
+            'currentTotal' => 0,
+            'lastMonthTotal' => 0,
+            'changePercentage' => 0,
+            'direction' => 'same', // Default arah "same" jika tidak ada perubahan
+        ];
+    }
+
+    // Memecah bulan dan tahun
+    list($tahun, $bulan) = explode('-', $bulan);
+
+    // Koneksi ke database
+    $db = dbConnect();
+
+    // Query untuk transaksi bulan saat ini
+    $query = "SELECT SUM(totalSelisih) AS totalSelisih
+            FROM (
+              SELECT DISTINCT no_faktur, totalSelisih 
+              FROM transaksi 
+                  WHERE YEAR(tanggal) = ? AND MONTH(tanggal) = ?
+              ) AS unique_selisih";
+
+    // Persiapkan statement untuk bulan saat ini
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahun, $bulan);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $currentData = $result->fetch_assoc();
+    $currentTotal = $currentData['totalSelisih'] ?? 0;
+
+    $stmt->close();
+
+    // Hitung bulan sebelumnya
+    $bulanSebelumnya = $bulan - 1;
+    $tahunSebelumnya = $tahun;
+
+    // Jika bulan sebelumnya kurang dari 1, mundur ke tahun sebelumnya
+    if ($bulanSebelumnya < 1) {
+        $bulanSebelumnya = 12;
+        $tahunSebelumnya--;
+    }
+
+    // Persiapkan statement untuk bulan sebelumnya
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahunSebelumnya, $bulanSebelumnya);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $lastMonthData = $result->fetch_assoc();
+    $lastMonthTotal = $lastMonthData['totalSelisih'] ?? 0;
+
+    $stmt->close();
+    $db->close();
+
+    // Hitung persentase perubahan
+    if ($lastMonthTotal > 0) {
+        $changePercentage = (($currentTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
+    }
+    else if($lastMonthTotal == $currentTotal){
+      $changePercentage = 0; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+    else {
+        $changePercentage = 100; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+
+    // Tentukan arah perubahan
+    $direction = 'same';
+    if ($currentTotal > $lastMonthTotal) {
+        $direction = 'up';
+    } elseif ($currentTotal < $lastMonthTotal) {
+        $direction = 'down';
+    }
+
+    // Kembalikan hasil
+    return [
+        'currentTotal' => $currentTotal,
+        'lastMonthTotal' => $lastMonthTotal,
+        'changePercentage' => $changePercentage,
+        'direction' => $direction,
+    ];
+}
+
+function getKeuntunganPeriodeBefore($bulan = '0') {
+
+  $dataTypes = [
+      'transaksi' => getTotalTransaksiComparison($bulan),
+      'barangMasuk' => getTotalBarangMasukComparison($bulan),
+      'beban' => getTotalBebanComparison($bulan),
+      'modal' => getTotalModalComparison($bulan),
+      'prive' => getTotalPriveComparison($bulan),
+  ];
+
+  $totalTransaksi = $dataTypes['transaksi']['currentTotal'];
+  $totalBarangMasuk = $dataTypes['barangMasuk']['currentTotal'];
+  $totalBeban = $dataTypes['beban']['currentTotal'];
+  $totalPrive = $dataTypes['prive']['currentTotal'];
+  $totalModal = $dataTypes['modal']['currentTotal'];
+
+  return $totalTransaksi - $totalBarangMasuk - $totalBeban - ($totalPrive + $totalModal);
+}
+
+function getTotalModalComparison($bulan = '0')
+{
+    // Jika bulan tidak diisi, set nilai default
+    if (!$bulan || $bulan === '0') {
+        return [
+            'currentTotal' => 0,
+            'lastMonthTotal' => 0,
+            'changePercentage' => 0,
+            'direction' => 'same', // Default arah "same" jika tidak ada perubahan
+        ];
+    }
+
+    // Memecah bulan dan tahun
+    list($tahun, $bulan) = explode('-', $bulan);
+
+    // Koneksi ke database
+    $db = dbConnect();
+
+    // Query untuk transaksi bulan saat ini
+    $query = "SELECT SUM(biaya) as totalModal 
+            FROM modal 
+                  WHERE YEAR(tanggal_modal) = ? AND MONTH(tanggal_modal) = ?";
+
+    // Persiapkan statement untuk bulan saat ini
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahun, $bulan);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $currentData = $result->fetch_assoc();
+    $currentTotal = $currentData['totalModal'] ?? 0;
+
+    $stmt->close();
+
+    // Hitung bulan sebelumnya
+    $bulanSebelumnya = $bulan - 1;
+    $tahunSebelumnya = $tahun;
+
+    // Jika bulan sebelumnya kurang dari 1, mundur ke tahun sebelumnya
+    if ($bulanSebelumnya < 1) {
+        $bulanSebelumnya = 12;
+        $tahunSebelumnya--;
+    }
+
+    // Persiapkan statement untuk bulan sebelumnya
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("ii", $tahunSebelumnya, $bulanSebelumnya);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $lastMonthData = $result->fetch_assoc();
+    $lastMonthTotal = $lastMonthData['totalModal'] ?? 0;
+
+    $stmt->close();
+    $db->close();
+
+    // Hitung persentase perubahan
+    if ($lastMonthTotal > 0) {
+        $changePercentage = (($currentTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
+    }
+    else if($lastMonthTotal == $currentTotal){
+      $changePercentage = 0; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+    else {
+        $changePercentage = 100; // Jika bulan sebelumnya 0, anggap kenaikan 100%
+    }
+
+    // Tentukan arah perubahan
+    $direction = 'same';
+    if ($currentTotal > $lastMonthTotal) {
+        $direction = 'up';
+    } elseif ($currentTotal < $lastMonthTotal) {
+        $direction = 'down';
+    }
+
+    // Kembalikan hasil
+    return [
+        'currentTotal' => $currentTotal,
+        'lastMonthTotal' => $lastMonthTotal,
+        'changePercentage' => $changePercentage,
+        'direction' => $direction,
+    ];
+}
+
+function getTotalPriveTanggal($tahun = null, $bulan = null)
+{
+  $db = dbConnect();
+  $query = "SELECT SUM(totalPrive) AS totalPrive 
+            FROM (
+              SELECT DISTINCT id_prive, SUM(biaya) AS totalPrive 
+              FROM prive 
+              WHERE 1=1";
+
+  if ($tahun) {
+    $query .= " AND YEAR(tanggal) = '$tahun'";
+  }
+  if ($bulan) {
+    $query .= " AND MONTH(tanggal) = '$bulan'";
+  }
+
+  $query .= " GROUP BY id_prive
+            ) AS unique_prive";
+
+  $res = $db->query($query);
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalPrive'];
+}
+
+function getTotalSelisihTanggal($tahun = null, $bulan = null)
+{
+  $db = dbConnect();
+  $query = "SELECT SUM(totalSelisih) AS totalSelisih
+            FROM (
+              SELECT DISTINCT no_faktur, totalSelisih 
+              FROM transaksi 
+              WHERE 1=1";
+
+  if ($tahun) {
+    $query .= " AND YEAR(tanggal) = '$tahun'";
+  }
+  if ($bulan) {
+    $query .= " AND MONTH(tanggal) = '$bulan'";
+  }
+
+  $query .= ") AS unique_transactions";
+
+  $res = $db->query($query);
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalSelisih'];
+}
+
+function getTotalModalTanggal($tahun = null, $bulan = null)
+{
+  $db = dbConnect();
+  $query = "SELECT SUM(biaya) as totalModal 
+            FROM modal 
+            WHERE 1=1";
+
+  if ($tahun) {
+    $query .= " AND YEAR(tanggal_modal) = '$tahun'";
+  }
+  if ($bulan) {
+    $query .= " AND MONTH(tanggal_modal) = '$bulan'";
+  }
+
+  $res = $db->query($query);
+  $data = $res->fetch_assoc();
+  $res->free();
+  $db->close();
+  return $data['totalModal'];
 }
 
 function getTotalBeban()

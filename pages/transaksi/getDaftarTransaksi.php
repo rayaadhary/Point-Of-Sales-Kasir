@@ -35,7 +35,7 @@ $query = "
 $totalData = getTotalRecords($sql_details, $query);
 
 // Limit the total records displayed to 50
-$maxRecords = 50;
+$maxRecords = 300;
 $totalData = min($totalData, $maxRecords);
 
 // Get the filtered records based on the request from DataTables
