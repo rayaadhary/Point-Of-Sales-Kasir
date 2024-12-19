@@ -1463,7 +1463,8 @@ function getTransaksiById($id)
             p.nama_pelanggan, 
             SUM(t.banyak) AS jumlahBanyak, 
             SUM(t.subtotal) AS totalSubtotal,
-            SUM(t.subtotal) / SUM(t.banyak) AS hargaTransaksi
+            SUM(t.subtotal) / SUM(t.banyak) AS hargaTransaksi,
+            t.ongkosKirim
         FROM 
             transaksi t 
         JOIN 
@@ -1480,7 +1481,8 @@ function getTransaksiById($id)
             t.totalDiskon,
             t.bayar,
             t.kembali,
-            t.jatuh_tempo
+            t.jatuh_tempo,
+            t.ongkosKirim
     ");
 
     $data = $res->fetch_assoc();

@@ -182,6 +182,11 @@ include_once "../layout/header.php"
                     </div>
                     <br>
                     <div class="row">
+                      <span>Ongkos Kirim</span>
+                      <input type="text" id="ongkosKirim" name="ongkosKirim" value="0" class="form-control">
+                    </div>
+                    <br>
+                    <div class="row">
                       <span>Total</span>
                       <input type="text" id="stotal" name="total" class="form-control" value="0" readonly>
                       <input type="hidden" id="totalSelisih" name="totalSelisih" class="form-control" value="0" readonly>
@@ -741,6 +746,21 @@ include_once "../layout/header.php"
     //   }
     // })
 
+    
+    $('#ongkosKirim').on('input', function() {
+      var rupiah = formatRupiah($(this).val(), 'Rp. ');
+      $(this).val(rupiah);
+      let ongkir = convertToAngka($(this).val().replace('Rp. ', ''));
+      let jumlah = convertToAngka($('#jumlah').val().replace('Rp. ', ''));
+      let totalDiskon = convertToAngka($('#totalDiskon').val().replace('Rp. ', ''));
+      let bayar = convertToAngka($('#bayar').val().replace('Rp. ', ''));
+      let totalBersih = jumlah - totalDiskon + ongkir;
+      $('#stotal').val(convertToRupiah(totalBersih));
+      let kembalian = bayar - totalBersih;
+      $('#kembalian').val(convertToRupiah(kembalian));
+      $('#status').val(kembalian >= 0 ? 'Lunas' : 'Utang');
+    });
+
     $('#bayar').on('input', function() {
       var rupiah = formatRupiah($(this).val(), 'Rp. ');
       $(this).val(rupiah);
@@ -750,6 +770,7 @@ include_once "../layout/header.php"
       $('#kembalian').val(convertToRupiah(kembalian));
       $('#status').val(kembalian >= 0 ? 'Lunas' : 'Utang');
     });
+
   });
 </script>
 

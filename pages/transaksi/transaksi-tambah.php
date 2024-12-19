@@ -54,6 +54,7 @@ if (isset($_POST['simpan'])) {
       $totalDiskon = mysqli_real_escape_string($db, trim(convert_to_number($_POST['totalDiskon']))); // tambahkan ini
       $selisih = mysqli_real_escape_string($db, trim(convert_to_number($_POST['selisih'][$i])));
       $totalSelisih = mysqli_real_escape_string($db, trim(convert_to_number($_POST['totalSelisih'])));
+      $ongkosKirim = mysqli_real_escape_string($db, trim(convert_to_number($_POST['ongkosKirim'])));
       $subtotal = mysqli_real_escape_string($db, trim(convert_to_number($_POST['subtotal'][$i])));
       $total = mysqli_real_escape_string($db, trim(convert_to_number($_POST['total'])));
       // $bersih = $total - $diskon;
@@ -93,8 +94,9 @@ if (isset($_POST['simpan'])) {
     id_pengguna, 
     no_surat_jalan, 
     selisih, 
-    totalSelisih
-) VALUES ('$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$totalDiskon', '$subtotal', '$total', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna', '$surat_jalan', '$selisih', '$totalSelisih')";
+    totalSelisih,
+    ongkosKirim
+) VALUES ('$no_faktur', '$tanggal', '$jatuh_tempo', '$banyak', '$diskon', '$totalDiskon', '$subtotal', '$total', '$bayar', '$kembalian', '$status', '$id_pelanggan', '$id_barang', '$id_pengguna', '$surat_jalan', '$selisih', '$totalSelisih', '$ongkosKirim')";
         $sql = mysqli_query($db, $query);
       }
     }
