@@ -57,6 +57,7 @@ $pdf->SetFont('Arial', '', 11);
 // die;
 // for ($i = 0; $i < $no; $i++) {
 $i = 1;
+$jumlah = 0;
 while ($item = mysqli_fetch_assoc($res)) {
   $pdf->Cell(15, 5, '' . $i, 1, 0, 'C');
   $pdf->Cell(30, 5, '' . $item['id_barang'], 1, 0, 'C');
@@ -64,6 +65,7 @@ while ($item = mysqli_fetch_assoc($res)) {
   $pdf->Cell(30, 5, '' . $item['banyak'], 1, 0, 'C');
   $pdf->Cell(20, 5, 'pcs', 1, 0, 'C');
   $pdf->Cell(20, 5, '', 1, 1, 'C');
+  $jumlah += (int)$item['banyak'];
   $i++;
 }
 
@@ -81,7 +83,7 @@ while ($item = mysqli_fetch_assoc($res)) {
 
 $pdf->Cell(110, 5, '', 0, 0);
 $pdf->Cell(30, 5, 'Jumlah', 0, 0);
-$pdf->Cell(50, 5, '' . $transaksi['jumlahBanyak'], 0, 1);
+$pdf->Cell(50, 5, '' . $jumlah, 0, 1);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, 'Hormat Kami', 0, 0, 'C');

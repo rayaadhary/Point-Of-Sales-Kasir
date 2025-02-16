@@ -163,7 +163,11 @@ $modalDisplay = getIconAndColor($modalResult['direction']);
 $selisihDisplay = getIconAndColor($selisihResult['direction']);
 
 $keuntungan = $totalTransaksi - $totalBarangMasuk - $totalBeban - ($totalPrive + $totalModal);
+$profit = $totalSelisih - $totalBeban;
 $keuntunganPeriodeBefore = getKeuntunganPeriodeBefore($bulan);
+$profitPeriodeBefore = getProfitPeriodeBefore($bulan);
+
+
 
 if(isset($_GET['bulan'])) {
   $tahun = substr($bulan, 0, 4);
@@ -180,10 +184,21 @@ $persentasePerubahanKeuntungan = $keuntunganPeriodeBefore != 0
   ? round((($keuntungan - $keuntunganPeriodeBefore) / $keuntunganPeriodeBefore) * 100, 0)
   : 0;
 
+$persentasePerubahanProfit = $profitPeriodeBefore != 0
+  ? round((($profit - $profitPeriodeBefore) / $profitPeriodeBefore) * 100, 0)
+  : 0;
+
+  // var_dump($keuntunganPeriodeBefore);
+  // die;
+
 // Tentukan arah perubahan keuntungan
 $arahKeuntungan = $keuntungan <=> $keuntunganPeriodeBefore;
 $keuntunganDisplay = getIconAndColor(
-  $arahKeuntungan === 1 ? 'up' : ($arahKeuntungan === -1 ? 'down' : 'same')
+  $arahKeuntungan === 1 ? 'up' : ($arahKeuntungan === -1 ? 'down' : 'same'));
+
+$arahProfit = $profit <=> $profitPeriodeBefore;
+$profitDisplay = getIconAndColor(
+  $arahProfit === 1 ? 'up' : ($arahProfit === -1 ? 'down' : 'same')
 );
 
 ?>
@@ -381,6 +396,25 @@ $keuntunganDisplay = getIconAndColor(
                     dari bulan lalu
                   </p>
                 </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card card-shadow">
+                <div class="card-header bg-gradient">
+                  <h6 class="card-title text-center text-light">
+                    <i class="fas fa-chart-line"></i> Total Profit
+                  </h6>
+                </div>
+                <div class="card-body text-right">
+                    <h4 class="text-right total-amount <?= $profitDisplay['color'] ?>">
+                      Rp. <?= number_format($profit, 0, ',', '.') ?>
+                    </h4>
+                    <p class="percentage-info <?= $profitDisplay['color'] ?>">
+                      <?= $profitDisplay['icon'] ?> <?= abs($persentasePerubahanProfit) ?>%
+                      <?= $arahProfit === 'up' ? '' : ($arahProfit === 'down' ? '' : '') ?>
+                      dari bulan lalu
+                    </p>
+                  </div>
               </div>
             </div>
           </div>

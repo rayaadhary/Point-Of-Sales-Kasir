@@ -36,6 +36,13 @@ if (!isset($_SESSION["id_pengguna"]))
   <script src="../../dist/jquery/jquery-ui-1.13.2.custom/jquery-ui.js"></script>
   <link rel="stylesheet" href="../../dist/jquery/select2-4.1.0-rc.0/dist/css/select2.min.css">
   <script src="../../dist/jquery/moment.js"></script>
+
+  <style>
+   .hidden {
+    display: none !important;
+}
+
+  </style>
 </head>
 
 <?php
@@ -137,6 +144,7 @@ include_once "../layout/header.php"
                       <input type="text" class="form-control" name="harga_beli" id="harga-beli">
                     </div>
                   </div>
+
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="harga_jual">Harga Jual</label>
@@ -165,9 +173,11 @@ include_once "../layout/header.php"
                         <div class="col-md-3">
                           <span>Nama Barang</span>
                         </div>
-                        <div class="col-md-2">
-                          <span>Harga Beli</span>
-                        </div>
+                        <?php if ($_SESSION['role'] === 'pemilik'): ?>
+                          <div class="col-md-2">
+                            <span>Harga Beli</span>
+                          </div>
+                        <?php endif; ?>
                         <div class="col-md-2">
                           <span>Harga Jual</span>
                         </div>
@@ -326,7 +336,12 @@ include_once "../layout/header.php"
 
 
 
+  // function convertToAngka(rupiah) {
+  //   return parseInt(rupiah.replace(/,.*|[^0-9]/g, ''), 10);
+  // }
+
   function convertToAngka(rupiah) {
+    if (!rupiah || typeof rupiah !== 'string') return 0;
     return parseInt(rupiah.replace(/,.*|[^0-9]/g, ''), 10);
   }
 
@@ -507,53 +522,124 @@ include_once "../layout/header.php"
       $(this).val(formatRupiah($(this).val(), 'Rp. '));
     });
 
-    $('#tambah').on('click', function() {
-      var no = $('#no').val();
-      var id_barang = $('#id-barang').val();
-      var nama_barang = $('#nama-barang').val();
-      // var nama_barang = $('#nama-barang option:selected').text();
-      var banyak = $('#banyak').val();
-      var harga_beli = convertToAngka($('#harga-beli').val());
-      var harga_jual = convertToAngka($('#harga-jual').val());
-      var total = convertToAngka($('#stotal').val());
-      // var subtotal = banyak * harga_beli;
-      var subtotal = banyak * harga_beli;
-      var total = parseInt(total) + parseInt(subtotal);
-      var html = '<div class="row mb-2" id="row' + no + '">' +
-        '<div class="col-md-3">' +
-        '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" readonly>' +
-        '<input type="hidden" id="idBarang' + no + '" name="idBarang[]" readonly>' +
-        '</div>' +
-        '<div class="col-md-2">' +
-        '<input class="form-control" id="hargaBeliBarang' + no + '" name="harga_beli[]" readonly>' +
-        '</div>' +
-        '<div class="col-md-2">' +
-        '<input class="form-control" id="hargaJualBarang' + no + '" name="harga_jual[]" readonly>' +
-        '</div>' +
-        '<div class="col-md-2">' +
-        '<input class="form-control" id="qty' + no + '" name="banyak[]" readonly>' +
-        '</div>' +
-        '<div class="col-md-2">' +
-        '<input class="form-control" id="subTotal' + no + '"  name="subtotal[]" readonly>' +
-        '</div>' +
-        '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
-        '</div>';
-      $('.list').append(html);
-      $('#stotal').val(convertToRupiah(total));
-      $('#namaBarang' + no).val(nama_barang);
-      $('#idBarang' + no).val(id_barang);
-      $('#hargaJualBarang' + no).val(convertToRupiah(harga_jual));
-      $('#hargaBeliBarang' + no).val(convertToRupiah(harga_beli));
-      $('#qty' + no).val(banyak);
-      $('#subTotal' + no).val(convertToRupiah(subtotal));
-      $('#banyak').val('');
-      var no = (no - 1) + 2;
-      $('#no').val(no);
-      $('#nama-barang').val(null).trigger('change');
-      $('#id-barang').val(null).trigger('change');
-      $('#harga-jual').val(null).trigger('change');
-      $('#harga-beli').val(null).trigger('change');
-    });
+   
+
+    // $('#tambah').on('click', function() {
+    //   var no = $('#no').val();
+    //   var id_barang = $('#id-barang').val();
+    //   var nama_barang = $('#nama-barang').val();
+    //   // var nama_barang = $('#nama-barang option:selected').text();
+    //   var banyak = $('#banyak').val();
+    //   var harga_beli = convertToAngka($('#harga-beli').val());
+    //   var harga_jual = convertToAngka($('#harga-jual').val());
+    //   var total = convertToAngka($('#stotal').val());
+    //   // var subtotal = banyak * harga_beli;
+    //   var subtotal = banyak * harga_beli;
+    //   var total = parseInt(total) + parseInt(subtotal);
+    //   var html = '<div class="row mb-2" id="row' + no + '">' +
+    //     '<div class="col-md-3">' +
+    //     '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" readonly>' +
+    //     '<input type="hidden" id="idBarang' + no + '" name="idBarang[]" readonly>' +
+    //     '</div>' +
+    //     '<div class="col-md-2">' +
+    //     '<input class="form-control" id="hargaBeliBarang' + no + '" name="harga_beli[]" readonly>' +
+    //     '</div>' +
+    //     '<div class="col-md-2">' +
+    //     '<input class="form-control" id="hargaJualBarang' + no + '" name="harga_jual[]" readonly>' +
+    //     '</div>' +
+    //     '<div class="col-md-2">' +
+    //     '<input class="form-control" id="qty' + no + '" name="banyak[]" readonly>' +
+    //     '</div>' +
+    //     '<div class="col-md-2">' +
+    //     '<input class="form-control" id="subTotal' + no + '"  name="subtotal[]" readonly>' +
+    //     '</div>' +
+    //     '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
+    //     '</div>';
+    //   $('.list').append(html);
+    //   $('#stotal').val(convertToRupiah(total));
+    //   $('#namaBarang' + no).val(nama_barang);
+    //   $('#idBarang' + no).val(id_barang);
+    //   $('#hargaJualBarang' + no).val(convertToRupiah(harga_jual));
+    //   $('#hargaBeliBarang' + no).val(convertToRupiah(harga_beli));
+    //   $('#qty' + no).val(banyak);
+    //   $('#subTotal' + no).val(convertToRupiah(subtotal));
+    //   $('#banyak').val('');
+    //   var no = (no - 1) + 2;
+    //   $('#no').val(no);
+    //   $('#nama-barang').val(null).trigger('change');
+    //   $('#id-barang').val(null).trigger('change');
+    //   $('#harga-jual').val(null).trigger('change');
+    //   $('#harga-beli').val(null).trigger('change');
+    // });
+
+    var userRole = "<?php echo $_SESSION['role']; ?>";
+
+    if (userRole !== "pemilik") {
+      $('#harga-beli').closest('.col-md-2').addClass('hidden');
+    }
+    $(document).ready(function () {
+  // Ambil role user dari sesi PHP
+  var userRole = "<?php echo $_SESSION['role']; ?>";
+
+  $('#tambah').on('click', function () {
+    var no = $('#no').val();
+    var id_barang = $('#id-barang').val();
+    var nama_barang = $('#nama-barang').val();
+    var banyak = $('#banyak').val();
+    var harga_beli = convertToAngka($('#harga-beli').val());
+    var harga_jual = convertToAngka($('#harga-jual').val());
+    var total = convertToAngka($('#stotal').val());
+    var subtotal = banyak * harga_beli;
+    total = parseInt(total) + parseInt(subtotal);
+
+    // Buat elemen HTML untuk baris baru
+    var html = '<div class="row mb-2" id="row' + no + '">' +
+      '<div class="col-md-3">' +
+      '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" readonly>' +
+      '<input type="hidden" id="idBarang' + no + '" name="idBarang[]" readonly>' +
+      '</div>' +
+      '<div class="col-md-2 harga-beli-container"' +
+      (userRole !== "pemilik" ? ' style="display: none;"' : '') + // Sembunyikan jika bukan pemilik
+      '>' +
+      '<input class="form-control" id="hargaBeliBarang' + no + '" name="harga_beli[]" readonly>' +
+      '</div>' +
+      '<div class="col-md-2">' +
+      '<input class="form-control" id="hargaJualBarang' + no + '" name="harga_jual[]" readonly>' +
+      '</div>' +
+      '<div class="col-md-2">' +
+      '<input class="form-control" id="qty' + no + '" name="banyak[]" readonly>' +
+      '</div>' +
+      '<div class="col-md-2">' +
+      '<input class="form-control" id="subTotal' + no + '" name="subtotal[]" readonly>' +
+      '</div>' +
+      '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
+      '</div>';
+
+    // Tambahkan elemen ke dalam daftar
+    $('.list').append(html);
+
+    // Update nilai subtotal dan total
+    $('#stotal').val(convertToRupiah(total));
+    $('#namaBarang' + no).val(nama_barang);
+    $('#idBarang' + no).val(id_barang);
+    $('#hargaJualBarang' + no).val(convertToRupiah(harga_jual));
+    $('#hargaBeliBarang' + no).val(convertToRupiah(harga_beli));
+    $('#qty' + no).val(banyak);
+    $('#subTotal' + no).val(convertToRupiah(subtotal));
+
+    // Reset input
+    $('#banyak').val('');
+    $('#no').val((parseInt(no) + 1));
+    $('#nama-barang').val(null).trigger('change');
+    $('#id-barang').val(null).trigger('change');
+    $('#harga-jual').val(null).trigger('change');
+    $('#harga-beli').val(null).trigger('change');
+  });
+});
+
+
+
+
 
 
 

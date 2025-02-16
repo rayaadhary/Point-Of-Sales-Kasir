@@ -78,51 +78,139 @@ function kodePembelian($waktu)
   return $kode_pembelian;
 }
 
+// function nomorSuratJalan()
+// {
+//   $db = dbConnect();
+//   $query = $db->query("SELECT max(no_surat_jalan) as kodeTerbesar FROM pengiriman");
+//   $data = $query->fetch_assoc();
+//   $surat_jalan = $data['kodeTerbesar'];
+//   $urutan = (int) substr($surat_jalan, 3, 5);
+//   $urutan++;
+//   $huruf = "DOM";
+//   $surat_jalan = $huruf . sprintf("%05s", $urutan);
+//   $query->free();
+//   $db->close();
+//   return $surat_jalan;
+// }
+
 function nomorSuratJalan()
 {
-  $db = dbConnect();
-  $query = $db->query("SELECT max(no_surat_jalan) as kodeTerbesar FROM pengiriman");
-  $data = $query->fetch_assoc();
-  $surat_jalan = $data['kodeTerbesar'];
-  $urutan = (int) substr($surat_jalan, 3, 5);
-  $urutan++;
-  $huruf = "DOM";
-  $surat_jalan = $huruf . sprintf("%05s", $urutan);
-  $query->free();
-  $db->close();
-  return $surat_jalan;
+    $db = dbConnect();
+    $query = $db->query("SELECT max(no_surat_jalan) as kodeTerbesar FROM pengiriman");
+    $data = $query->fetch_assoc();
+    $surat_jalan = $data['kodeTerbesar'];
+
+    // Handle null case
+    if (is_null($surat_jalan)) {
+        $urutan = 1; // Start numbering from 1 if no existing records
+    } else {
+        $urutan = (int) substr($surat_jalan, 3, 5); // Extract the numeric portion
+        $urutan++;
+    }
+
+    $huruf = "DOM"; // Prefix for the surat jalan
+    $surat_jalan = $huruf . sprintf("%05s", $urutan); // Format as DOMxxxxx (e.g., DOM00001)
+    $query->free();
+    $db->close();
+    return $surat_jalan;
 }
+
+
+// function barangMasuk($waktu)
+// {
+//   $db = dbConnect();
+//   $query = $db->query("SELECT no_barang_masuk as kodeTerbesar FROM barang_masuk order by id_barang_masuk desc limit 1");
+//   $data = $query->fetch_assoc();
+//   $kode_faktur = $data['kodeTerbesar'];
+//   $urutan = (int) substr($kode_faktur, 7, 3);
+//   $urutan++;
+//   $waktu_formatted = date_create_from_format('Y-m-d', $waktu);
+//   $waktu_formatted = date_format($waktu_formatted, 'dm');
+//   $huruf = "BRM";
+//   $kode_faktur = $huruf . $waktu_formatted . sprintf("%03s", $urutan);
+//   $query->free();
+//   $db->close();
+//   return $kode_faktur;
+// }
+
 
 function barangMasuk($waktu)
 {
-  $db = dbConnect();
-  $query = $db->query("SELECT max(no_barang_masuk) as kodeTerbesar FROM barang_masuk");
-  $data = $query->fetch_assoc();
-  $kode_faktur = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_faktur, 7, 3);
-  $urutan++;
-  $waktu_formatted = date_create_from_format('Y-m-d', $waktu);
-  $waktu_formatted = date_format($waktu_formatted, 'dm');
-  $huruf = "BRM";
-  $kode_faktur = $huruf . $waktu_formatted . sprintf("%03s", $urutan);
-  $query->free();
-  $db->close();
-  return $kode_faktur;
+    $db = dbConnect();
+    $query = $db->query("SELECT no_barang_masuk as kodeTerbesar FROM barang_masuk ORDER BY id_barang_masuk DESC LIMIT 1");
+    
+    // Handle empty result set
+    $kode_faktur = null;
+    if ($query && $query->num_rows > 0) {
+        $data = $query->fetch_assoc();
+        $kode_faktur = $data['kodeTerbesar'];
+    }
+
+    // Ensure $kode_faktur is not null before processing
+    if ($kode_faktur) {
+        $urutan = (int) substr($kode_faktur, 7, 3);
+    } else {
+        $urutan = 0; // Start from 0 if no data exists
+    }
+    
+    $urutan++;
+    
+    // Format the date
+    $waktu_formatted = date_create_from_format('Y-m-d', $waktu);
+    if ($waktu_formatted) {
+        $waktu_formatted = date_format($waktu_formatted, 'dm');
+    } else {
+        $waktu_formatted = '0000'; // Fallback if date parsing fails
+    }
+    
+    $huruf = "BRM";
+    $kode_faktur = $huruf . $waktu_formatted . sprintf("%03s", $urutan);
+    
+    // Clean up and return the result
+    if ($query) {
+        $query->free();
+    }
+    $db->close();
+    
+    return $kode_faktur;
 }
+
+
+// function kodePelanggan()
+// {
+//   $db = dbConnect();
+//   $query = $db->query("SELECT max(id_pelanggan) as kodeTerbesar FROM pelanggan");
+//   $data = $query->fetch_assoc();
+//   $kode_pelanggan = $data['kodeTerbesar'];
+//   $urutan = (int) substr($kode_pelanggan, 1, 4);
+//   $urutan++;
+//   $huruf = "P";
+//   $kode_pelanggan = $huruf . sprintf("%04s", $urutan);
+//   $query->free();
+//   $db->close();
+//   return $kode_pelanggan;
+// }
 
 function kodePelanggan()
 {
-  $db = dbConnect();
-  $query = $db->query("SELECT max(id_pelanggan) as kodeTerbesar FROM pelanggan");
-  $data = $query->fetch_assoc();
-  $kode_pelanggan = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_pelanggan, 1, 4);
-  $urutan++;
-  $huruf = "P";
-  $kode_pelanggan = $huruf . sprintf("%04s", $urutan);
-  $query->free();
-  $db->close();
-  return $kode_pelanggan;
+    $db = dbConnect();
+    $query = $db->query("SELECT max(id_pelanggan) as kodeTerbesar FROM pelanggan");
+    $data = $query->fetch_assoc();
+    $kode_pelanggan = $data['kodeTerbesar'];
+
+    // Handle null case
+    if (is_null($kode_pelanggan)) {
+        $urutan = 1; // Start numbering from 1 if no existing pelanggan found
+    } else {
+        $urutan = (int) substr($kode_pelanggan, 1, 4); // Extract the numeric portion
+        $urutan++;
+    }
+
+    $huruf = "P"; // Prefix for pelanggan
+    $kode_pelanggan = $huruf . sprintf("%04s", $urutan); // Format as Pxxxx (e.g., P0001)
+    $query->free();
+    $db->close();
+    return $kode_pelanggan;
 }
 
 
@@ -142,65 +230,157 @@ function kodePengguna()
   return $kode_pengguna;
 }
 
+// function kodeSupplier()
+// {
+//   $db = dbConnect();
+//   $query = $db->query("SELECT max(id_supplier) as kodeTerbesar FROM supplier");
+//   $data = $query->fetch_assoc();
+//   $kode_supplier = $data['kodeTerbesar'];
+//   $urutan = (int) substr($kode_supplier, 2, 4);
+//   $urutan++;
+//   $huruf = "PT";
+//   $kode_supplier = $huruf . sprintf("%04s", $urutan);
+//   $query->free();
+//   $db->close();
+//   return $kode_supplier;
+// }
+
 function kodeSupplier()
 {
-  $db = dbConnect();
-  $query = $db->query("SELECT max(id_supplier) as kodeTerbesar FROM supplier");
-  $data = $query->fetch_assoc();
-  $kode_supplier = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_supplier, 2, 4);
-  $urutan++;
-  $huruf = "PT";
-  $kode_supplier = $huruf . sprintf("%04s", $urutan);
-  $query->free();
-  $db->close();
-  return $kode_supplier;
+    $db = dbConnect();
+    $query = $db->query("SELECT max(id_supplier) as kodeTerbesar FROM supplier");
+    $data = $query->fetch_assoc();
+    $kode_supplier = $data['kodeTerbesar'];
+
+    // Handle null case
+    if (is_null($kode_supplier)) {
+        $urutan = 1;
+    } else {
+        $urutan = (int) substr($kode_supplier, 2, 4);
+        $urutan++;
+    }
+
+    $huruf = "PT";
+    $kode_supplier = $huruf . sprintf("%04s", $urutan);
+    $query->free();
+    $db->close();
+    return $kode_supplier;
 }
+
+
+// function kodeBeban()
+// {
+//   $db = dbConnect();
+//   $query = $db->query("SELECT max(id_beban) as kodeTerbesar FROM beban");
+//   $data = $query->fetch_assoc();
+//   $kode_beban = $data['kodeTerbesar'];
+//   $urutan = (int) substr($kode_beban, 2, 4);
+//   $urutan++;
+//   $huruf = "IB";
+//   $kode_beban = $huruf . sprintf("%04s", $urutan);
+//   $query->free();
+//   $db->close();
+//   return $kode_beban;
+// }
 
 function kodeBeban()
 {
-  $db = dbConnect();
-  $query = $db->query("SELECT max(id_beban) as kodeTerbesar FROM beban");
-  $data = $query->fetch_assoc();
-  $kode_beban = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_beban, 2, 4);
-  $urutan++;
-  $huruf = "IB";
-  $kode_beban = $huruf . sprintf("%04s", $urutan);
-  $query->free();
-  $db->close();
-  return $kode_beban;
+    $db = dbConnect();
+    $query = $db->query("SELECT max(id_beban) as kodeTerbesar FROM beban");
+    $data = $query->fetch_assoc();
+    $kode_beban = $data['kodeTerbesar'];
+
+    // Handle null case
+    if (is_null($kode_beban)) {
+        $urutan = 1; // Start numbering from 1 if no existing records
+    } else {
+        $urutan = (int) substr($kode_beban, 2, 4); // Extract the numeric portion
+        $urutan++;
+    }
+
+    $huruf = "IB"; // Prefix for the beban ID
+    $kode_beban = $huruf . sprintf("%04s", $urutan); // Format as IBxxxx (e.g., IB0001)
+    $query->free();
+    $db->close();
+    return $kode_beban;
 }
+
+
+// function kodePrive()
+// {
+//   $db = dbConnect();
+//   $query = $db->query("SELECT max(id_prive) as kodeTerbesar FROM prive");
+//   $data = $query->fetch_assoc();
+//   $kode_prive = $data['kodeTerbesar'];
+//   $urutan = (int) substr($kode_prive, 2, 4);
+//   $urutan++;
+//   $huruf = "IP";
+//   $kode_prive = $huruf . sprintf("%04s", $urutan);
+//   $query->free();
+//   $db->close();
+//   return $kode_prive;
+// }
 
 function kodePrive()
 {
-  $db = dbConnect();
-  $query = $db->query("SELECT max(id_prive) as kodeTerbesar FROM prive");
-  $data = $query->fetch_assoc();
-  $kode_prive = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_prive, 2, 4);
-  $urutan++;
-  $huruf = "IP";
-  $kode_prive = $huruf . sprintf("%04s", $urutan);
-  $query->free();
-  $db->close();
-  return $kode_prive;
+    $db = dbConnect();
+    $query = $db->query("SELECT max(id_prive) as kodeTerbesar FROM prive");
+    $data = $query->fetch_assoc();
+    $kode_prive = $data['kodeTerbesar'];
+
+    // Handle null case
+    if (is_null($kode_prive)) {
+        $urutan = 1; // Start numbering from 1 if no existing records
+    } else {
+        $urutan = (int) substr($kode_prive, 2, 4); // Extract the numeric portion
+        $urutan++;
+    }
+
+    $huruf = "IP"; // Prefix for the prive ID
+    $kode_prive = $huruf . sprintf("%04s", $urutan); // Format as IPxxxx (e.g., IP0001)
+    $query->free();
+    $db->close();
+    return $kode_prive;
 }
+
+
+// function kodeModal()
+// {
+//   $db = dbConnect();
+//   $query = $db->query("SELECT max(id_modal) as kodeTerbesar FROM modal");
+//   $data = $query->fetch_assoc();
+//   $kode_modal = $data['kodeTerbesar'];
+//   $urutan = (int) substr($kode_modal, 2, 4);
+//   $urutan++;
+//   $huruf = "MD";
+//   $kode_modal = $huruf . sprintf("%04s", $urutan);
+//   $query->free();
+//   $db->close();
+//   return $kode_modal;
+// }
 
 function kodeModal()
 {
-  $db = dbConnect();
-  $query = $db->query("SELECT max(id_modal) as kodeTerbesar FROM modal");
-  $data = $query->fetch_assoc();
-  $kode_modal = $data['kodeTerbesar'];
-  $urutan = (int) substr($kode_modal, 2, 4);
-  $urutan++;
-  $huruf = "MD";
-  $kode_modal = $huruf . sprintf("%04s", $urutan);
-  $query->free();
-  $db->close();
-  return $kode_modal;
+    $db = dbConnect();
+    $query = $db->query("SELECT max(id_modal) as kodeTerbesar FROM modal");
+    $data = $query->fetch_assoc();
+    $kode_modal = $data['kodeTerbesar'];
+
+    // Handle null case
+    if (is_null($kode_modal)) {
+        $urutan = 1; // Start numbering from 1 if no existing records
+    } else {
+        $urutan = (int) substr($kode_modal, 2, 4); // Extract the numeric portion
+        $urutan++;
+    }
+
+    $huruf = "MD"; // Prefix for the modal ID
+    $kode_modal = $huruf . sprintf("%04s", $urutan); // Format as MDxxxx (e.g., MD0001)
+    $query->free();
+    $db->close();
+    return $kode_modal;
 }
+
 
 function gantiPassword($username, $password)
 {
@@ -421,6 +601,46 @@ function getTotalTransaksiTanggal($bulan)
     // Return the total or 0 if no result or it's NULL
     return $data['totalTransaksi'] ?? 0;
 }
+
+function getTotalTransaksiBetweenTanggal($tanggalAwal, $tanggalAkhir)
+{
+    // Pastikan format tanggalAwal dan tanggalAkhir sesuai format YYYY-MM-DD
+    $db = dbConnect();
+
+    $query = "SELECT SUM(totalTransaksi) as totalTransaksi 
+              FROM (
+                  SELECT DISTINCT no_faktur, total AS totalTransaksi 
+                  FROM transaksi 
+                  WHERE tanggal BETWEEN ? AND ?
+                  GROUP BY no_faktur, id_transaksi
+              ) AS unique_total_transaksi";
+
+    // Prepare the statement
+    if ($stmt = $db->prepare($query)) {
+        // Bind parameter tanggalAwal dan tanggalAkhir
+        $stmt->bind_param("ss", $tanggalAwal, $tanggalAkhir);
+
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        if (!$data) {
+            throw new Exception("No results found for the given date range.");
+        }
+
+        $result->free();
+        $stmt->close();
+    } else {
+        throw new Exception("Query preparation failed: " . $db->error);
+    }
+
+    // Close the database connection
+    $db->close();
+
+    // Return the total or 0 if no result or it's NULL
+    return $data['totalTransaksi'] ?? 0;
+}
+
 function getTotalTransaksiComparison($bulan = '0')
 {
     // Jika bulan tidak diisi, set nilai default
@@ -966,7 +1186,20 @@ function getTotalSelisihComparison($bulan = '0')
 }
 
 function getKeuntunganPeriodeBefore($bulan = '0') {
+  $dataTypes = [
+      'selisih' => getTotalSelisihComparison($bulan),
+      'beban' => getTotalBebanComparison($bulan)
+  ];
 
+  $totalSelisih = (float) $dataTypes['selisih']['lastMonthTotal'];
+  $totalBeban = (float) $dataTypes['beban']['lastMonthTotal'];
+
+  // Perhitungan keuntungan
+  return $totalSelisih - $totalBeban;
+  // return $dataTypes;
+}
+
+function getProfitPeriodeBefore($bulan = '0') {
   $dataTypes = [
       'transaksi' => getTotalTransaksiComparison($bulan),
       'barangMasuk' => getTotalBarangMasukComparison($bulan),
@@ -975,14 +1208,17 @@ function getKeuntunganPeriodeBefore($bulan = '0') {
       'prive' => getTotalPriveComparison($bulan),
   ];
 
-  $totalTransaksi = $dataTypes['transaksi']['currentTotal'];
-  $totalBarangMasuk = $dataTypes['barangMasuk']['currentTotal'];
-  $totalBeban = $dataTypes['beban']['currentTotal'];
-  $totalPrive = $dataTypes['prive']['currentTotal'];
-  $totalModal = $dataTypes['modal']['currentTotal'];
+  $totalTransaksi = (float) $dataTypes['transaksi']['lastMonthTotal'];
+  $totalBarangMasuk = (float) $dataTypes['barangMasuk']['lastMonthTotal'];
+  $totalBeban = (float) $dataTypes['beban']['lastMonthTotal'];
+  $totalPrive = (float) $dataTypes['prive']['lastMonthTotal'];
+  $totalModal = (float) $dataTypes['modal']['lastMonthTotal'];
 
+  // Perhitungan keuntungan
   return $totalTransaksi - $totalBarangMasuk - $totalBeban - ($totalPrive + $totalModal);
+  // return $dataTypes;
 }
+
 
 function getTotalModalComparison($bulan = '0')
 {
@@ -1460,6 +1696,8 @@ function getTransaksiById($id)
             t.totalDiskon,
             t.kembali,
             t.id_barang, 
+            p.id_pelanggan,
+            t.no_surat_jalan,
             p.nama_pelanggan, 
             SUM(t.banyak) AS jumlahBanyak, 
             SUM(t.subtotal) AS totalSubtotal,
@@ -1478,8 +1716,10 @@ function getTransaksiById($id)
              t.tanggal,
                   t.total,
             t.diskon,
-            t.totalDiskon,
+          t.totalDiskon,
             t.bayar,
+            t.no_surat_jalan,
+            p.id_pelanggan,
             t.kembali,
             t.jatuh_tempo,
             t.ongkosKirim
@@ -1489,6 +1729,15 @@ function getTransaksiById($id)
     $res->free();
     $db->close();
     return $data;
+}
+
+function convertDateFormat($date) {
+  $dateObj = DateTime::createFromFormat('d/m/Y', $date);
+  if ($dateObj) {
+      return $dateObj->format('Y-m-d');
+  } else {
+      throw new Exception("Format tanggal tidak valid.");
+  }
 }
 
 
@@ -1620,6 +1869,7 @@ function updateDataBarang($data)
   // Escape input data
   $nama_barang = mysqli_real_escape_string($db, $data['nama_barang']);
   $harga_jual = mysqli_real_escape_string($db, $data['harga_jual']);
+  $harga_jual = convert_to_number($harga_jual);
   $stok = mysqli_real_escape_string($db, $data['stok']);
   $id_barang = mysqli_real_escape_string($db, $data['id_barang']);
   

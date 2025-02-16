@@ -18,7 +18,7 @@ $query = "
         t.no_faktur,
         t.tanggal,
         t.jatuh_tempo,
-        t.diskon,
+        t.totalDiskon,
         t.total,
         t.bayar,
         t.kembali,
@@ -82,7 +82,7 @@ function getFilteredRecords($sql_details, $query, $request, $maxRecords)
         $baseQuery .= " WHERE t.no_faktur LIKE :search OR p.nama_pelanggan LIKE :search";
     }
 
-    $baseQuery .= " GROUP BY t.no_faktur, t.tanggal, t.jatuh_tempo, t.diskon, t.total, t.bayar, t.kembali, t.status, p.nama_pelanggan, t.no_surat_jalan";
+    $baseQuery .= " GROUP BY t.no_faktur, t.tanggal, t.jatuh_tempo, t.totalDiskon, t.total, t.bayar, t.kembali, t.status, p.nama_pelanggan, t.no_surat_jalan";
 
 
     // Get total filtered records
@@ -128,7 +128,7 @@ function formatData($data)
             'tanggal' => $row['tanggal'],
             'nama_pelanggan' => $row['nama_pelanggan'], // Include nama_pelanggan
             'jatuh_tempo' => $row['jatuh_tempo'],
-            'diskon' => 'Rp. ' . number_format($row['diskon'], 0, ",", "."),
+            'totalDiskon' => 'Rp. ' . number_format($row['totalDiskon'], 0, ",", "."),
             'total' => 'Rp. ' . number_format($row['total'], 0, ",", "."),
             'bayar' => 'Rp. ' . number_format($row['bayar'], 0, ",", "."),
             'kembali' => 'Rp. ' . number_format($row['kembali'], 0, ",", "."),
@@ -139,6 +139,9 @@ function formatData($data)
                 </a>
                 <a href="cetak-transaksi-list.php?idPengiriman=' . $row['no_surat_jalan'] . '&idTransaksi=' . $row['no_faktur'] . '" title="cetak transaksi" class="btn btn-success btn-circle btn-sm">
                     <i class="fas fa-money-check"></i>
+                </a>
+                <a href="transaksi-edit.php?idPengiriman=' . $row['no_surat_jalan'] . '&idTransaksi=' . $row['no_faktur'] . '" class="btn btn-warning btn-circle btn-sm" title="edit transaksi">
+                    <i class="fas fa-edit"></i>
                 </a>
                 <a href="transaksi-hapus.php?idPengiriman=' . $row['no_surat_jalan'] . '&idTransaksi=' . $row['no_faktur'] . '" class="btn btn-danger btn-circle btn-sm hapus" title="hapus transaksi">
                     <i class="fas fa-trash"></i>

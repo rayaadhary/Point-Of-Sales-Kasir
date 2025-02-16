@@ -202,7 +202,6 @@
               </li>
             <?php
             }
-            if ($_SESSION['role'] == 'pemilik') {
             ?>
               <li class="nav-item <?= ($menu == 'barang_masuk') ? 'menu-open' : '' ?>">
                 <a href="#" class="nav-link <?= ($menu == 'barang_masuk') ? 'active' : '' ?>">
@@ -214,20 +213,30 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
+                    <a href="<?= BASEURL ?>/pages/barang-masuk/daftar-barang-masuk.php" class="nav-link <?= ($title == 'daftar_barang_masuk') ? 'active' : '' ?>">
+                      <i class=" far fa-circle nav-icon"></i>
+                      <p>Daftar Barang Masuk</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
                     <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="nav-link <?= ($title == 'barang_masuk') ? 'active' : '' ?>">
                       <i class=" far fa-circle nav-icon"></i>
                       <p>Barang Masuk</p>
                     </a>
                   </li>
+                  <?php
+                  if ($_SESSION['role'] == 'pemilik') {
+                    ?>
                   <li class="nav-item">
                     <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk-utang.php" class="nav-link <?= ($title == 'barang_masuk_utang') ? 'active' : '' ?>">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Barang Masuk Utang</p>
                     </a>
                   </li>
+                  <?php } ?>
                 </ul>
               </li>
-            <?php }
+            <?php 
             if ($_SESSION['role'] == 'petugas' || 'pemilik') { ?>
               <li class="nav-item <?= ($menu == 'transaksi') ? 'menu-open' : '' ?>">
                 <a href="#" class="nav-link <?= ($menu == 'transaksi') ? 'active' : '' ?>">
