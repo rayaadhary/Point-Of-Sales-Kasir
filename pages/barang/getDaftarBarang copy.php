@@ -13,20 +13,29 @@ $sql_details = array(
 );
 
 // Define the SQL query for the DataTable with JOIN
-$query = "SELECT
+$query = "
+    SELECT
         barang.id_barang, 
+        barang_masuk.no_barang_masuk, 
+        barang_masuk.tanggal_beli, 
         barang.nama_barang, 
-        barang.harga_jual,
-        barang.stok
+        barang.harga_beli, 
+        barang.harga_jual, 
+        barang.stok, 
+        supplier.nama_supplier
     FROM 
         barang
+    JOIN 
+        barang_masuk ON barang.id_barang = barang_masuk.id_barang
+    JOIN 
+        supplier ON supplier.id_supplier = barang_masuk.id_supplier
 ";
 
 // Get the total number of records before filtering
 $totalData = getTotalRecords($sql_details, $query);
 
 // Limit the total records displayed to 50
-$maxRecords = 100;
+$maxRecords = 50;
 $totalData = min($totalData, $maxRecords);
 
 // Get the filtered records based on the request from DataTables
@@ -59,14 +68,20 @@ function getFilteredRecords($sql_details, $query, $request, $maxRecords)
     // Base query for total filtered records
     $baseQuery = $query;
 
-    // $baseQuery .= " WHERE (barang.status_enable IS NULL OR barang.status_enable = 'true')
-    // AND (barang_masuk.status_enable IS NULL OR barang_masuk.status_enable = 'true')";
+    $baseQuery .= " WHERE (barang.status_enable IS NULL OR barang.status_enable = 'true')
+    AND (barang_masuk.status_enable IS NULL OR barang_masuk.status_enable = 'true')";
 
+    $tanggalAwal = $request['start_date'];
+    $tanggalAkhir = $request['end_date'];
+
+    if (!empty($tanggalAwal) && !empty($tanggalAkhir)) {
+        $baseQuery .= " AND barang_masuk.tanggal_beli BETWEEN '$tanggalAwal' AND '$tanggalAkhir'";
+    }
 
     // Searching functionality
     $searchValue = $request['search']['value'];
     if (!empty($searchValue)) {
-        $baseQuery .= " WHERE (barang.nama_barang LIKE :search OR barang.id_barang LIKE :search)";
+        $baseQuery .= " AND (barang.nama_barang LIKE :search OR supplier.nama_supplier LIKE :search)";
     }
 
 
@@ -109,9 +124,13 @@ function formatData($data)
     foreach ($data as &$row) {
         $row = [
             'id_barang' => $row['id_barang'],
+            'no_barang_masuk' => $row['no_barang_masuk'],
+            'tanggal_beli' => $row['tanggal_beli'],
             'nama_barang' => $row['nama_barang'],
+            'harga_beli' => 'Rp. ' . number_format($row['harga_beli'], 0, ",", "."),
             'harga_jual' => 'Rp. ' . number_format($row['harga_jual'], 0, ",", "."),
-            'stok' => $row['stok']
+            'stok' => $row['stok'],
+            'nama_supplier' => $row['nama_supplier']
         ];
     }
     return $data;

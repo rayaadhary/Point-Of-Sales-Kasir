@@ -1,7 +1,7 @@
 <?php
 include_once "../../functions.php";
 $menu = "transaksi";
-$title = "transaksi_tambah";
+$title = "transaksi_edit";
 if (!isset($_SESSION["id_pengguna"]))
   header(
     "Location: " . BASEURL
@@ -75,13 +75,17 @@ include_once "../layout/header.php"
             <!-- </div> -->
             <!-- /.card-header -->
             <div class="card-body">
-              <form action="transaksi-tambah.php" method="post">
+              <form action="transaksi-ubah.php" method="post">
                 <div class="row mb-4">
                   <div class="col-md-2">
                     <div class="form-group">
                       <?php
-                      $waktu = date_format(date_create(), 'Y-m-d');
-                      $kode_faktur = kodeFaktur($waktu);
+                      // $waktu = date_format(date_create(), 'Y-m-d');
+                      // $kode_faktur = kodeFaktur($waktu);
+                      $kode_faktur = $_GET['idTransaksi'];
+                      $dataTransaksi = getTransaksiById($kode_faktur);
+
+                      // var_dump($dataTransaksi);
                       ?>
                       <label for="no-faktur">No Faktur</label>
                       <input type="text" class="form-control" name="no_faktur" id="no-faktur" value="<?= $kode_faktur ?>" readonly style="width: 150px;">
@@ -89,17 +93,17 @@ include_once "../layout/header.php"
                   </div>
                   <div class="col-md-2">
                     <label for="tanggal">Tanggal Transaksi</label>
-                    <input type="date" class="form-control" name="tanggal" id="tanggal" style="width: 140px;">
+                    <input type="date" class="form-control" name="tanggal" id="tanggal" value="<?= $dataTransaksi["tanggal"] ?>" readonly style="width: 140px;">
                   </div>
                   <div class="col-md-2">
                     <label for="jatuh-tempo">Jatuh Tempo</label>
-                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" style="width: 140px;">
+                    <input type="date" class="form-control" name="jatuh_tempo" id="jatuh-tempo" value="<?= $dataTransaksi["jatuh_tempo"] ?>" style="width: 140px;">
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                       <label for="nama-pelanggan">Nama Pelanggan</label>
-                      <input type="text" name="nama_pelanggan" id="nama-pelanggan" class="form-control" value="" required>
-                      <input type="hidden" class="form-control" name="id_pelanggan" id="id-pelanggan" readonly>
+                      <input type="text" name="nama_pelanggan" id="nama-pelanggan" class="form-control" value="<?= $dataTransaksi["nama_pelanggan"] ?>" readonly>
+                      <input type="hidden" class="form-control" name="id_pelanggan" value="<?= $dataTransaksi["id_pelanggan"] ?>" id="id-pelanggan" readonly>
                     </div>
                   </div>
                 </div>
@@ -178,23 +182,23 @@ include_once "../layout/header.php"
                     <br>
                     <div class="row">
                       <span>Total Diskon</span>
-                      <input type="text" id="totalDiskon" name="totalDiskon" class="form-control" value="0" readonly>
+                      <input type="text" id="totalDiskon" name="totalDiskon" class="form-control" value="<?= $dataTransaksi["totalDiskon"] ?>" readonly>
                     </div>
                     <br>
                     <div class="row">
                       <span>Ongkos Kirim</span>
-                      <input type="text" id="ongkosKirim" name="ongkosKirim" value="0" class="form-control">
+                      <input type="text" id="ongkosKirim" name="ongkosKirim" value="<?= $dataTransaksi['ongkosKirim'] ?>" class="form-control">
                     </div>
                     <br>
                     <div class="row">
                       <span>Total</span>
                       <input type="text" id="stotal" name="total" class="form-control" value="0" readonly>
-                      <input type="hidden" id="totalSelisih" name="totalSelisih" class="form-control" value="0" readonly>
+                      <input type="hidden" id="totalSelisih" name="totalSelisih" class="form-control" readonly>
                     </div>
                     <br>
                     <div class="row">
                       <span>Bayar</span>
-                      <input type="text" id="bayar" name="bayar" class="form-control" required>
+                      <input type="text" id="bayar" name="bayar" value="<?= $dataTransaksi["bayar"] ?>" class="form-control" required>
                     </div>
                     <br>
                     <div class="row">
@@ -232,7 +236,8 @@ include_once "../layout/header.php"
                           <div class="form-group">
                             <label for="surat_jalan">Surat Jalan</label>
                             <?php
-                            $suratJalan = nomorSuratJalan();
+                            // $suratJalan = nomorSuratJalan();
+                            $suratJalan = $dataTransaksi['no_surat_jalan'];
                             ?>
                             <input type="text" class="form-control" name="surat_jalan" id="surat_jalan" value="<?= $suratJalan ?>" readonly>
                           </div>
@@ -328,10 +333,12 @@ include_once "../layout/header.php"
     var today = moment().format('YYYY-MM-DD');
 
     // Menetapkan nilai awal input tanggal dan jatuh tempo dengan tanggal sekarang
-    $('#tanggal').val(today);
-    $('#jatuh-tempo').val(today);
+    // $('#tanggal').val(today);
+    // $('#jatuh-tempo').val(today);
     $('#tanggal-kirim').val(today);
-    $('#nama-pelanggan').val('');
+
+
+    // $('#nama-pelanggan').val('');
 
     $('#tanggal-kirim').datepicker({
       dateFormat: 'yy-mm-dd',
@@ -356,6 +363,326 @@ include_once "../layout/header.php"
       dateFormat: 'yy-mm-dd',
       changeYear: true,
     });
+
+    const kodeFaktur = $('#no-faktur').val();
+
+    function getTransactionData(kodeFaktur) {
+      $.ajax({
+        url: 'ambilDataTransaksi.php',
+        method: 'POST',
+        data: {
+          no_faktur: kodeFaktur
+        },
+        success: function(response) {
+          const items = JSON.parse(response);
+          displayItems(items);
+        }
+      });
+    }
+
+    function updateTotals() {
+      let total = 0;
+      let totalDiskon = 0;
+      let totalSelisih = 0;
+      let ongkosKirim = 0;
+
+      // Loop through all rows
+      $('.row').each(function(index) {
+        const no = index + 1;
+        const harga = convertToAngka($('#hargaBarang' + no).val());
+        let qty = convertToAngka($('#qty' + no).val());
+        let diskon = convertToAngka($('#diskon' + no).val());
+
+        // diskon = diskon * qty;
+        
+        
+        const hargaBeli = convertToAngka($('#hargaBeli' + no).val());
+
+        const subtotal = (harga * qty) - diskon;
+        const selisih = ((harga - hargaBeli) * qty) - diskon;
+
+        $('#subTotal' + no).val(convertToRupiah(subtotal));
+        // $('#diskon' + no).val(convertToRupiah(diskon));
+        $('#selisih' + no).val(selisih);
+
+        total += subtotal;
+        totalDiskon += diskon;
+        totalSelisih += selisih;
+      });
+
+      // console.log(qty);
+      // console.log(harga);
+      // console.log(diskon);
+      console.log(totalSelisih);
+
+      ongkosKirim = convertToAngka($('#ongkosKirim').val());
+      let stotal = total + ongkosKirim;
+
+      $('#jumlah').val(convertToRupiah(total + totalDiskon));
+      $('#stotal').val(convertToRupiah(stotal));
+      $('#totalDiskon').val(convertToRupiah(totalDiskon));
+      $('#totalSelisih').val(convertToRupiah(totalSelisih));
+
+      
+      const bayar = convertToAngka($('#bayar').val());
+      
+      // $('#bayar').val(convertToRupiah(bayar));
+
+      var kembalian = bayar - Math.max(0, stotal);
+
+      // const kembalian = bayar - total;
+
+      $('#kembalian').val(convertToRupiah(kembalian));
+
+
+      if (kembalian >= 0) {
+        $('#kembalian').val(convertToRupiah(kembalian));
+        $('#status').val('Lunas');
+      } else {
+        $('#status').val('Utang');
+        $('#kembalian').val(convertToRupiah(kembalian));
+      }
+    }
+
+    // Helper function to clean Rupiah format
+    // function cleanRupiah(rupiahString) {
+    //   return rupiahString.replace(/[^\d,-]/g, '').replace(',', '.');
+    // }
+
+    function displayItems(items) {
+      let no = 1;
+      let total = 0;
+      let totalDiskon = 0;
+      let totalSelisih = 0;
+
+      items.forEach(item => {
+        const subtotal = item.subtotal;
+        const selisih = ((item.harga - item.harga_beli) * item.banyak) - item.diskon;
+
+        const html = '<div class="row mb-2" id="row' + no + '">' +
+          '<div class="col-md-3">' +
+          '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" value="' + item.nama_barang + '" readonly>' +
+          '<input type="hidden" id="idBarang' + no + '" name="idBarang[]" value="' + item.id_barang + '" readonly>' +
+          '<input type="hidden" id="idTransaksi' + no + '" name="idTransaksi[]" value="' + (item.id_transaksi || '') + '" readonly>' +
+          '<input type="hidden" id="hargaBeli' + no + '" value="' + item.harga_beli + '">' +
+          '</div>' +
+          '<div class="col-md-2">' +
+          '<input class="form-control" id="hargaBarang' + no + '" name="harga[]" value="' + convertToRupiah(item.harga) + '" readonly>' +
+          '</div>' +
+          '<div class="col-md-1">' +
+          '<input class="form-control" readonly id="qty' + no + '" name="banyak[]" value="' + item.banyak + '" data-initial="' + item.banyak + '">' +
+          '</div>' +
+          '<div class="col-md-3">' +
+          '<input class="form-control" readonly id="diskon' + no + '" name="diskon[]" value="' + convertToRupiah(item.diskon) + '">' +
+          '</div>' +
+          '<div class="col-md-2">' +
+          '<input class="form-control" id="subTotal' + no + '" name="subtotal[]" value="' + convertToRupiah(subtotal) + '" readonly>' +
+          '<input type="hidden" id="selisih' + no + '" name="selisih[]" value="' + selisih + '" readonly>' +
+          '</div>' +
+          '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
+          '</div>';
+
+        $('.list').append(html);
+
+        total += subtotal;
+        totalDiskon += item.diskon;
+        totalSelisih += selisih;
+        no++;
+      });
+
+      // console.log(totalDiskon);
+
+      // Update initial totals
+      $('#jumlah').val(convertToRupiah(total + totalDiskon));
+      $('#totalDiskon').val(convertToRupiah(totalDiskon));
+      $('#totalSelisih').val(convertToRupiah(totalSelisih));
+      
+      
+      const bayar = $('#bayar').val();
+      $('#bayar').val(convertToRupiah(bayar));
+      const ongkosKirim = $('#ongkosKirim').val();
+      $('#stotal').val(convertToRupiah(total + convertToAngka(ongkosKirim)));
+      $('#ongkosKirim').val(convertToRupiah(ongkosKirim));
+      
+      const kembalian = bayar - (total + convertToAngka(ongkosKirim));
+
+      $('#kembalian').val(convertToRupiah(kembalian));
+
+
+      if (kembalian >= 0) {
+        $('#kembalian').val(convertToRupiah(kembalian));
+        $('#status').val('Lunas');
+      } else {
+        $('#status').val('Utang');
+        $('#kembalian').val(convertToRupiah(kembalian));
+      }
+
+      // Add event listeners for qty and diskon changes
+      // $(document).on('input', '.qty-input', function() {
+      //   let value = $(this).val().replace(/[^\d]/g, '');
+      //   $(this).val(convertToAngka(value));
+
+      //   updateTotals();
+
+      // });
+
+      $(document).on('input', '.qty-input', function() {
+        const idBarang = $(this).closest('.row').find('input[name="idBarang[]"]').val(); // Ambil id_barang dari baris terkait
+        const qtyInput = $(this); // Referensi ke input saat ini
+
+        // Panggil API untuk mendapatkan stok
+        $.ajax({
+          url: 'ambilDataStok.php',
+          type: 'GET',
+          data: {
+            id_barang: idBarang
+          },
+          success: function(response) {
+            if (typeof response.stok !== 'undefined') {
+              const stok = parseInt(response.stok);
+              let banyak = parseInt(qtyInput.val().replace(/[^\d]/g, '')) || 0;
+              const initialValue = qtyInput.data('initial');
+
+              if (stok === 0) {
+                qtyInput.val(initialValue); // Kembalikan ke nilai awal dari database
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Stok Kosong',
+                  text: 'Maaf, stok untuk produk ini tidak tersedia.',
+                  confirmButtonText: 'OK',
+                });
+              } else if (banyak > stok) {
+                qtyInput.val(initialValue); // Kembalikan ke nilai awal dari database
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'Perhatian',
+                  text: `Jumlah yang dimasukkan tidak boleh lebih dari stok yang tersedia (${stok}).`,
+                  confirmButtonText: 'OK',
+                });
+              } else {
+                qtyInput.val(banyak); // Tetapkan nilai input yang valid
+              }
+
+              updateTotals();
+            } else {
+              console.error(response.error || 'Gagal mengambil stok');
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error('API Error:', error);
+          },
+        });
+      });
+
+
+
+      $(document).on('input', '.diskon-input', function() {
+        // Clean and format the discount input
+        let value = $(this).val().replace(/[^\d]/g, '');
+
+        $(this).val(convertToRupiah(value));
+        updateTotals();
+      });
+    }
+
+    getTransactionData(kodeFaktur);
+
+
+    $(document).on('click', '#tambah-transaksi', function(e) {
+      e.preventDefault();
+
+      var totalDiskon = 0;
+      // Ambil nilai dari input form
+      var nama_barang = $('#nama-barang option:selected').text();
+      const idBarang = $('#id-barang').val();
+      const stok = $('#stok').val();
+      const harga = convertToAngka($('#harga').val());
+      const hargaBeli = convertToAngka($('#harga_beli').val());
+      let qty = parseInt($('#banyak').val());
+      let diskon = convertToAngka($('#diskon').val());
+      var total = convertToAngka($('#stotal').val());
+      var totalSelisih = convertToAngka($('#totalSelisih').val());
+
+      console.log(totalSelisih);
+
+
+      // Validasi input
+      if (!nama_barang || qty <= 0 || harga <= 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Perhatian',
+          text: 'Pastikan semua data valid sebelum menambahkan transaksi',
+          confirmButtonText: 'OK'
+        });
+        return;
+      }
+
+      diskon = qty*diskon;
+
+      //   diskon = banyak * diskon;
+      var subtotal = (harga * qty) - diskon;
+
+      // Update total
+      totalDiskon += diskon;
+      var jumlah = total + subtotal + totalDiskon;
+      var total = total + subtotal;
+
+      // Update totals in the UI
+      $('#totalDiskon').val(convertToRupiah(totalDiskon));
+      var selisih = ((harga - hargaBeli) * qty) - diskon;
+      totalSelisih += selisih;
+      $('#totalSelisih').val(convertToRupiah(totalSelisih));
+
+      $('#jumlah').val(convertToRupiah(jumlah));
+      $('#stotal').val(convertToRupiah(total));
+
+      // Hitung subtotal dan selisih
+      // const subtotal = (harga * qty) - diskon;
+      // const selisih = ((harga - hargaBeli) * qty) - diskon;
+
+      // Hitung nomor baris baru
+      const no = $('.list .row').length + 1;
+
+      // Susun HTML untuk baris baru
+      const html = `
+    <div class="row mb-2" id="row${no}">
+      <div class="col-md-3">
+        <input class="form-control" id="namaBarang${no}" name="nama_barang[]" value="${nama_barang}" readonly>
+        <input type="hidden" id="idBarang${no}" name="idBarang[]" value="${idBarang}" readonly>
+        <input type="hidden" id="hargaBeli${no}" value="${hargaBeli}">
+      </div>
+      <div class="col-md-2">
+        <input class="form-control" id="hargaBarang${no}" name="harga[]" value="${convertToRupiah(harga)}" readonly>
+      </div>
+      <div class="col-md-1">
+        <input class="form-control " readonly id="qty${no}" name="banyak[]" value="${qty}">
+      </div>
+      <div class="col-md-3">
+        <input class="form-control " readonly id="diskon${no}" name="diskon[]" value="${convertToRupiah(diskon)}">
+      </div>
+      <div class="col-md-2">
+        <input class="form-control" id="subTotal${no}" name="subtotal[]" value="${convertToRupiah(subtotal)}" readonly>
+        <input type="hidden" id="selisih${no}" name="selisih[]" value="${selisih}" readonly>
+      </div>
+      <a class="btn btn-sm btn-danger rounded" onClick="del(${no})"> X </a>
+    </div>
+  `;
+
+      // Tambahkan baris baru ke daftar list
+      $('.list').append(html);
+
+      // Perbarui total setelah penambahan
+      updateTotals();
+
+      // Reset form input
+      $('#nama-barang').val('');
+      $('#id-barang').val('');
+      $('#stok').val('');
+      $('#harga').val('');
+      $('#banyak').val('');
+      $('#diskon').val(0);
+    });
+
   });
 
 
@@ -389,52 +716,138 @@ include_once "../layout/header.php"
   }
 
 
+
   function convertToAngka(rupiah) {
+    if (!rupiah || typeof rupiah !== 'string') return 0;
     return parseInt(rupiah.replace(/,.*|[^0-9]/g, ''), 10);
   }
 
 
+  // function del(no) {
+  //   var stotal = convertToAngka($('#subTotal' + no).val());
+  //   var alltotal = convertToAngka($('#stotal').val());
+  //   var newtotal = alltotal - stotal;
+
+  //   var selisih = convertToAngka($('#selisih' + no).val());
+  //   var totalSelisih = convertToAngka($('#totalSelisih').val());
+  //   var newselisih = totalSelisih - selisih;
+
+  //   // Mengupdate jumlah total, dengan mengurangi `stotal` dan `diskonItem`
+  //   var totalJumlah = convertToAngka($('#jumlah').val());
+  //   var diskonItem = convertToAngka($('#diskon' + no).val());
+  //   var newJumlah = totalJumlah - stotal - diskonItem;
+
+  //   // Update total diskon
+  //   var totalDiskon = convertToAngka($('#totalDiskon').val()) - diskonItem;
+
+  //   // Update nilai di UI
+  //   $('#totalDiskon').val(convertToRupiah(totalDiskon));
+  //   $('#jumlah').val(convertToRupiah(newJumlah));
+  //   $('#stotal').val(convertToRupiah(newtotal));
+  //   $('#totalSelisih').val(convertToRupiah(newselisih));
+
+  //   // Hapus baris item
+  //   $('#row' + no).remove();
+
+  //   // Perhitungan kembalian
+  //   var bayar = convertToAngka($('#bayar').val());
+  //   var kembalian = bayar - Math.max(0, newtotal - totalDiskon);
+
+  //   if (kembalian >= 0) {
+  //     $('#kembalian').val(convertToRupiah(kembalian));
+  //     $('#status').val('Lunas');
+  //     var tanggal = $('#tanggal').val();
+  //     $('#jatuh-tempo').val(tanggal);
+  //   } else {
+  //     $('#status').val('Utang');
+  //     $('#kembalian').val(convertToRupiah(kembalian));
+  //     jatuhTempo();
+  //   }
+  // }
   function del(no) {
-    var stotal = convertToAngka($('#subTotal' + no).val());
-    var alltotal = convertToAngka($('#stotal').val());
-    var newtotal = alltotal - stotal;
+  const elements = {
+    row: $(`#row${no}`),
+    idTransaksi: $(`#idTransaksi${no}`).val(),
+    stotal: convertToAngka($(`#subTotal${no}`).val()),
+    diskon: convertToAngka($(`#diskon${no}`).val()),
+    selisih: convertToAngka($(`#selisih${no}`).val())
+  };
 
-    var selisih = convertToAngka($('#selisih' + no).val());
-    var totalSelisih = convertToAngka($('#totalSelisih').val());
-    var newselisih = totalSelisih  - selisih;
+  const totals = {
+    all: convertToAngka($('#stotal').val()),
+    selisih: convertToAngka($('#totalSelisih').val()),
+    jumlah: convertToAngka($('#jumlah').val()),
+    diskon: convertToAngka($('#totalDiskon').val()),
+    bayar: convertToAngka($('#bayar').val())
+  };
 
-    // Mengupdate jumlah total, dengan mengurangi `stotal` dan `diskonItem`
-    var totalJumlah = convertToAngka($('#jumlah').val());
-    var diskonItem = convertToAngka($('#diskon' + no).val());
-    var newJumlah = totalJumlah - stotal - diskonItem;
-
-    // Update total diskon
-    var totalDiskon = convertToAngka($('#totalDiskon').val()) - diskonItem;
-
-    // Update nilai di UI
-    $('#totalDiskon').val(convertToRupiah(totalDiskon));
-    $('#jumlah').val(convertToRupiah(newJumlah));
-    $('#stotal').val(convertToRupiah(newtotal));
-    $('#totalSelisih').val(convertToRupiah(newselisih));
-
-    // Hapus baris item
-    $('#row' + no).remove();
-
-    // Perhitungan kembalian
-    var bayar = convertToAngka($('#bayar').val());
-    var kembalian = bayar - Math.max(0, newtotal - totalDiskon);
-
+  function updateUI(newTotals) {
+    $('#stotal').val(convertToRupiah(newTotals.all));
+    $('#totalSelisih').val(convertToRupiah(newTotals.selisih));
+    $('#jumlah').val(convertToRupiah(newTotals.jumlah));
+    $('#totalDiskon').val(convertToRupiah(newTotals.diskon));
+    
+    const kembalian = totals.bayar - Math.max(0, newTotals.all - newTotals.diskon);
+    $('#kembalian').val(convertToRupiah(kembalian));
+    
     if (kembalian >= 0) {
-      $('#kembalian').val(convertToRupiah(kembalian));
       $('#status').val('Lunas');
-      var tanggal = $('#tanggal').val();
-      $('#jatuh-tempo').val(tanggal);
+      $('#jatuh-tempo').val($('#tanggal').val());
     } else {
       $('#status').val('Utang');
-      $('#kembalian').val(convertToRupiah(kembalian));
       jatuhTempo();
     }
   }
+
+  function calculateNewTotals() {
+    return {
+      all: totals.all - elements.stotal,
+      selisih: totals.selisih - elements.selisih,
+      jumlah: totals.jumlah - elements.stotal - elements.diskon,
+      diskon: Math.max(0, totals.diskon - elements.diskon)
+    };
+  }
+
+  function handleDelete() {
+    elements.row.remove();
+    updateUI(calculateNewTotals());
+  }
+
+  if (!elements.idTransaksi) {
+    handleDelete();
+    return;
+  }
+
+  Swal.fire({
+    title: 'Konfirmasi',
+    text: "Apakah anda yakin ingin menghapus item ini?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Ya, Hapus!',
+    cancelButtonText: 'Batal'
+  }).then(result => {
+    if (!result.isConfirmed) return;
+
+    $.ajax({
+      url: 'editHapusTransaksi.php',
+      method: 'POST',
+      data: { id_transaksi: elements.idTransaksi },
+      success: response => {
+        const result = JSON.parse(response);
+        if (!result.success) {
+          Swal.fire('Error!', result.message, 'error');
+          return;
+        }
+        handleDelete();
+        Swal.fire('Terhapus!', 'Item berhasil dihapus.', 'success');
+      },
+      error: () => Swal.fire('Error!', 'Terjadi kesalahan saat menghapus item.', 'error')
+    });
+  });
+}
+
 
 
 
@@ -602,66 +1015,69 @@ include_once "../layout/header.php"
     var totalDiskon = 0;
 
 
-    $('#tambah-transaksi').on('click', function() {
-      var no = parseInt($('#no').val());
-      var id_barang = $('#id-barang').val();
-      var nama_barang = $('#nama-barang option:selected').text();
-      var banyak = parseInt($('#banyak').val());
-      var diskon = convertToAngka($('#diskon').val());
-      var harga = convertToAngka($('#harga').val());
-      var harga_beli = convertToAngka($('#harga_beli').val());
-      var total = convertToAngka($('#stotal').val());
-      var totalSelisih = convertToAngka($('#totalSelisih').val());
-      diskon =banyak*diskon;
-      var subtotal = (harga * banyak) - diskon;
 
-      // Update total
-      totalDiskon += diskon;
-      var jumlah = total + subtotal + totalDiskon;
-      var total = total + subtotal;
+    // console.log(kodeFaktur);
 
-      // Update totals in the UI
-      $('#totalDiskon').val(convertToRupiah(totalDiskon));
-      var selisih = ((harga - harga_beli) * banyak) - diskon;
-      totalSelisih += selisih;
-      $('#totalSelisih').val(convertToRupiah(totalSelisih));
 
-      // Create new row in the list
-      var html = '<div class="row mb-2" id="row' + no + '">' +
-        '<div class="col-md-3">' +
-        '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" value="' + nama_barang + '" readonly>' +
-        '<input type="hidden" id="idBarang' + no + '" name="idBarang[]" value="' + id_barang + '" readonly>' +
-        '</div>' +
-        '<div class="col-md-2">' +
-        '<input class="form-control" id="hargaBarang' + no + '" name="harga[]" value="' + convertToRupiah(harga) + '" readonly>' +
-        '</div>' +
-        '<div class="col-md-1">' +
-        '<input class="form-control" id="qty' + no + '" name="banyak[]" value="' + banyak + '" readonly>' +
-        '</div>' +
-        '<div class="col-md-3">' +
-        '<input class="form-control" id="diskon' + no + '" name="diskon[]" value="' + convertToRupiah(diskon) + '" readonly>' +
-        '</div>' +
-        '<div class="col-md-2">' +
-        '<input class="form-control" id="subTotal' + no + '" name="subtotal[]" value="' + convertToRupiah(subtotal) + '" readonly>' +
-        '<input type="hidden" id="selisih' + no + '" name="selisih[]" value="' + selisih + '" readonly>' +
-        '</div>' +
-        '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
-        '</div>';
 
-      $('.list').append(html);
+    // $('#tambah-transaksi').on('click', function() {
+    //   var no = parseInt($('#no').val());
+    //   var id_barang = $('#id-barang').val();
+    //   var nama_barang = $('#nama-barang option:selected').text();
+    //   var banyak = parseInt($('#banyak').val());
+    //   var diskon = convertToAngka($('#diskon').val());
+    //   var harga = convertToAngka($('#harga').val());
+    //   var harga_beli = convertToAngka($('#harga_beli').val());
+    //   var total = convertToAngka($('#stotal').val());
+    //   var totalSelisih = convertToAngka($('#totalSelisih').val());
+    //   diskon = banyak * diskon;
+    //   var subtotal = (harga * banyak) - diskon;
 
-      // Update overall totals
-      $('#jumlah').val(convertToRupiah(jumlah));
-      $('#stotal').val(convertToRupiah(total));
+    //   // Update total
+    //   totalDiskon += diskon;
+    //   var jumlah = total + subtotal + totalDiskon;
+    //   var total = total + subtotal;
 
-      // Clear input fields
-      $('#banyak, #nama-barang, #id-barang, #harga, #stok').val(null).trigger('change');
-      $('#diskon').val(0);
+    //   // Update totals in the UI
+    //   $('#totalDiskon').val(convertToRupiah(totalDiskon));
+    //   var selisih = ((harga - harga_beli) * banyak) - diskon;
+    //   totalSelisih += selisih;
+    //   $('#totalSelisih').val(convertToRupiah(totalSelisih));
 
-      // Increment item number
-      $('#no').val(no + 1);
-    });
+    //   // Create new row in the list
+    //   var html = '<div class="row mb-2" id="row' + no + '">' +
+    //     '<div class="col-md-3">' +
+    //     '<input class="form-control" id="namaBarang' + no + '" name="nama_barang[]" value="' + nama_barang + '" readonly>' +
+    //     '<input type="hidden" id="idBarang' + no + '" name="idBarang[]" value="' + id_barang + '" readonly>' +
+    //     '</div>' +
+    //     '<div class="col-md-2">' +
+    //     '<input class="form-control" id="hargaBarang' + no + '" name="harga[]" value="' + convertToRupiah(harga) + '" readonly>' +
+    //     '</div>' +
+    //     '<div class="col-md-1">' +
+    //     '<input class="form-control" id="qty' + no + '" name="banyak[]" value="' + banyak + '" readonly>' +
+    //     '</div>' +
+    //     '<div class="col-md-3">' +
+    //     '<input class="form-control" id="diskon' + no + '" name="diskon[]" value="' + convertToRupiah(diskon) + '" readonly>' +
+    //     '</div>' +
+    //     '<div class="col-md-2">' +
+    //     '<input class="form-control" id="subTotal' + no + '" name="subtotal[]" value="' + convertToRupiah(subtotal) + '" readonly>' +
+    //     '<input type="hidden" id="selisih' + no + '" name="selisih[]" value="' + selisih + '" readonly>' +
+    //     '</div>' +
+    //     '<a class="btn btn-sm btn-danger rounded" onClick="del(' + no + ')"> X </a>' +
+    //     '</div>';
 
+    //   $('.list').append(html);
+
+    //   // Update overall totals
+    //   $('#jumlah').val(convertToRupiah(jumlah));
+    //   $('#stotal').val(convertToRupiah(total));
+
+    //   // Clear input fields
+    //   $('#banyak, #nama-barang, #id-barang, #diskon, #harga, #stok').val(null).trigger('change');
+
+    //   // Increment item number
+    //   $('#no').val(no + 1);
+    // });
 
     // $('#diskon').on('input', function() {
     //   var total = convertToAngka($('#stotal').val());
@@ -696,7 +1112,7 @@ include_once "../layout/header.php"
           text: 'Diskon melebihi harga transaksi',
           confirmButtonText: 'OK'
         });
-      $(this).val(0);
+        $(this).val(0);
       }
 
       var rupiah = formatRupiah($(this).val(), 'Rp. ');
@@ -752,7 +1168,7 @@ include_once "../layout/header.php"
     //   }
     // })
 
-    
+
     $('#ongkosKirim').on('input', function() {
       var rupiah = formatRupiah($(this).val(), 'Rp. ');
       $(this).val(rupiah);
@@ -764,16 +1180,16 @@ include_once "../layout/header.php"
       $('#stotal').val(convertToRupiah(totalBersih));
       let kembalian = bayar - totalBersih;
       $('#kembalian').val(convertToRupiah(kembalian));
-      // $('#status').val(kembalian >= 0 ? 'Lunas' : 'Utang');
+      $('#status').val(kembalian >= 0 ? 'Lunas' : 'Utang');
 
       if (kembalian >= 0) {
-      $('#status').val('Lunas');
-      var tanggal = $('#tanggal').val();
-      $('#jatuh-tempo').val(tanggal);
-    } else {
-      $('#status').val('Utang');
-      jatuhTempo();
-    }
+        $('#status').val('Lunas');
+        var tanggal = $('#tanggal').val();
+        $('#jatuh-tempo').val(tanggal);
+      } else {
+        $('#status').val('Utang');
+        jatuhTempo();
+      }
     });
 
     $('#bayar').on('input', function() {
@@ -785,15 +1201,15 @@ include_once "../layout/header.php"
       $('#kembalian').val(convertToRupiah(kembalian));
       $('#status').val(kembalian >= 0 ? 'Lunas' : 'Utang');
 
-      
+
       if (kembalian >= 0) {
-      $('#status').val('Lunas');
-      var tanggal = $('#tanggal').val();
-      $('#jatuh-tempo').val(tanggal);
-    } else {
-      $('#status').val('Utang');
-      jatuhTempo();
-    }
+        $('#status').val('Lunas');
+        var tanggal = $('#tanggal').val();
+        $('#jatuh-tempo').val(tanggal);
+      } else {
+        $('#status').val('Utang');
+        jatuhTempo();
+      }
     });
 
   });

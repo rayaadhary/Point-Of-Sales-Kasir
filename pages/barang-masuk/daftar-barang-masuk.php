@@ -1,7 +1,7 @@
 <?php
 include_once "../../functions.php";
-$menu = 'transaksi';
-$title = 'transaksi_list';
+$title = 'daftar_barang_masuk';
+$menu  = "barang_masuk";
 if (!isset($_SESSION["id_pengguna"]))
   header(
     "Location: " . BASEURL
@@ -14,7 +14,6 @@ if (!isset($_SESSION["id_pengguna"]))
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Putra Subur Makmur</title>
-
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -49,22 +48,9 @@ include_once "../layout/header.php"
     <div class="container-fluid">
       <?php flash(); ?>
       <div class="row mb-2">
-        <div class="col-sm-4">
-          <h1>Daftar Transaksi</h1>
+        <div class="col-sm-6">
+          <h1>Barang</h1>
         </div>
-        <?php
-        $tanggalAwal = isset($_GET['filter_tanggal_awal']) && !empty($_GET['filter_tanggal_awal']) ? $_GET['filter_tanggal_awal'] : date('Y-m-d');
-        $tanggalAkhir = isset($_GET['filter_tanggal_akhir']) && !empty($_GET['filter_tanggal_akhir']) ? $_GET['filter_tanggal_akhir'] : date('Y-m-d');
-
-        $totalPenjualan = getTotalTransaksiBetweenTanggal($tanggalAwal, $tanggalAkhir);
-        if ($_SESSION['role'] == 'pemilik') {
-        ?>
-        <div class="col-sm-8 d-flex align-items-center">
-          <label for="" class="mr-2 mb-0">Total Penjualan:</label>
-          <input type="text" name="" id="" class="form-control col-3 text-right" value="  Rp. <?= number_format($totalPenjualan, 0, ',', '.') ?>" readonly>
-        </div>
-        <?php } ?>
-
       </div>
     </div><!-- /.container-fluid -->
   </section>
@@ -78,9 +64,11 @@ include_once "../layout/header.php"
             <div class="card-header">
               <div class="d-flex justify-content-between align-items-center">
                 <!-- Tombol Tambah -->
-
-                <a href="<?= BASEURL ?>/pages/transaksi/transaksi.php" class="btn btn-primary" type="button">Tambah</a>
-
+                <input type="hidden" name="role" id="role" value="<?= $_SESSION['role'] ?>">
+                <?php if ($_SESSION['role'] == 'pemilik') { ?>
+                <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="btn btn-primary" type="button">Tambah</a>
+              
+                <?php } ?>
                 <form method="GET" action="" class="form-inline">
                   <div class="form-group mr-2">
                     <label for="filter_tanggal_awal" class="mr-2">Tanggal Awal:</label>
@@ -99,26 +87,29 @@ include_once "../layout/header.php"
               </div>
             </div>
             <!-- /.card-header -->
-            <div class="card-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>No Faktur</th>
-                    <th>Pelanggan</th>
-                    <th>Tanggal</th>
-                    <th>JatuhTempo</th>
-                    <th>Potongan</th>
-                    <th>Total</th>
-                    <th>Bayar</th>
-                    <th>Kembali</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>ID Barang</th>
+                      <th>No Barang Masuk</th>
+                      <th>Tanggal Beli</th>
+                      <th>Nama Barang</th>
+                      <?php if ($_SESSION['role'] == 'pemilik') { ?>
+                        <th>Harga Beli</th>
+                      <?php } ?>
+                      <th>Harga Jual</th>
+                      <th>Banyak</th>
+                      <th>Supplier</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Data is loaded dynamically via DataTables -->
+                  </tbody>
+                </table>
+              </div>
             </div>
+
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
@@ -147,10 +138,8 @@ include_once "../layout/header.php"
 </div>
 <!-- ./wrapper -->
 
+<!-- Modal Tambah Data -->
 
-<!-- jQuery -->
-<!-- <script src="../../plugins/jquery/jquery.min.js"></script> -->
-<!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables  & Plugins -->
 <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
@@ -177,14 +166,19 @@ include_once "../layout/header.php"
 <script src="../../dist/js/demo.js"></script>
 <!-- Page specific script -->
 <script>
+
+const userRole = $('#role').val();
+
+console.log(userRole);
+
   $(function() {
-    const table = $("#example1").DataTable({
+    var table = $("#example1").DataTable({
       responsive: true,
       processing: true,
       serverSide: true,
       searching: true,
       ajax: {
-        url: "getDaftarTransaksi.php",
+        url: "getDaftarBarang.php",
         type: "GET",
         data: function(d) {
           d.start_date = $("#filter_tanggal_awal").val(); // Tambahkan parameter tanggal awal
@@ -197,84 +191,112 @@ include_once "../layout/header.php"
         [10]
       ],
       columns: [{
-          data: "no_faktur"
+          data: "id_barang"
         },
         {
-          data: "nama_pelanggan"
+          data: "no_barang_masuk"
         },
         {
-          data: "tanggal"
+          data: "tanggal_beli"
         },
         {
-          data: "jatuh_tempo"
+          data: "nama_barang"
+        },
+        ...(userRole === "pemilik" ? [{ 
+        data: "harga_beli",
+        render: $.fn.dataTable.render.number(',', '.', 0, 'Rp ')
+      }] : []),
+        {
+          data: "harga_jual",
+          render: $.fn.dataTable.render.number(',', '.', 0, 'Rp ')
         },
         {
-          data: "totalDiskon"
+          data: "banyak"
         },
         {
-          data: "total"
-        },
-        {
-          data: "bayar"
-        },
-        {
-          data: "kembali"
-        },
-        {
-          data: "status"
-        },
-        {
-          data: "actions"
-        },
+          data: "nama_supplier"
+        }
       ],
       order: [
-        [2, "desc"]
-      ], // Order by tanggal
+        [0, 'desc']
+      ],
       language: {
-        url: "https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json",
-      },
+        url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'
+      }
     });
 
-    // Event filter
-    $("#filter_date").on("click", function() {
-      table.ajax.reload(); // Reload table data sesuai filter
+    // Re-bind modal triggers after DataTables redraws
+    $('#example1').on('click', '.edit-modal', function(e) {
+      e.preventDefault();
+      var id_barang = $(this).data('id');
+      console.log(id_barang);
+
+      // Fetch data for the modal
+      $.ajax({
+        // url: `getBarangById.php?id_barang=${id_barang}`,
+        url: 'getBarangById.php?id_barang=' + id_barang,
+        type: "GET",
+        success: function(response) {
+          var data = JSON.parse(response); 
+
+          $('#id_barang').val(data.id_barang);
+          $('#nama_barang').val(data.nama_barang);
+          $('#harga_jual').val(data.harga_jual);
+          $('#stok').val(data.stok);
+
+          // Show modal
+          $('#myModal').modal('show');
+        }
+      });
     });
   });
 
-  $("input[type=date]").on('click', function() {
+  $(document).on('click', '.hapus', function(e) {
+    e.preventDefault();  // Prevent the default behavior (redirect)
+
+    var deleteUrl = $(this).attr('href');  // Get the URL for deletion from the href attribute
+
+    // Show SweetAlert confirmation dialog
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data ini akan dihapus secara permanen.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If the user confirms, navigate to the delete URL to execute the deletion
+            window.location.href = deleteUrl;
+        }
+    });
+});
+
+$("input[type=date]").on('click', function() {
     return false;
   });
-  $(document).on('click', '.filter', function(e) {
-    // Ambil nilai dari input tanggal
-    var tanggal_awal = $('#filter_tanggal_awal').val();
-    var tanggal_akhir = $('#filter_tanggal_akhir').val();
 
-    // Cek apakah kedua tanggal sudah diisi
-    if (!tanggal_awal || !tanggal_akhir) {
-      // Jika salah satu atau kedua tanggal tidak diisi, tampilkan SweetAlert
-      e.preventDefault(); // Mencegah form untuk disubmit
-      Swal.fire({
-        icon: 'error',
-        title: 'Peringatan!',
-        text: 'Kedua tanggal harus diisi!',
-      });
-    }
+$(document).ready(function() {
+
+var today = moment().format('YYYY-MM-DD');
+
+$(document).ready(function() {
+
+
+  // Inisialisasi datepicker untuk tanggal awal dan tanggal akhir
+  $('#filter_tanggal_awal, #filter_tanggal_akhir').datepicker({
+    dateFormat: 'yy-mm-dd', // Format tanggal
+    changeYear: true, // Menampilkan pemilih tahun
+    changeMonth: true,
   });
+});
+});
 
-  $(document).ready(function() {
-
-    var today = moment().format('YYYY-MM-DD');
-
-    $(document).ready(function() {
-      // Inisialisasi datepicker untuk tanggal awal dan tanggal akhir
-      $('#filter_tanggal_awal, #filter_tanggal_akhir').datepicker({
-        dateFormat: 'yy-mm-dd', // Format tanggal
-        changeYear: true, // Menampilkan pemilih tahun
-        changeMonth: true,
-      });
-    });
-  })
 </script>
+
+
+
 
 </body>
 

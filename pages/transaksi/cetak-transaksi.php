@@ -7,6 +7,9 @@
 include_once "../../functions.php";
 include_once "../../dist/fpdf/fpdf.php";
 
+// var_dump($_SESSION['cetak']);
+// die;
+
 
 $tanggal = date_create($_SESSION['cetak']['tanggal']);
 $jatuh_tempo = date_create($_SESSION['cetak']['jatuh_tempo']);
@@ -54,35 +57,54 @@ $pdf->Cell(15, 5, 'Qty', 1, 0, 'C');
 $pdf->Cell(38, 5, 'Diskon', 1, 0, 'C'); // Pindah ke baris baru
 $pdf->Cell(38, 5, 'Subtotal', 1, 1, 'C'); // Pindah ke baris baru
 $pdf->SetFont('Arial', '', 11);
-$no =  $_SESSION['cetak']['no'] - 1;
+$no =  (int)$_SESSION['cetak']['no'] - 2;
 
-($no == 0) ? $no = 1 : $no = $no;
-// var_dump($_SESSION['cetak']);
+// var_dump($no);
+// die;
+($no === 0) ? $no = 1 : $no;
+
+
+$jumlahTransaksi = (int) str_replace(['Rp. ', '.', ','], '', $_SESSION['cetak']['jumlah']);
+$jumlahTransaksiFormatted = number_format($jumlahTransaksi, 2, ',', '.');
+
+// var_dump($no);
 // die;
 // ($_SESSION['cetak']['no'] = 2) ? $no =  $_SESSION['cetak']['no'] - 1 : $no =  $_SESSION['cetak']['no'] - 2;
-$subtotalSum = 0;
-for ($i = 0; $i < $no; $i++) {
-  if (!$_SESSION['cetak']['nama_barang'][$i] && !$_SESSION['cetak']['banyak'][$i] && !$_SESSION['cetak']['harga'][$i] && !$_SESSION['cetak']['subtotal'][$i]) {
-    continue;
-  }
-  $subtotal = str_replace(['Rp. ', '.', ','], '', $_SESSION['cetak']['subtotal'][$i]);
-  $jumlahTransaksi = (int) str_replace(['Rp. ', '.', ','], '', $_SESSION['cetak']['jumlah']);
-  // $subtotalFormatted = number_format((int)$subtotal, 0, ',', '.');
-  $subtotalInt = (int) $subtotal; // Pastikan subtotal dalam format angka
+$subtotalSum = 0; // Untuk menjumlahkan semua subtotal
+$i = 0;
 
-  // Jumlahkan subtotal ke subtotalSum
-  $subtotalSum += $subtotalInt;
+// Loop while untuk membaca data selama elemen tersedia
+while (isset($_SESSION['cetak']['nama_barang'][$i])) {
+    // Skip jika data tidak valid
+    if (
+        empty($_SESSION['cetak']['nama_barang'][$i]) &&
+        empty($_SESSION['cetak']['banyak'][$i]) &&
+        empty($_SESSION['cetak']['harga'][$i]) &&
+        empty($_SESSION['cetak']['subtotal'][$i])
+    ) {
+        $i++;
+        continue;
+    }
 
-  $subtotalFormatted = number_format($subtotalInt, 2, ',', '.');
-  $jumlahTransaksiFormatted = number_format($jumlahTransaksi, 2, ',', '.');
+    // Konversi subtotal ke integer
+    $subtotal = str_replace(['Rp. ', '.', ','], '', $_SESSION['cetak']['subtotal'][$i]);
+    $subtotalInt = (int)$subtotal;
 
-  $pdf->Cell(15, 5, '' . $i + 1, 1, 0, 'C');
-  $pdf->Cell(80, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
-  $pdf->Cell(38, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['harga'][$i]), 2, ',', '.'), 1, 0, 'R');
-  $pdf->Cell(15, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
-  // $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
-  $pdf->Cell(38, 5,  'Rp. ' . number_format(convert_to_number($_SESSION['cetak']['diskon'][$i]), 2, ',', '.'), 1, 0, 'R');
-  $pdf->Cell(38, 5, 'Rp. ' . $subtotalFormatted, 1, 1, 'R');
+    // Tambahkan subtotal ke total
+    $subtotalSum += $subtotalInt;
+
+    // Format subtotal
+    $subtotalFormatted = number_format($subtotalInt, 2, ',', '.');
+
+    // Cetak ke PDF
+    $pdf->Cell(15, 5, '' . ($i + 1), 1, 0, 'C');
+    $pdf->Cell(80, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
+    $pdf->Cell(38, 5, 'Rp. ' . number_format((int)str_replace(['Rp. ', '.', ','], '', $_SESSION['cetak']['harga'][$i]), 2, ',', '.'), 1, 0, 'R');
+    $pdf->Cell(15, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
+    $pdf->Cell(38, 5, 'Rp. ' . number_format((int)str_replace(['Rp. ', '.', ','], '', $_SESSION['cetak']['diskon'][$i]), 2, ',', '.'), 1, 0, 'R');
+    $pdf->Cell(38, 5, 'Rp. ' . $subtotalFormatted, 1, 1, 'R');
+
+    $i++; // Increment index
 }
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(20, 5, '', 0, 0, 'C');
@@ -171,26 +193,36 @@ $pdf->SetFont('Arial', '', 11);
 // $no =  $_SESSION['cetak']['no'] - 2;
 // var_dump($_SESSION['cetak']);
 // die;
-for ($i = 0; $i < $no; $i++) {
-  if (!$_SESSION['cetak']['idBarang'][$i] && !$_SESSION['cetak']['banyak'][$i] && !$_SESSION['cetak']['nama_barang'][$i]) {
-    continue;
-  }
-  $pdf->Cell(15, 5, '' . $i + 1, 1, 0, 'C');
-  $pdf->Cell(30, 5, '' . $_SESSION['cetak']['idBarang'][$i], 1, 0, 'C');
-  $pdf->Cell(80, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
-  $pdf->Cell(30, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
-  $pdf->Cell(20, 5, 'pcs', 1, 0, 'C');
-  $pdf->Cell(20, 5, '', 1, 1, 'C');
-}
-$jumlah = 0;
 $i = 0;
-while ($i < $no) {
-  if (!$_SESSION['cetak']['banyak'][$i]) {
-    continue;
-  }
-  $jumlah += $_SESSION['cetak']['banyak'][$i];
-  $i++;
+$jumlah = 0;
+
+while (isset($_SESSION['cetak']['nama_barang'][$i])) {
+    // Skip jika data tidak valid
+    if (
+        empty($_SESSION['cetak']['idBarang'][$i]) &&
+        empty($_SESSION['cetak']['banyak'][$i]) &&
+        empty($_SESSION['cetak']['nama_barang'][$i])
+    ) {
+        $i++;
+        continue;
+    }
+
+    // Cetak data ke PDF
+    $pdf->Cell(15, 5, '' . ($i + 1), 1, 0, 'C');
+    $pdf->Cell(30, 5, '' . $_SESSION['cetak']['idBarang'][$i], 1, 0, 'C');
+    $pdf->Cell(80, 5, '' . $_SESSION['cetak']['nama_barang'][$i], 1, 0);
+    $pdf->Cell(30, 5, '' . $_SESSION['cetak']['banyak'][$i], 1, 0, 'C');
+    $pdf->Cell(20, 5, 'pcs', 1, 0, 'C');
+    $pdf->Cell(20, 5, '', 1, 1, 'C');
+
+    $jumlah += $_SESSION['cetak']['banyak'][$i];
+
+    $i++; // Increment index
 }
+// $i = 0;
+// while (isset($_SESSION['cetak']['nama_barang'][$i])) {
+//   $i++;
+// }
 $pdf->Cell(110, 5, '', 0, 0);
 $pdf->Cell(30, 5, 'Jumlah', 0, 0);
 $pdf->Cell(50, 5, '' . $jumlah, 0, 1);
@@ -205,4 +237,6 @@ $pdf->Cell(60, 30, '(   Putra Subur Makmur   )', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(60, 30, '(                          )', 0, 0, 'C');
 $pdf->Cell(60, 30, '(   ' . $_SESSION['cetak']['nama_pelanggan'] . '   )', 0, 0, 'C');
+$pdf->SetFont('Arial', 'B', 16);
+$pdf->Cell(200, 20, 'BCA : 3790 - 474 - 588 (SALSABILA SHAFA PUJA)', 0, 1, 'C');
 $pdf->Output();

@@ -70,17 +70,23 @@ $pdf->SetFont('Arial', '', 11);
 // ($_SESSION['cetak']['no'] = 2) ? $no =  $_SESSION['cetak']['no'] - 1 : $no =  $_SESSION['cetak']['no'] - 2;
 $i = 1;
 $subtotalSum = 0;
+$jumlahSum = 0;
 while ($item = mysqli_fetch_assoc($res)) {
   $subtotal = str_replace(['Rp. ', '.', ','], '', $item['subtotal']);
+  $diskon = str_replace(['Rp. ', '.', ','], '', $item['diskon']);
   $jumlahTransaksi = (int) str_replace(['Rp. ', '.', ','], '', $item['subtotal']) + (int) convert_to_number($item['diskon']);
   // $subtotalFormatted = number_format((int)$subtotal, 0, ',', '.');
   $subtotalInt = (int) $subtotal; // Pastikan subtotal dalam format angka
+  $diskonInt = (int) $diskon; // Pastikan subtotal dalam format angka
 
   // Jumlahkan subtotal ke subtotalSum
   $subtotalSum += $subtotalInt;
 
+  $jumlahSum += $subtotalInt + $diskonInt;
+
+
   $subtotalFormatted = number_format($subtotalInt, 2, ',', '.');
-  $jumlahTransaksiFormatted = number_format($jumlahTransaksi, 2, ',', '.');
+  $jumlahTransaksiFormatted = number_format($jumlahSum, 2, ',', '.');
 
   $pdf->Cell(15, 5, '' . $i, 1, 0, 'C');
   $pdf->Cell(80, 5, '' . $item['nama_barang'], 1, 0);
@@ -117,7 +123,12 @@ $pdf->Cell(25, 5, '', 0, 0, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Ongkos Kirim', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($transaksi['ongkosKirim']), 2, ',', '.'), 0, 1, 'R');
+$ongkosKirim = $transaksi['ongkosKirim'] ?? 0; // Jika null, set default ke 0
+if (!is_numeric($ongkosKirim)) {
+    $ongkosKirim = 0; // Pastikan nilai adalah angka
+}
+$formattedOngkosKirim = number_format((float)$ongkosKirim, 2, ',', '.');
+$pdf->Cell(30, 5, 'Rp. ' . $formattedOngkosKirim, 0, 1, 'R');
 $pdf->Cell(20, 5, '', 0, 0, 'C');
 $pdf->Cell(60, 5, '', 0, 0);
 $pdf->Cell(60, 5, '', 0, 0, 'C');
@@ -144,4 +155,8 @@ $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(30, 5, 'Kembali', 0, 0);
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(30, 5, 'Rp. ' . number_format(convert_to_number($transaksi['kembali']), 2, ',', '.'), 0, 1, 'R');
+
+// $pdf->Cell(20, 10, '', 0, 1, 'C');
+$pdf->SetFont('Arial', 'B', 16);
+$pdf->Cell(200, 20, 'BCA : 3790 - 474 - 588 (SALSABILA SHAFA PUJA)', 0, 1, 'C');
 $pdf->Output();

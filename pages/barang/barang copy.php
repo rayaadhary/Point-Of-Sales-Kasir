@@ -65,67 +65,89 @@ include_once "../layout/header.php"
                 <!-- Tombol Tambah -->
                 <input type="hidden" name="role" id="role" value="<?= $_SESSION['role'] ?>">
                 <?php if ($_SESSION['role'] == 'pemilik') { ?>
-                  <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="btn btn-primary" type="button">Tambah</a>
-
+                <a href="<?= BASEURL ?>/pages/barang-masuk/barang-masuk.php" class="btn btn-primary" type="button">Tambah</a>
+              
                 <?php } ?>
+                <form method="GET" action="" class="form-inline">
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_awal" class="mr-2">Tanggal Awal:</label>
+                    <input type="date" name="filter_tanggal_awal" id="filter_tanggal_awal" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_awal']) ? $_GET['filter_tanggal_awal'] : '' ?>" required>
+                  </div>
+                  <div class="form-group mr-2">
+                    <label for="filter_tanggal_akhir" class="mr-2">Tanggal Akhir:</label>
+                    <input type="date" name="filter_tanggal_akhir" id="filter_tanggal_akhir" class="form-control"
+                      value="<?= isset($_GET['filter_tanggal_akhir']) ? $_GET['filter_tanggal_akhir'] : '' ?>" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary filter">Filter</button>
+                </form>
 
 
               </div>
             </div>
             <!-- /.card-header -->
-            <div class="card-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>ID Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Harga Jual</th>
-                    <th>Stok</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Data is loaded dynamically via DataTables -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Form Edit Barang</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body edit">
-                  <form action="barang-edit.php" method="post">
-                    <div class="card-body">
-                      <div class="form-group">
-                        <label for="id_barang">ID Barang</label>
-                        <input type="text" class="form-control" name="id_barang" id="id_barang" readonly>
-                      </div>
-                      <div class="form-group">
-                        <label for="nama_barang">Nama Barang</label>
-                        <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang">
-                      </div>
-                      <div class="form-group">
-                        <label for="harga_jual">Harga Jual</label>
-                        <input type="text" class="form-control" id="harga_jual" name="harga_jual" placeholder="Masukan Harga Barang">
-                      </div>
-                      <div class="form-group">
-                        <label for="stok">Stok Barang</label>
-                        <input type="number" class="form-control" id="stok" name="stok">
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
-                    </div>
-                  </form>
-                </div>
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>ID Barang</th>
+                      <th>No Barang Masuk</th>
+                      <th>Tanggal Beli</th>
+                      <th>Nama Barang</th>
+                      <?php if ($_SESSION['role'] == 'pemilik') { ?>
+                        <th>Harga Beli</th>
+                      <?php } ?>
+                      <th>Harga Jual</th>
+                      <th>Stok</th>
+                      <th>Supplier</th>
+                      <?php if ($_SESSION['role'] == 'pemilik') { ?>
+                        <th>Aksi</th>
+                      <?php } ?>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Data is loaded dynamically via DataTables -->
+                  </tbody>
+                </table>
               </div>
             </div>
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Form Edit Barang</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="barang-edit.php" method="post">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="id_barang">ID Barang</label>
+                          <input type="text" class="form-control" name="id_barang" id="id_barang" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="nama_barang">Nama Barang</label>
+                          <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukan Nama Barang">
+                        </div>
+                        <div class="form-group">
+                          <label for="harga_jual">Harga Jual</label>
+                          <input type="number" class="form-control" id="harga_jual" name="harga_jual" placeholder="Masukan Harga Barang">
+                        </div>
+                        <div class="form-group">
+                          <label for="stok">Stok Barang</label>
+                          <input type="number" class="form-control" id="stok" name="stok">
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" name="btn-simpan">Simpan</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
@@ -175,7 +197,6 @@ include_once "../layout/header.php"
 <script src="<?= BASEURL ?>/dist/js/pages/js-logout.js"></script>
 <script src="<?= BASEURL ?>/dist/js/pages/js-rupiah.js"></script>
 
-
 <script src="<?= BASEURL ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
@@ -183,8 +204,10 @@ include_once "../layout/header.php"
 <script src="../../dist/js/demo.js"></script>
 <!-- Page specific script -->
 <script>
-  const userRole = $('#role').val();
 
+const userRole = $('#role').val();
+
+console.log(userRole);
 
   $(function() {
     var table = $("#example1").DataTable({
@@ -195,6 +218,10 @@ include_once "../layout/header.php"
       ajax: {
         url: "getDaftarBarang.php",
         type: "GET",
+        data: function(d) {
+          d.start_date = $("#filter_tanggal_awal").val(); // Tambahkan parameter tanggal awal
+          d.end_date = $("#filter_tanggal_akhir").val(); // Tambahkan parameter tanggal akhir
+        },
       },
       pageLength: 10,
       lengthMenu: [
@@ -205,25 +232,42 @@ include_once "../layout/header.php"
           data: "id_barang"
         },
         {
-          data: "nama_barang"
+          data: "no_barang_masuk"
         },
         {
-          data: "harga_jual"
+          data: "tanggal_beli"
+        },
+        {
+          data: "nama_barang"
+        },
+        ...(userRole === "pemilik" ? [{ 
+        data: "harga_beli",
+        render: $.fn.dataTable.render.number(',', '.', 0, 'Rp ')
+      }] : []),
+        {
+          data: "harga_jual",
+          render: $.fn.dataTable.render.number(',', '.', 0, 'Rp ')
         },
         {
           data: "stok"
         },
+        {
+          data: "nama_supplier"
+        },
         ...(userRole === "pemilik" ? [{
-          data: null,
-          orderable: false,
-          render: function(data, type, row) {
-            // Render tombol edit dan hapus
-            return `
+        data: null,
+        orderable: false,
+        render: function(data, type, row) {
+          // Render tombol edit dan hapus
+          return `
             <a href="#" type="button" data-id="${row.id_barang}" class="btn btn-success btn-circle btn-sm edit-modal">
               <i class="fas fa-edit"></i>
+            </a>
+            <a href="barang-hapus.php?id_barang=${row.id_barang}&no_barang_masuk=${row.no_barang_masuk}" class="btn btn-danger btn-circle btn-sm hapus">
+              <i class="fas fa-trash"></i>
             </a>`;
-          }
-        }] : [])
+        }
+      }] : [])
       ],
       order: [
         [0, 'desc']
@@ -233,6 +277,7 @@ include_once "../layout/header.php"
       }
     });
 
+    // Re-bind modal triggers after DataTables redraws
     $('#example1').on('click', '.edit-modal', function(e) {
       e.preventDefault();
       var id_barang = $(this).data('id');
@@ -244,11 +289,11 @@ include_once "../layout/header.php"
         url: 'getBarangById.php?id_barang=' + id_barang,
         type: "GET",
         success: function(response) {
-          var data = JSON.parse(response);
+          var data = JSON.parse(response); 
 
           $('#id_barang').val(data.id_barang);
           $('#nama_barang').val(data.nama_barang);
-          $('#harga_jual').val(convertToRupiah(data.harga_jual));
+          $('#harga_jual').val(data.harga_jual);
           $('#stok').val(data.stok);
 
           // Show modal
@@ -258,27 +303,48 @@ include_once "../layout/header.php"
     });
   });
 
-  $(document).ready(function() {
-    function convertToRupiah(angka) {
-      var rupiah = '';
-      var angkarev = angka.toString().split('').reverse().join('');
-      for (var i = 0; i < angkarev.length; i++) {
-        if (i % 3 == 0) {
-          rupiah += angkarev.substr(i, 3) + '.';
+  $(document).on('click', '.hapus', function(e) {
+    e.preventDefault();  // Prevent the default behavior (redirect)
+
+    var deleteUrl = $(this).attr('href');  // Get the URL for deletion from the href attribute
+
+    // Show SweetAlert confirmation dialog
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data ini akan dihapus secara permanen.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If the user confirms, navigate to the delete URL to execute the deletion
+            window.location.href = deleteUrl;
         }
-      }
-      // Menghilangkan titik terakhir dan menambahkan 'Rp. ' di depan
-      return 'Rp. ' + rupiah.split('', rupiah.length - 1).reverse().join('');
-    }
-
-
-    $(document).on('click', '.edit', function() {
-      $('#harga_jual').on('keyup', function() {
-        var rupiah = formatRupiah($(this).val(), 'Rp. ');
-        $(this).val(rupiah);
-      })
     });
+});
+
+$("input[type=date]").on('click', function() {
+    return false;
   });
+
+$(document).ready(function() {
+
+var today = moment().format('YYYY-MM-DD');
+
+$(document).ready(function() {
+
+
+  // Inisialisasi datepicker untuk tanggal awal dan tanggal akhir
+  $('#filter_tanggal_awal, #filter_tanggal_akhir').datepicker({
+    dateFormat: 'yy-mm-dd', // Format tanggal
+    changeYear: true, // Menampilkan pemilih tahun
+    changeMonth: true,
+  });
+});
+});
+
 </script>
 
 
