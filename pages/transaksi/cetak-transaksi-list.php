@@ -45,10 +45,12 @@ $pdf->Cell(70, 5, 'Kepada Yth,     ' . $transaksi['nama_pelanggan'], 0, 1);
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(135, 10, 'Jl Pameuntasan-Gajah Mekar Kab. Bandung Jawa Barat 40911', 0, 0,);
 // $pdf->SetFont('Arial', '', 11);
-$pdf->Cell(70, 5, 'No Surat Jalan : ' . $pengiriman['no_surat_jalan'], 0, 0);
+$pdf->Cell(70, 5, 'No Surat Jalan : ' . $pengiriman['no_surat_jalan'], 0, 1);
 // $pdf->Cell(35, 5, '' . date_format($jatuh_tempo, 'd-m-y'), 1, 1, 'C');
-$pdf->Cell(150, 10, '', 0, 1);
-$pdf->SetFont('Arial', 'B', 11);
+// $pdf->Cell(2, 10, '', 0, 0);
+$pdf->Cell(135, 10, '', 0, 0);
+$pdf->Cell(70, 5, 'Keterangan : ' . $pengiriman['project'], 0, 1);
+// $pdf->SetFont('Arial', 'B', 11);
 // $pdf->Cell(70, 5, 'No Surat Jalan', 1, 1, 'C');
 $pdf->SetFont('Arial', 'B', 11);
 // $pdf->Cell(150, 10, 'Kepada :  ' . $transaksi['nama_pelanggan'], 0, 0,);
@@ -59,11 +61,12 @@ $pdf->Cell(150, 5, 'Faktur :  ' . $transaksi['no_faktur'], 0, 1);
 $pdf->SetFont('Arial', '', 11);
 
 $pdf->Cell(15, 5, 'No', 1, 0, 'C');
-$pdf->Cell(80, 5, 'Nama Barang', 1, 0);
-$pdf->Cell(38, 5, 'Harga', 1, 0, 'C');
+$pdf->Cell(55, 5, 'Nama Barang', 1, 0);
+$pdf->Cell(35, 5, 'Harga', 1, 0, 'C');
 $pdf->Cell(15, 5, 'Qty', 1, 0, 'C');
-$pdf->Cell(38, 5, 'Diskon', 1, 0, 'C'); // Pindah ke baris baru
-$pdf->Cell(38, 5, 'Subtotal', 1, 1, 'C'); // Pindah ke baris baru
+$pdf->Cell(35, 5, 'Jumlah', 1, 0, 'C');
+$pdf->Cell(35, 5, 'Diskon', 1, 0, 'C'); // Pindah ke baris baru
+$pdf->Cell(35, 5, 'Subtotal', 1, 1, 'C'); // Pindah ke baris baru
 $pdf->SetFont('Arial', '', 11);
 // var_dump($_SESSION['cetak']);
 // die;
@@ -89,13 +92,17 @@ while ($item = mysqli_fetch_assoc($res)) {
   $jumlahTransaksiFormatted = number_format($jumlahSum, 2, ',', '.');
 
   $pdf->Cell(15, 5, '' . $i, 1, 0, 'C');
-  $pdf->Cell(80, 5, '' . $item['nama_barang'], 1, 0);
+  $nama_barang = $item['nama_barang'];
+  $nama_barang = (strlen($nama_barang) > 25) ? substr($nama_barang, 0, 25) . '...' : $nama_barang;
+  $pdf->Cell(55, 5, $nama_barang, 1, 0);
+  // $pdf->Cell(55, 5, '' . $item['nama_barang'], 1, 0);
   $hargaTransaksi = ($item['subtotal'] + $item['diskon']) / $item['banyak'];
-  $pdf->Cell(38, 5, 'Rp. ' . number_format(convert_to_number($hargaTransaksi), 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(35, 5, 'Rp. ' . number_format(convert_to_number($hargaTransaksi), 2, ',', '.'), 1, 0, 'R');
   $pdf->Cell(15, 5, '' . $item['banyak'], 1, 0, 'C');
+  $pdf->Cell(35, 5, 'Rp. ' . number_format(convert_to_number($jumlahSum), 2, ',', '.'), 1, 0, 'R');
   // $pdf->Cell(50, 5, 'Rp. ' . number_format(convert_to_number($item['subtotal'][$i]), 2, ',', '.'), 1, 1, 'R'); // Pindah ke baris baru
-  $pdf->Cell(38, 5,  'Rp. ' . number_format(convert_to_number($item['diskon']), 2, ',', '.'), 1, 0, 'R');
-  $pdf->Cell(38, 5,  'Rp. ' . $subtotalFormatted, 1, 1, 'R');
+  $pdf->Cell(35, 5,  'Rp. ' . number_format(convert_to_number($item['diskon']), 2, ',', '.'), 1, 0, 'R');
+  $pdf->Cell(35, 5,  'Rp. ' . $subtotalFormatted, 1, 1, 'R');
   $i++;
 }
 $pdf->SetFont('Arial', 'B', 11);
@@ -125,7 +132,7 @@ $pdf->Cell(30, 5, 'Ongkos Kirim', 0, 0);
 $pdf->SetFont('Arial', '', 11);
 $ongkosKirim = $transaksi['ongkosKirim'] ?? 0; // Jika null, set default ke 0
 if (!is_numeric($ongkosKirim)) {
-    $ongkosKirim = 0; // Pastikan nilai adalah angka
+  $ongkosKirim = 0; // Pastikan nilai adalah angka
 }
 $formattedOngkosKirim = number_format((float)$ongkosKirim, 2, ',', '.');
 $pdf->Cell(30, 5, 'Rp. ' . $formattedOngkosKirim, 0, 1, 'R');

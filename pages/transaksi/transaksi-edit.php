@@ -250,6 +250,10 @@ include_once "../layout/header.php"
                             <textarea class="form-control" rows="3" name="alamat_tujuan" id="alamat-tujuan" placeholder="Masukan Alamat Tujuan" required></textarea>
                           </div>
                           <div class="form-group">
+                            <label for="keterangan">Keterangan</label>
+                            <input type="text" class="form-control" name="keterangan" id="keterangan" >
+                          </div>
+                          <div class="form-group">
                             <label for="tanggal">Tanggal</label>
                             <input type="date" class="form-control" name="tanggal_kirim" id="tanggal-kirim" required>
                           </div>

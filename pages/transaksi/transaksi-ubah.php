@@ -8,8 +8,8 @@ if (!isset($_SESSION["id_pengguna"])) {
 $db = dbConnect();
 
 if (isset($_POST['simpan'])) {
-  var_dump($_POST);
-  die;
+  // var_dump($_POST);
+  // die;
   $no_faktur = mysqli_real_escape_string($db, trim($_POST['no_faktur']));
   $update_time = date('Y-m-d H:i:s');
 

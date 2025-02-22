@@ -40,7 +40,8 @@ if (isset($_POST['simpan'])) {
     $alamat_tujuan = mysqli_real_escape_string($db, trim($_POST['alamat_tujuan']));
     $tanggal_kirim = mysqli_real_escape_string($db, trim($_POST['tanggal_kirim']));
     $telepon = mysqli_real_escape_string($db, trim($_POST['telepon']));
-    $sql = mysqli_query($db, "INSERT INTO pengiriman VALUES ('$surat_jalan', '$alamat_tujuan', '$tanggal_kirim', '$telepon')");
+    $keterangan = mysqli_real_escape_string($db, trim($_POST['keterangan']));
+    $sql = mysqli_query($db, "INSERT INTO pengiriman VALUES ('$surat_jalan', '$alamat_tujuan', '$tanggal_kirim', '$telepon', '$keterangan')");
     for ($i = 0; $i <= $no; $i++) {
       if (!$_POST['idBarang'][$i] && !$_POST['banyak'][$i] && !$_POST['subtotal'][$i]) {
         continue;
