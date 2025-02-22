@@ -2240,11 +2240,9 @@ function bisa($db, $query)
   $db->close();
 }
 
-function convert_to_number($number_string)
-{
-  return preg_replace('/[^0-9\-]/', '', $number_string);
+function convert_to_number($number_string) {
+  return (int) preg_replace('/[^0-9\-]/', '', $number_string);
 }
-
 
 function setFlash($pesan, $aksi, $tipe)
 {

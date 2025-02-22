@@ -62,25 +62,54 @@ if (isset($_POST['simpan'])) {
                 isupdated = ? 
               WHERE id_transaksi = ?");
 
+            // $stmtUpdateTransaksi->bind_param(
+            //   "ssiiiiiiissiiiss",
+            //   $_POST['tanggal'],
+            //   $_POST['jatuh_tempo'],
+            //   $banyak,
+            //   $diskon,
+            //   convert_to_number($_POST['totalDiskon']),
+            //   $subtotal,
+            //   convert_to_number($_POST['total']),
+            //   convert_to_number($_POST['bayar']),
+            //   convert_to_number($_POST['kembalian']),
+            //   $_POST['status'],
+            //   $_SESSION['id_pengguna'],
+            //   $selisih,
+            //   convert_to_number($_POST['totalSelisih']),
+            //   convert_to_number($_POST['ongkosKirim']),
+            //   $update_time,
+            //   $existingTransaksi['id_transaksi']
+            // );
+
+            $totalDiskon = convert_to_number($_POST['totalDiskon']);
+            $total = convert_to_number($_POST['total']);
+            $bayar = convert_to_number($_POST['bayar']);
+            $kembalian = convert_to_number($_POST['kembalian']);
+            $totalSelisih = convert_to_number($_POST['totalSelisih']);
+            $ongkosKirim = convert_to_number($_POST['ongkosKirim']);
+
             $stmtUpdateTransaksi->bind_param(
               "ssiiiiiiissiiiss",
               $_POST['tanggal'],
               $_POST['jatuh_tempo'],
               $banyak,
               $diskon,
-              convert_to_number($_POST['totalDiskon']),
+              $totalDiskon,
               $subtotal,
-              convert_to_number($_POST['total']),
-              convert_to_number($_POST['bayar']),
-              convert_to_number($_POST['kembalian']),
+              $total,
+              $bayar,
+              $kembalian,
               $_POST['status'],
               $_SESSION['id_pengguna'],
               $selisih,
-              convert_to_number($_POST['totalSelisih']),
-              convert_to_number($_POST['ongkosKirim']),
+              $totalSelisih,
+              $ongkosKirim,
               $update_time,
               $existingTransaksi['id_transaksi']
             );
+
+
             $stmtUpdateTransaksi->execute();
             $found = true;
             break;
